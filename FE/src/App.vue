@@ -5,6 +5,7 @@
 </template>
 
 <script>
+require('normalize.css/normalize.css')
 export default {
   name: 'app'
 }
