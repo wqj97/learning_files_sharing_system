@@ -1,12 +1,12 @@
 <template>
   <div>
    <header id="header">
-      <div id="basic_info" class="text_shdow">
-      <div class="">
+      <div id="basic_info" class="text_shdow" >
+      <div class="left" @click="$router.push('/mine')">
         <img class="avatar_photo vertical_center" src="../assets/defaultHead.jpg">
       Lv.3
       </div>
-      <div class="right">
+      <div class="right" @click="$router.push('/schoolList')">
         <img class="img vertical_center" src="../assets/location.png">
           天津工业大学
       </div>
