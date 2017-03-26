@@ -16,7 +16,7 @@
       <img src="../assets/search.png" class="img vertical_center" alt="">
       <span >搜索...</span>
     </div>
-    <div class="upload text_shdow">
+    <div class="upload text_shdow" @click="$router.push('/upload')">
       <img class="img vertical_center" src="../assets/upload.png">
       <span>上传文件</span>
     </div>
