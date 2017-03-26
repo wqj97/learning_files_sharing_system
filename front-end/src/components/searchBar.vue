@@ -1,0 +1,88 @@
+<template>
+  <div :class="{'searchBar': true,'searchBar-shadow' : this.shadow}">
+    <div class="left">
+      <span class="vertical_center" v-if="type">{{type}}</span>
+      <img class="img" v-else src="../assets/search.png">
+    </div>
+    <div class="right">
+      <input  :value="value" type="text" @input="$emit('input', $event.target.value)" :placeholder="placeholder" autofocus>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'searchBar',
+  props: {
+    value: {
+      type: String
+    },
+    type: {
+      type:String
+    },
+    shadow:{
+      type: Boolean
+    }
+  },
+  computed: {
+    placeholder() {
+      // return '搜索' + !this.type ? this.type : '...'   // why can't
+      const lastpart = !this.type == undefined ? this.type : '...'
+      return '搜索' + lastpart
+    }
+  },
+  data () {
+    return {
+
+    }
+  }
+}
+</script>
+
+
+<style lang="scss" scoped>
+  @import '../style/base.scss';
+.searchBar{
+  background-color: #fff;
+  width: 100%;
+  display: flex;
+  padding: 13px 18px;
+  box-sizing: border-box;
+}
+.searchBar-shadow{
+  box-shadow: 0 2px 30px 0 rgba(0, 0, 0, .22);
+}
+.left{
+  width: 55px;
+  vertical-align: middle;
+  color: #455D7A;
+  font-size: 9px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+.img{
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+.right {
+  width: 100%;
+  input{
+    vertical-align: middle;
+    color:#9E9E9E;
+    font-size: 14px;
+    appearance: none;
+    border: none;
+    width:100%;
+    &:focus{
+      outline: none;
+    }
+    &::placeholder{
+      color:#9E9E9E;
+    }
+  }
+
+}
+</style>
