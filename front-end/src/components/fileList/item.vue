@@ -1,5 +1,5 @@
 <template>
-  <div class="file-list-item">
+  <div class="file-list-item" @click="$router.push('/download')">
     <div class="left">{{type}}</div>
     <div class="right">
       <div class="top">{{title}}</div>

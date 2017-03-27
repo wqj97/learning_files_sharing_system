@@ -33,6 +33,11 @@ export default new Router({
     {
       path: '/mine',
       component: require('v/mine')
+    },
+    {
+      path: '/buy',
+      component: require('v/buy')
     }
+
   ]
 })

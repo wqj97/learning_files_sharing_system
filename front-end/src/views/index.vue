@@ -1,19 +1,19 @@
 <template>
   <div>
    <header id="header">
-      <div id="basic_info" class="text_shdow">
-      <div class="">
+      <div id="basic_info" class="text_shdow" >
+      <div class="left" @click="$router.push('/mine')">
         <img class="avatar_photo vertical_center" src="../assets/defaultHead.jpg">
       Lv.3
       </div>
-      <div class="right">
+      <div class="right" @click="$router.push('/schoolList')">
         <img class="img vertical_center" src="../assets/location.png">
           天津工业大学
       </div>
     </div>
     <h3 class="title text_shdow">这里有你想要的所有</h3>
-    <div id="search">
-      <img src="../assets/search.png" class="img vertical_center" alt="">
+    <div id="search" @click="$router.push('/search')">
+      <img src="../assets/search.png" class="img vertical_center">
       <span >搜索...</span>
     </div>
     <div class="upload text_shdow" @click="$router.push('/upload')">
@@ -36,7 +36,7 @@
          <categoryList></categoryList>
         </swiper-item>
       </swiper>-->
-<categoryList v-show="tabIndex === 0"></categoryList>
+<categoryList v-show="tabIndex === 0" @click="categoryListClick"></categoryList>
   <fileList v-show="tabIndex !== 0"></fileList>
    </section>
   </div>
@@ -74,6 +74,11 @@ export default {
       mainColor: "#F8421E",
       imgList: demoList,
       tabList: tabList
+    }
+  },
+  methods: {
+    categoryListClick(val) {
+    	this.$router.push({path: '/search', query: { type: val.title }})
     }
   }
 }
