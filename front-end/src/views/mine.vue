@@ -11,7 +11,7 @@
         万千钧
       </div>
       <div class="num">
-        1511650919
+        天津工业大学
       </div>
     </div>
     <div class="record">
@@ -33,16 +33,30 @@
       </div>
     </div>
     <div class="Mine-menu">
-      <div class="cost">
-      
-          <img src="../assets/wallet.svg">
-          消费记录
+      <div>
+          <img src="../assets/mine/download.svg">
+          下载记录
       </div>
-      <div class="share">
-        <img src="../assets/share.svg">
-        分享享优惠
+      <div>
+        <img src="../assets/mine/heart.svg">
+        收藏
       </div>
     </div>
+        <div class="Mine-menu">
+      <div>
+
+          <img src="../assets/mine/share.svg">
+          分享记录
+      </div>
+      <div>
+        <img src="../assets/mine/letter.svg">
+        系统通知
+      </div>
+    </div>
+      <div id="buy" @click="$router.push('/buy')">
+        立即升级
+      </div>
+
   </div>
 </template>
 
@@ -51,6 +65,19 @@
 </script>
 
 <style lang="scss" scoped>
+#buy{
+position: fixed;
+width:100%;
+bottom: 0;
+height: 8vh;
+line-height: 8vh;
+text-align: center;
+color:#FFF;
+font-size: 18px;
+font-weight: 200;
+
+background-image: linear-gradient(-90deg, #EF5F3E 0%, #EB3369 100%);
+}
   .Mine {
     .Mine-bg {
       height:200px;
