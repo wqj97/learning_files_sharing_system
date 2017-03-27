@@ -58,10 +58,15 @@ export default {
 <style lang="scss" scoped>
 @import '../style/base.scss';
 .top{
+  background-color: #fff;
   color: #455D7A;
   width: 100%;
   margin-top:19px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #EEEEEE;
   .top{
+    padding-bottom: 0px;
+    border: none;
     display: flex;
     justify-content: space-around;
     .right{

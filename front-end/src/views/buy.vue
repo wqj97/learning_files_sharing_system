@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!--水平方向上有滚动条-->
     <div class="item">
       <div class="main">
         <div class="level">Lv.1</div>

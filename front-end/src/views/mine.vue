@@ -20,7 +20,7 @@
           1
         </div>
         <div class="des">
-          正在进行
+          等级
         </div>
       </div>
       <div class="did">
@@ -28,7 +28,7 @@
           3
         </div>
         <div class="des">
-          完成课程
+          积分
         </div>
       </div>
     </div>
