@@ -24,7 +24,7 @@ class BelongsToMany extends Relation
     protected $middle;
 
     /**
-     * 架构函数
+     * 构造函数
      * @access public
      * @param Model  $parent     上级模型对象
      * @param string $model      模型名
@@ -54,7 +54,7 @@ class BelongsToMany extends Relation
         $localKey   = $this->localKey;
         $middle     = $this->middle;
         if ($closure) {
-            call_user_func_array($closure, [& $this->query]);
+            call_user_func_array($closure, [ & $this->query]);
         }
         // 关联查询
         $pk                              = $this->parent->getPk();
@@ -74,6 +74,31 @@ class BelongsToMany extends Relation
             $set->pivot = new Pivot($pivot, $this->middle);
         }
         return $result;
+    }
+
+    /**
+     * 根据关联条件查询当前模型
+     * @access public
+     * @param string  $operator 比较操作符
+     * @param integer $count    个数
+     * @param string  $id       关联表的统计字段
+     * @param string  $joinType JOIN类型
+     * @return Query
+     */
+    public function has($operator = '>=', $count = 1, $id = '*', $joinType = 'INNER')
+    {
+        return $this->parent;
+    }
+
+    /**
+     * 根据关联条件查询当前模型
+     * @access public
+     * @param mixed $where 查询条件（数组或者闭包）
+     * @return Query
+     */
+    public function hasWhere($where = [])
+    {
+        throw new Exception('relation not support: hasWhere');
     }
 
     /**
@@ -174,8 +199,8 @@ class BelongsToMany extends Relation
         return $this->belongsToManyQuery($this->middle, $this->foreignKey, $this->localKey, [
             'pivot.' . $this->localKey => [
                 'exp',
-                '=' . $this->parent->getTable() . '.' . $this->parent->getPk()
-            ]
+                '=' . $this->parent->getTable() . '.' . $this->parent->getPk(),
+            ],
         ])->fetchSql()->count();
     }
 
@@ -271,7 +296,7 @@ class BelongsToMany extends Relation
      * @access public
      * @param mixed $data  数据 可以使用数组、关联模型对象 或者 关联对象的主键
      * @param array $pivot 中间表额外数据
-     * @return int
+     * @return array|Pivot
      * @throws Exception
      */
     public function attach($data, $pivot = [])
@@ -301,7 +326,12 @@ class BelongsToMany extends Relation
             $ids                    = (array) $id;
             foreach ($ids as $id) {
                 $pivot[$this->foreignKey] = $id;
-                $result                   = $this->query->table($this->middle)->insert($pivot, true);
+                $this->query->table($this->middle)->insert($pivot, true);
+                $result[] = new Pivot($pivot, $this->middle);
+            }
+            if (count($result) == 1) {
+                // 返回中间表模型对象
+                $result = $result[0];
             }
             return $result;
         } else {
