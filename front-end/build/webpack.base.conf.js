@@ -65,7 +65,7 @@ let webpackConfig = {
     new CopyWebpackPlugin([
       {
         from: resolve('./src/assets/'),
-        to: resolve('./dist/static/img')
+        to: resolve('../home/static/img')
       }
     ])
   ]
