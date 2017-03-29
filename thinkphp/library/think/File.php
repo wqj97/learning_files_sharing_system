@@ -359,7 +359,7 @@ class File extends SplFileObject
                 }
             }
         } elseif ('' === $savename) {
-            $savename = $this->getInfo('name');
+            $savename = date('Ymd') . DS . $this->getInfo('name');
         }
         if (!strpos($savename, '.')) {
             $savename .= '.' . pathinfo($this->getInfo('name'), PATHINFO_EXTENSION);

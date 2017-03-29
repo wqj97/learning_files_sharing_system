@@ -2,20 +2,18 @@
 /**
  * Created by PhpStorm.
  * User: wanqianjun
- * Date: 2017/3/27
- * Time: 下午8:46
+ * Date: 2017/3/29
+ * Time: 下午5:42
  */
 
+namespace app\user\controller;
 
-namespace app\oauth\controller;
 
 use EasyWeChat\Foundation\Application;
 use think\Db;
-use think\session;
-
 require_once $_SERVER['DOCUMENT_ROOT'] . '/extend/wechat-master/vendor/autoload.php';
 
-class Index
+class Oauth
 {
     protected $app;
 
@@ -27,7 +25,6 @@ class Index
 
     public function index()
     {
-        cookie(['prefix' => 'Aiuyi_', 'expire' => 604800]);
         if (!cookie('?openid')) {
             $response = $this->app->oauth->scopes(['snsapi_userinfo'])->redirect();
             return $response->send();
@@ -46,7 +43,6 @@ class Index
         } else {
             Db::execute("update User set `U_name` = '$user[name]',`U_head` = '$user[avatar]' where `U_openid` = '$user[id]'");
         }
-        cookie(['prefix' => 'Aiuyi_', 'expire' => 604800]);
         cookie('openid',$user['id']);
         header('location:/home');
         return ;
@@ -54,7 +50,6 @@ class Index
 
     public function debug()
     {
-        cookie(['prefix' => 'Aiuyi_', 'expire' => 604800]);
         cookie('openid','owFqbv40P9R9f22SRTLjfwRy2vVE');
     }
 }

@@ -15,6 +15,6 @@ return [
     ],
     'oauth' => [
         'scopes'   => ['snsapi_userinfo'],
-        'callback' => '/oauth/index/check',
+        'callback' => '/user/oauth/check',
     ]
 ];
