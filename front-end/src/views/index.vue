@@ -36,8 +36,10 @@
          <categoryList></categoryList>
         </swiper-item>
       </swiper>-->
-<categoryList v-show="tabIndex === 0" @click="categoryListClick"></categoryList>
-  <fileList v-show="tabIndex !== 0"></fileList>
+<transition name="fade">
+  <categoryList v-if="tabIndex === 0" @click="categoryListClick"></categoryList>
+  <fileList v-else="tabIndex !== 0"></fileList>
+</transition>
    </section>
   </div>
 </template>
@@ -86,6 +88,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '../style/base';
+@import '../style/animate';
 #basic_info{
   padding: 0 28px;
   display: flex;
