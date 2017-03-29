@@ -62,6 +62,7 @@ app.use(hotMiddleware)
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
 
+app.use('/static/img/', express.static(path.resolve(__dirname, `../${config.dev.sourceImgPath}`)))
 var uri = 'http://localhost:' + port
 
 devMiddleware.waitUntilValid(function () {
