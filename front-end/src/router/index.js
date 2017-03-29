@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+<<<<<<< HEAD
 
 const asyncRequire = viewName => resolve => require([`../views/${viewName}`], resolve)
 /**
@@ -7,6 +8,21 @@ const asyncRequire = viewName => resolve => require([`../views/${viewName}`], re
  * 用 asyncRequire('XXX')就好
  * asyncRequire会自动加载views目录下指定的文件
  */
+=======
+const download = resolve => {
+  require.ensure([], (require) => {
+    resolve(require('v/download'))
+  })
+}
+const asyncImport = (component) =>
+   resolve => {
+    require.ensure([], (require) => {
+      // TODO: BUG: alias doesn't work
+      resolve(require(`../views/${component}`))
+    }, 'noneIndex')
+  }
+// import {asyncImport} from "@/utils"
+>>>>>>> lazy loading router
 Vue.use(Router)
 const router = new Router({
   routes: [
@@ -17,31 +33,31 @@ const router = new Router({
     },
     {
       path: '/download',
-      component: require('v/download')
+      component: asyncImport('download')
     },
     {
       path: '/history',
-      component: require('v/history')
+      component: asyncImport('history')
     },
     {
       path: '/schoolList',
-      component: require('v/schoolList')
+      component: asyncImport('schoolList')
     },
     {
       path: '/search',
-      component: require('v/search')
+      component: asyncImport('search')
     },
     {
       path: '/upload',
-      component: require('v/upload')
+      component: asyncImport('upload')
     },
     {
       path: '/mine',
-      component: require('v/mine')
+      component: asyncImport('mine')
     },
     {
       path: '/buy',
-      component: require('v/buy')
+      component: asyncImport('buy')
     }
 
   ]
