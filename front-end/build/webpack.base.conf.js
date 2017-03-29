@@ -3,14 +3,12 @@ var utils = require('./utils')
 var CopyWebpackPlugin = require('copy-webpack-plugin')
 var projectRoot = path.resolve(__dirname, '../')
 const vuxLoader = require('vux-loader')
-
+const resolve = utils.resolve
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
 console.log(__dirname)
 
-function resolve (dir) {
-  return path.join(__dirname, '..', dir)
-}
+
 
 let webpackConfig = {
   entry: {
@@ -60,15 +58,7 @@ let webpackConfig = {
         }
       }
     ]
-  },
-  plugins: [
-    new CopyWebpackPlugin([
-      {
-        from: resolve('./src/assets/'),
-        to: resolve('../home/static/img')
-      }
-    ])
-  ]
+  }
 }
 
 

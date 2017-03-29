@@ -1,7 +1,9 @@
 var utils = require('./utils')
+const resolve = utils.resolve
 var webpack = require('webpack')
 var config = require('../config')
 var merge = require('webpack-merge')
+var CopyWebpackPlugin = require('copy-webpack-plugin')
 var baseWebpackConfig = require('./webpack.base.conf')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
@@ -30,6 +32,12 @@ module.exports = merge(baseWebpackConfig, {
       template: 'index.html',
       inject: true
     }),
-    new FriendlyErrorsPlugin()
+    new FriendlyErrorsPlugin(),
+       new CopyWebpackPlugin([
+      {
+        from: resolve('./src/assets/'),
+        to: config.dev.imgPublicPath
+      }
+    ])
   ]
 })

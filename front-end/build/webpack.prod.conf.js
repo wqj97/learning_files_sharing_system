@@ -1,5 +1,6 @@
 var path = require('path')
 var utils = require('./utils')
+const resolve = utils.resolve
 var webpack = require('webpack')
 var config = require('../config')
 var merge = require('webpack-merge')
@@ -85,6 +86,10 @@ var webpackConfig = merge(baseWebpackConfig, {
         from: path.resolve(__dirname, '../static'),
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
+      },
+       {
+        from: resolve('./src/assets/'),
+        to: config.build.imgPublicPath
       }
     ])
   ]
