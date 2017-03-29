@@ -1,7 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-const asyncRequire = viewName => resolve => require([`../views/${viewName}`], resolve)
+const asyncImport = (component) =>
+    resolve => {
+     require.ensure([], (require) => {
+       // TODO: BUG: alias doesn't work
+       resolve(require(`../views/${component}`))
+     }, 'noneIndex')
+   }
 Vue.use(Router)
 const router = new Router({
   routes: [
