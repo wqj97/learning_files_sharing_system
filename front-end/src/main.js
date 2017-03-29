@@ -5,10 +5,16 @@ import FastClick from 'fastclick'
 import VueRouter from 'vue-router'
 import App from './App'
 import router from './router'
-Vue.use(VueRouter)
+import store from './store'
 
+router.beforeEach(function (to, from, next) {
+  store.commit('updateLoadingStatus', {isLoading: true})
+  next()
+})
 
-
+router.afterEach(function (to) {
+  store.commit('updateLoadingStatus', {isLoading: false})
+})
 
 FastClick.attach(document.body)
 
@@ -17,5 +23,6 @@ Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({
   router,
-  render: h => h(App)
+  render: h => h(App),
+  store
 }).$mount('#app-box')
