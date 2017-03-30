@@ -21,8 +21,10 @@ class Upload
      */
     public function Index()
     {
-        $this->addScore();
         $file = request()->file('file');
+        if (empty($file)) {
+            return json(["result" => "failed", "reason" => "没有文件上传"],403);
+        }
         $info = $file->move($_SERVER['DOCUMENT_ROOT'] . '/upload');
         $file_ext = $info->getExtension();
         if (!$this->checkExt($file_ext)) {
@@ -35,8 +37,9 @@ class Upload
             unlink($info->getRealPath());
             return json(["result" => "failed", "reason" => "文件已存在"],403);
         }
+        $this->addScore();
         $file_name = $info->getInfo()['name'];
-        $file_src = '/upload/' . date('Ymd') . "/" . $file_name;
+        $file_src = '/upload/' . date('Ymd') . "/" . $info->getFilename();
         Db::execute('INSERT INTO File (F_name,F_hash,F_url,F_ext,F_user_openid) VALUES (?,?,?,?,?)', [$file_name, $file_hash, $file_src, $file_ext, cookie('openid')]);
         return json(["result" => "success", "file_info" => ["file_name" => $file_name, "file_ext" => $file_ext]]);
     }
@@ -81,4 +84,5 @@ class Upload
         $file_credit = (Int)Server_Setting('file_credit');
         Db::execute("update User set U_credit = U_credit + $file_credit where U_openid = '$openid'");
     }
+
 }
