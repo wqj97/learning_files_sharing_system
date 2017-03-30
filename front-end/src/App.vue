@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <loading v-model="isLoading"></loading>
-    <router-view></router-view>
+    <transition name="fade">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
@@ -20,7 +22,9 @@ export default {
   }
 }
 </script>
-
+<style lang="scss">
+@import './style/animate.scss'
+</style>
 <style lang="less">
 @import '~vux/src/styles/reset.less';
 
@@ -28,3 +32,4 @@ body {
   background-color: #fbf9fe;
 }
 </style>
+

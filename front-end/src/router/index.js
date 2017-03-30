@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-const asyncRequire = viewName => resolve => require([`../views/${viewName}`], resolve)
-/**
- * 异步加载模块, 如果一些很少访问的views
- * 用 asyncRequire('XXX')就好
- * asyncRequire会自动加载views目录下指定的文件
- */
+const asyncImport = (component) =>
+    resolve => {
+     require.ensure([], (require) => {
+       // TODO: BUG: alias doesn't work
+       resolve(require(`../views/${component}`))
+     }, 'noneIndex')
+   }
 Vue.use(Router)
 const router = new Router({
   routes: [
@@ -17,31 +18,31 @@ const router = new Router({
     },
     {
       path: '/download',
-      component: require('v/download')
+      component: asyncImport('download')
     },
     {
       path: '/history',
-      component: require('v/history')
+      component: asyncImport('history')
     },
     {
       path: '/schoolList',
-      component: require('v/schoolList')
+      component: asyncImport('schoolList')
     },
     {
       path: '/search',
-      component: require('v/search')
+      component: asyncImport('search')
     },
     {
       path: '/upload',
-      component: require('v/upload')
+      component: asyncImport('upload')
     },
     {
       path: '/mine',
-      component: require('v/mine')
+      component: asyncImport('mine')
     },
     {
       path: '/buy',
-      component: require('v/buy')
+      component: asyncImport('buy')
     }
 
   ]
