@@ -23,7 +23,7 @@ class login
             http_response_code(403);
             return '<h1>密码错误</h1><script>setTimeout(function() {location.href=\'index.html\'},1000)</script>';
         } else {
-            header("Location: file.php");
+            header("Location: File-check.php");
             session('Login',1);
             return json(null,302);
         }
