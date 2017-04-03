@@ -38,7 +38,11 @@ class Upload
             return json(["result" => "failed", "reason" => "文件已存在"],403);
         }
         $this->addScore();
-        $file_name = $info->getInfo()['name'];
+        if (input('?post.file_name')) {
+            $file_name = input('post.file_name');
+        } else {
+            $file_name = $info->getInfo()['name'];
+        }
         $file_src = '/upload/' . date('Ymd') . "/" . $info->getFilename();
         Db::execute('INSERT INTO File (F_name,F_hash,F_url,F_ext,F_user_openid) VALUES (?,?,?,?,?)', [$file_name, $file_hash, $file_src, $file_ext, cookie('openid')]);
         return json(["result" => "success", "file_info" => ["file_name" => $file_name, "file_ext" => $file_ext]]);

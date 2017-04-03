@@ -28,10 +28,10 @@ class Db
 
     public function query($query)
     {
-        $result = $this->sql->query($query)->fetch_all(1);
+        $result = $this->sql->query($query);
         if ($this->sql->error) {
-            exit($this->sql->error);
+            throw new Exception($this->sql->error);
         }
-        return $result;
+        return $result->fetch_all(1);
     }
 }

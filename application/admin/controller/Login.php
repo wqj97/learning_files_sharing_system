@@ -8,10 +8,7 @@
 
 namespace app\admin\controller;
 
-
-use think\Response;
-
-class login
+class Login
 {
     public function Index()
     {
