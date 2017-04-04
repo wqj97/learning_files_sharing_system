@@ -1,7 +1,7 @@
 <template>
   <div>
 <Group>
-  <Cell title="123" is-link></Cell>
+  <Cell v-for="item in list" :title="item.name" is-link></Cell>
 </Group>
   </div>
 </template>
@@ -13,6 +13,16 @@ export default {
   components: {
     Cell,
     Group
+  },
+  data () {
+    return {
+      list: []
+    }
+  },
+  mounted () {
+    this.$http.get('/user/school/list').then( res => {
+      this.list = res.body
+    })
   }
 }
 </script>

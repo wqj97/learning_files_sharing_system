@@ -6,7 +6,8 @@ import VueRouter from 'vue-router'
 import App from './App'
 import router from './router'
 import store from './store'
-
+import VueResource from 'vue-resource'
+Vue.use(VueResource)
 router.beforeEach(function (to, from, next) {
   store.commit('updateLoadingStatus', {isLoading: true})
   next()
