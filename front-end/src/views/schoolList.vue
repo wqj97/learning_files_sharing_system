@@ -1,7 +1,7 @@
 <template>
   <div>
 <Group>
-  <Cell v-for="item in list" :title="item.name" is-link></Cell>
+  <Cell v-for="item in list" :title="item.name" is-link @click="click(item)"></Cell>
 </Group>
   </div>
 </template>
@@ -17,6 +17,12 @@ export default {
   data () {
     return {
       list: []
+    }
+  },
+  methods: {
+    click (school) {
+      localStorage.schoolName = school.name
+      localStorage.schoolId = school.id
     }
   },
   mounted () {
