@@ -31,7 +31,8 @@ class home
         }
         $user_info['level'] = $this->getLevel($user_info['U_credit']);
         $banner = json_decode(Server_Setting('banner'));
-        return json(["userInfo" => $user_info,"banner" => $banner]);
+        $top_file = Db::query("select F_Id,F_name from File ORDER BY F_download_count LIMIT 0,12");
+        return json(["userInfo" => $user_info,"banner" => $banner,"top_file" => $top_file]);
     }
 
     /**

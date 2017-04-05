@@ -103,6 +103,13 @@ $Db = new Db();
             </span>
           </a>
         </li>
+        <li class="treeview">
+          <a href="Banner.php"><i class="fa fa-tv"></i> <span>首页banner设置</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right" style="transform: none"></i>
+            </span>
+          </a>
+        </li>
       </ul>
       <!-- /.sidebar-menu -->
     </section>

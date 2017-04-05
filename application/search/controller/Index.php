@@ -32,7 +32,7 @@ class Index
     {
         $name = input('get.name');
         $page = input('get.page');
-        $type = input('get.type', [0]);
+        $type = input('get.type', "[0]");
         $start = $page * 12;
         if ($type == '[0]') {
             if (empty($name)) {
