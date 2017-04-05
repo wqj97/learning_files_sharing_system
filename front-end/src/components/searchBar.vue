@@ -5,7 +5,7 @@
       <img class="img" v-else src="../assets/search.png">
     </div>
     <div class="right">
-      <form action="">
+      <form action="" @submit.prevent="empty">
       <input  v-on:keyup.13="$emit('submit', $event.target.value)" :value="value" type="search" @input="$emit('input', $event.target.value)" :placeholder="placeholder" autofocus>
       </form>
     </div>
@@ -31,6 +31,10 @@ export default {
       // return '搜索' + !this.type ? this.type : '...'   // why can't
       const lastpart = !this.type == undefined ? this.type : '...'
       return '搜索' + lastpart
+    }
+  },
+  methods: {
+    empty() {
     }
   },
   data () {
