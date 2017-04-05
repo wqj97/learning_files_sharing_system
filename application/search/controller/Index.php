@@ -16,8 +16,11 @@ class Index
 {
     /**
      * 搜索
-     * @get name: 文件名, $page: 页码, 默认每页12个, $type = 0: 文件类型
-     *  科目习题: 2
+     * @get name: 文件名
+     * @get page: 页码, 默认每页12个
+     * @get $type = 0: 文件类型
+     * type:
+        科目习题: 2
         科目精华: 4
         英语: 8
         考研: 16
@@ -29,7 +32,7 @@ class Index
     {
         $name = input('get.name');
         $page = input('get.page');
-        $type = input('get.type', 0);
+        $type = input('get.type', [0]);
         $start = $page * 12;
         if ($type == '[0]') {
             if (empty($name)) {

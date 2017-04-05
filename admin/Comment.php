@@ -88,7 +88,20 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
             </span>
           </a>
         </li>
-
+        <li class="treeview">
+          <a href="User-control.php"><i class="fa fa-user"></i> <span>用户管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right" style="transform: none"></i>
+            </span>
+          </a>
+        </li>
+        <li class="treeview">
+          <a href="Setting.php"><i class="fa fa-gear"></i> <span>设置</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right" style="transform: none"></i>
+            </span>
+          </a>
+        </li>
       </ul>
       <!-- /.sidebar-menu -->
     </section>
@@ -167,7 +180,7 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
                                                                                                  FROM File
                                                                                                  WHERE F_name LIKE '%$keywords%')
                           GROUP BY C_file_Id DESC
-                          LIMIT 0, 12
+                          LIMIT $start, 12
                           ");
                       }
                   } else {
@@ -186,7 +199,7 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
                         C_join_time
                       FROM Comment
                       GROUP BY C_file_Id DESC
-                      LIMIT 0, 12
+                      LIMIT $start, 12
                       ");
                   }
                   foreach ($comment as $row) {
@@ -198,7 +211,6 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
                       <td class=\"sorting_1\">$row[C_join_time]</td>
                       <td class=\"sorting_1\">
                       <div class=\"btn-group\">
-                        <button type=\"button\" class=\"btn btn-info\" onclick='getFile($row[C_Id])'>查看</button>
                         <button type=\"button\" class=\"btn btn-primary\" onclick='showEdit($row[C_Id])'>修改</button>
                         <button type=\"button\" class=\"btn btn-danger\" onclick='refuse($row[C_Id])'>删除</button>
                       </div>
@@ -223,9 +235,9 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
               <div class="col-sm-12">
                 <div class="dataTables_info" id="example2_info" role="status" aria-live="polite">
                     <?php
-                    $count = $Db->query("SELECT count(*) FROM File")[0]["count(*)"];
+                    $count = $Db->query("SELECT count(*) FROM Comment")[0]["count(*)"];
                     $echoCount = $start + 1;
-                    echo "当前 $echoCount 到 " . ($echoCount + 11) . ", 共 $count 个文件";
+                    echo "当前 $echoCount 到 " . ($echoCount + 11) . ", 共 $count 个评论";
                     ?>
                 </div>
               </div>
@@ -239,12 +251,12 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
                     ?>">
                       <a href="<?php
                       $prewPage = $page - 1;
-                      echo "File-modify.php?page=$prewPage&keyWords=$keywords";
+                      echo "Comment.php?page=$prewPage&keyWords=$keywords";
                       ?>">上一页</a>
                     <li class="paginate_button next">
                       <a href="<?php
                       $nextPage = $page + 1;
-                      echo "File-modify.php?page=$nextPage&keyWords=$keywords";
+                      echo "Comment.php?page=$nextPage&keyWords=$keywords";
                       ?>">下一页</a>
                     </li>
                   </ul>
@@ -269,6 +281,29 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
 </div>
 
 <!-- REQUIRED JS SCRIPTS -->
+<div class="modal fade" id="CommentEdit">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span></button>
+        <h4 class="modal-title">评论</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>评论内容 (小于255个字符)</label>
+          <textarea id="comment-content" maxlength="255" cols="30" rows="10" class="form-control"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="agreeBtn">修改</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
 
 <!-- jQuery 3.2.1 -->
 <script src="plugins/jQuery/jquery.min.js"></script>
@@ -279,8 +314,30 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
 
 <script>
   function search (keyWords) {
-    let page = <?php echo $page ?>;
-    window.location.href = 'Comment.php?page=' + page + '&keyWords=' + keyWords;
+    window.location.href = 'Comment.php?page=0' + '&keyWords=' + keyWords;
+  }
+
+  function showEdit (Id) {
+    $.get('/admin/comment?comment_id='+ Id,function (data) {
+      $("#comment-content").val(data.C_content)
+    })
+    $("#agreeBtn").attr("onclick",`save(${Id})`)
+    $("#CommentEdit").modal()
+  }
+
+  function save (Id) {
+    $.post('/admin/comment/save',{
+      comment_id:Id,
+      comment_content:$("#comment-content").val()
+    },function () {
+      location.reload()
+    })
+  }
+
+  function refuse (Id) {
+    $.get("/admin/comment/delete?comment_id=" + Id,function () {
+      location.reload()
+    })
   }
 </script>
 

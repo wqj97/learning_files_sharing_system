@@ -1,6 +1,9 @@
 <?php
 require_once 'SQL/Db.php';
 $Db = new Db();
+$page = isset($_GET['page']) ? $_GET["page"] : 0;
+$keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
+$start = $page * 12;
 ?>
 <!DOCTYPE html>
 <html>
@@ -20,7 +23,7 @@ $Db = new Db();
   <!-- Main Header -->
   <header class="main-header">
     <!-- Logo -->
-    <a href="home.php" class="logo">
+    <a href="#" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>医</b></span>
       <!-- logo for regular state and mobile devices -->
@@ -56,14 +59,14 @@ $Db = new Db();
       <ul class="sidebar-menu">
         <li class="header">菜单</li>
         <!-- Optionally, you can add icons to the links -->
-        <li class="treeview active">
+        <li class="treeview">
           <a href="#"><i class="fa fa-file"></i> <span>文件管理</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li class="active">
+            <li>
               <a href="File-check.php"><i class="fa fa-hand-peace-o"></i>文件审批</a>
             </li>
             <li>
@@ -81,7 +84,7 @@ $Db = new Db();
             </span>
           </a>
         </li>
-        <li class="treeview">
+        <li class="treeview active">
           <a href="User-control.php"><i class="fa fa-user"></i> <span>用户管理</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right" style="transform: none"></i>
@@ -106,23 +109,37 @@ $Db = new Db();
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        文件审批
+        用户管理
       </h1>
       <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-file"></i> 文件管理</a></li>
-        <li class="active">文件审批</li>
+        <li><a href="#"><i class="fa fa-user"></i> 用户管理</a></li>
+        <li class="active">用户管理</li>
       </ol>
     </section>
 
     <!-- Main content -->
     <section class="content">
-      <div class="box box-success">
+      <!-- Your Page Content Here -->
+      <div class="box box-danger">
         <div class="box-header">
-          <h3 class="box-title">未审批文件</h3>
+          <h3 class="box-title">用户列表</h3>
         </div>
         <!-- /.box-header -->
         <div class="box-body">
           <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+            <div class="row">
+              <div class="pull-right" style="padding-right: 15px;">
+                <div>
+                  <label>用户名:
+                    <input type="search" class="form-control" onkeydown="if(event.keyCode === 13) search(this.value)"
+                           value="<?php
+                           echo $keywords;
+                           ?>
+                           ">
+                  </label>
+                </div>
+              </div>
+            </div>
             <div class="row">
               <div class="col-sm-12">
                 <table id="example1" class="table table-bordered table-striped dataTable" role="grid"
@@ -130,29 +147,53 @@ $Db = new Db();
                   <thead>
                   <tr role="row">
                     <!--                      <th>文件Id</th>-->
-                    <th>文件名</th>
-                    <th>文件扩展名</th>
-                    <th>文件上传用户</th>
-                    <th>文件上传时间</th>
+                    <th>用户名</th>
+                    <th>文件上传数</th>
+                    <th>积分 [ 等级 ]</th>
+                    <th>加入时间</th>
                     <th>操作</th>
                   </tr>
                   </thead>
                   <tbody>
                   <?php
-                  $unsolve_file = $Db->query("SELECT F_Id,F_name,F_ext,F_user_openid,F_join_time FROM File WHERE `F_type` IS NULL");
-                  foreach ($unsolve_file as $row) {
-                      $userName = $Db->query("select U_name,(select S_name from School where S_Id = U_school) as 'school_name' from User where U_openid = '$row[F_user_openid]'")[0];
+                  $user = $Db->query("SELECT
+  U_Id,
+  U_name,
+  (SELECT S_name
+   FROM School
+   WHERE S_Id = U_school)          AS 'school_name',
+  (SELECT COUNT(*)
+   FROM FILE
+   WHERE F_user_openid = U_openid) AS File_count,
+  U_credit,
+  U_join_date
+FROM User
+where U_name like '%$keywords%'
+ORDER BY U_Id DESC
+LIMIT $start, 12;");
+                  function getLevel($credit)
+                  {
+                      global $Db;
+                      $level = json_decode($Db->query("SELECT S_value FROM Setting WHERE S_key = 'level'")[0]["S_value"]);
+                      foreach ($level as $levelNum => $each) {
+                          if ($credit <= $each) {
+                              return $levelNum;
+                          }
+                      }
+                      return 0;
+                  }
+
+                  foreach ($user as $row) {
+                      $user_level = getLevel($row["U_credit"]);
                       echo "
                       <tr role=\"row\" class=\"even\">
-                      <td class=\"sorting_1\" id='$row[F_Id]'>$row[F_name]</td>
-                      <td class=\"sorting_1\">$row[F_ext]</td>
-                      <td class=\"sorting_1\">$userName[U_name] [ $userName[school_name] ]</td>
-                      <td class=\"sorting_1\">$row[F_join_time]</td>
+                      <td class=\"sorting_1\">$row[U_name] [ $row[school_name] ]</td>
+                      <td class=\"sorting_1\">$row[File_count]</td>
+                      <td class=\"sorting_1\">$row[U_credit] [ $user_level 级 ]</td>
+                      <td class=\"sorting_1\">$row[U_join_date]</td>
                       <td class=\"sorting_1\">
                       <div class=\"btn-group\">
-                        <button type=\"button\" class=\"btn btn-info\" onclick='getFile($row[F_Id])'>查看</button>
-                        <button type=\"button\" class=\"btn btn-success\" onclick='showAgree($row[F_Id])'>通过</button>
-                        <button type=\"button\" class=\"btn btn-danger\" onclick='refuse($row[F_Id])'>删除</button>
+                        <button type=\"button\" class=\"btn btn-info\" onclick='showUserEdit($row[U_Id])'>修改</button>
                       </div>
                       </td>
                       ";
@@ -162,84 +203,95 @@ $Db = new Db();
                   <tfoot>
                   <tr>
                     <!--                      <th>文件Id</th>-->
-                    <th>文件名</th>
-                    <th>文件类型</th>
-                    <th>文件上传用户</th>
-                    <th>文件上传时间</th>
+                    <th>用户名</th>
+                    <th>文件上传数</th>
+                    <th>积分 [ 等级 ]</th>
+                    <th>加入时间</th>
                     <th>操作</th>
                   </tr>
                   </tfoot>
                 </table>
               </div>
             </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="dataTables_info" id="example2_info" role="status" aria-live="polite">
+                    <?php
+                    $count = $Db->query("SELECT count(*) FROM User")[0]["count(*)"];
+                    $echoCount = $start + 1;
+                    echo "当前 $echoCount 到 " . ($echoCount + 11) . ", 共 $count 个用户";
+                    ?>
+                </div>
+              </div>
+              <div class="col-sm-12 text-center">
+                <div class="dataTables_paginate paging_simple_numbers">
+                  <ul class="pagination">
+                    <li class="paginate_button previous <?
+                    if ($page == 0) {
+                        echo "disabled";
+                    }
+                    ?>">
+                      <a href="<?php
+                      $prewPage = $page - 1;
+                      echo "User-control.php?page=$prewPage&keyWords=$keywords";
+                      ?>">上一页</a>
+                    <li class="paginate_button next">
+                      <a href="<?php
+                      $nextPage = $page + 1;
+                      echo "User-control.php?page=$nextPage&keyWords=$keywords";
+                      ?>">下一页</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <form class="form-group" action="">
+                  <label>跳转到: </label>
+                  <input type="number" name="page" class="form-control" value="<?php echo $page ?>">
+                  <button type="submit" class="btn btn-info">跳转</button>
+                  <input type="hidden" name="keyWords" value="<?php echo $keywords ?>">
+                </form>
+              </div>
+            </div>
           </div>
           <!-- /.box-body -->
         </div>
-        <!-- /.box -->
-      </div>
-
-      <!-- Your Page Content Here -->
-
     </section>
     <!-- /.content -->
   </div>
 </div>
-<div class="modal fade" id="preview">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">×</span></button>
-        <h4 class="modal-title">文件预览</h4>
-      </div>
-      <div class="modal-body" style="display: flex"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="agree-btn">通过</button>
-        <button type="button" class="btn btn-danger" id="refuse-btn">删除</button>
-        <button type="button" class="btn btn-default">关闭</button>
-      </div>
-    </div>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
 
-<div class="modal fade" id="file_type">
+<div class="modal fade" id="user_edit">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span></button>
-        <h4 class="modal-title">文件类型</h4>
+        <h4 class="modal-title">用户信息</h4>
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <label>文件名: </label>
-          <input type="text" class="form-control" placeholder="文件名" id="file_name">
+          <label>用户名: </label>
+          <input type="text" class="form-control" placeholder="用户名" id="user_name">
         </div>
         <div class="form-group">
-          <label>文件分类</label>
-          <select class="form-control" id="file_type_code">
+          <label>所在学校</label>
+          <select class="form-control" id="user_school">
               <?php
-              $types = json_decode($Db->query("SELECT S_value FROM Setting WHERE S_key = 'file_type'")[0]["S_value"]);
-              foreach ($types as $key => $type) {
-                  echo "<option value='$key'>$type</option>";
+              $schools = $Db->query("SELECT * FROM School");
+              foreach ($schools as $key => $school) {
+                  echo "<option value='$school[S_Id]'>$school[S_name]</option>";
               }
               ?>
           </select>
-          <label>文件等级</label>
-          <select class="form-control" id="file_level">
-              <?php
-              $types = json_decode($Db->query("SELECT S_value FROM Setting WHERE S_key = 'level'")[0]["S_value"]);
-              foreach ($types as $key => $val) {
-                  echo "<option value='$key'>$key 级 [$val 分]</option>";
-              }
-              ?>
-          </select>
+        </div>
+        <div class="form-group">
+          <label>积分: </label>
+          <input type="number" class="form-control" placeholder="积分" id="user_credit">
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="agreeBtn">通过</button>
+        <button type="button" class="btn btn-success" id="editBtn">修改</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
       </div>
     </div>
@@ -247,6 +299,7 @@ $Db = new Db();
   </div>
   <!-- /.modal-dialog -->
 </div>
+
 <!-- REQUIRED JS SCRIPTS -->
 
 <!-- jQuery 3.2.1 -->
@@ -257,39 +310,28 @@ $Db = new Db();
 <script src="dist/js/app.min.js"></script>
 
 <script>
-  function getFile (Id) {
-    $.get("/admin/File?file_id=" + Id, function (data) {
-      data = "http://wx.97qingnian.com" + data["F_url"];
-      console.log(data);
-      $("#preview .modal-body").html('').append('<iframe frameborder="0" width="1024px" height="768px" src="http://view.officeapps.live.com/op/view.aspx?src=' + data + '"></iframe>');
-      $("#preview").modal();
-      $("#agree-btn").attr("onclick", "showAgree(" + Id + ")");
-      $("#refuse-btn").attr("onclick", "refuse(" + Id + ")");
+  function search (keyWords) {
+    window.location.href = 'User-control.php?page=0' + '&keyWords=' + keyWords;
+  }
+
+  function showUserEdit (Id) {
+    $.get(`/admin/user?user_id=${Id}`, function (data) {
+      $("#user_school").val(data.U_school)
+      $("#user_credit").val(data.U_credit)
+      $("#user_name").val(data.U_name)
+      $("#user_edit").modal()
+      $("#editBtn").attr("onclick", `save(${Id})`)
     })
   }
 
-  function showAgree (Id) {
-    $("#file_type").modal();
-    $("#file_name").val($("#" + Id).html());
-    $("#agreeBtn").attr("onclick", "agree(" + Id + ")");
-  }
-
-  function agree (Id) {
-    let type = $("#file_type_code").val();
-    let level = $("#file_level").val();
-    let file_name = $("#file_name").val();
-    $.get('/admin/File/Agree?file_id=' + Id + '&file_type_code=' + type + '&file_level=' + level + '&file_name=' + file_name, function (data) {
-      if (data.result === "success") {
-        location.reload()
-      }
-    })
-  }
-
-  function refuse (Id) {
-    $.get('/admin/File/Refuse?file_id=' + Id, function (data) {
-      if (data.result === "success") {
-        location.reload()
-      }
+  function save (Id) {
+    $.post('/admin/User/save', {
+      user_id: Id,
+      user_name: $("#user_name").val(),
+      user_school: $("#user_school").val(),
+      user_credit: $("#user_credit").val()
+    }, function () {
+      location.reload()
     })
   }
 </script>

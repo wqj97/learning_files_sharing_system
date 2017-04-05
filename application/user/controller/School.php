@@ -21,4 +21,9 @@ class School
         $school_list = Db::query("select S_Id as Id, S_name as name from School");
         return json($school_list);
     }
+
+    public function list() {
+        $school = Db::query("select S_Id as Id, S_name as name from School");
+        return json($school);
+    }
 }

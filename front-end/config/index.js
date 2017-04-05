@@ -35,7 +35,10 @@ module.exports = {
         target: 'http://wx.97qingnian.com',
         changeOrigin: true,
         pathRewrite: {
-          '^/': '/'
+          '/file': '/file',
+          '/search': '/search',
+          '/user': '/user',
+          '/oauth': '/oauth'
         }
       }
     },

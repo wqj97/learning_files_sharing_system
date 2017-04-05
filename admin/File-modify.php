@@ -76,7 +76,27 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
             </li>
           </ul>
         </li>
-
+        <li class="treeview">
+          <a href="Comment.php"><i class="fa fa-commenting-o"></i> <span>评论管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right" style="transform: none"></i>
+            </span>
+          </a>
+        </li>
+        <li class="treeview">
+          <a href="User-control.php"><i class="fa fa-user"></i> <span>用户管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right" style="transform: none"></i>
+            </span>
+          </a>
+        </li>
+        <li class="treeview">
+          <a href="Setting.php"><i class="fa fa-gear"></i> <span>设置</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right" style="transform: none"></i>
+            </span>
+          </a>
+        </li>
       </ul>
       <!-- /.sidebar-menu -->
     </section>
@@ -192,7 +212,7 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
                   <ul class="pagination">
                     <li class="paginate_button previous <?
                     if ($page == 0) {
-                      echo "disabled";
+                        echo "disabled";
                     }
                     ?>">
                       <a href="<?php
@@ -211,9 +231,9 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
               <div class="col-sm-12">
                 <form class="form-group" action="">
                   <label>跳转到: </label>
-                  <input type="number" name="page" class="form-control" value="<?php echo $page?>">
+                  <input type="number" name="page" class="form-control" value="<?php echo $page ?>">
                   <button type="submit" class="btn btn-info">跳转</button>
-                  <input type="hidden" name="keyWords" value="<?php echo $keywords?>">
+                  <input type="hidden" name="keyWords" value="<?php echo $keywords ?>">
                 </form>
               </div>
             </div>
@@ -279,8 +299,7 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
 
 <script>
   function search (keyWords) {
-    let page = <?php echo $page ?>;
-    window.location.href = 'File-modify.php?page=' + page + '&keyWords=' + keyWords;
+    window.location.href = 'File-modify.php?page=0' + '&keyWords=' + keyWords;
   }
   function getFile (Id) {
     $.get("/admin/File?file_id=" + Id, function (data) {
