@@ -27,8 +27,6 @@ export default {
   },
   methods: {
     click(school) {
-      localStorage.schoolName = school.name
-      localStorage.schoolId = school.Id
       this.$router.push('/')
     }
   },

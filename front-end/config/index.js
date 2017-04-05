@@ -33,11 +33,21 @@ module.exports = {
        proxyTable: {
         '/user': {
         target: 'https://wx.97qingnian.com',
+        changeOrigin: true
+      },
+      '/file': {
+        target: 'https://wx.97qingnian.com',
         changeOrigin: true,
-        pathRewrite: {
-          '^/': '/'
-        }
+      },
+            '/search': {
+        target: 'https://wx.97qingnian.com',
+        changeOrigin: true,
+      },
+            '/index': {
+        target: 'https://wx.97qingnian.com',
+        changeOrigin: true,
       }
+
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README

@@ -22,7 +22,7 @@ export default new Vuex.Store({
     },
     updateUser(state, payload) {
       state.user = payload.user
-    }
+    },
   },
   actions: {
     initUserInfo({state, commit}) {
@@ -35,6 +35,17 @@ export default new Vuex.Store({
       }, err => {
         commit('updateError', {isError: true})
         commit('updateLoadingStatus', {isLoading: true})
+      })
+    },
+    updateUserSchool({state, commit}, {schoolName, schoolId}) {
+      Vue.http.post('/user/school', {school: school}).then(res => {
+        if (state.user.U_name) {
+          state.user.U_school = schoolName
+        } else {
+          dispatch('initUserInfo')
+        }
+      }, err => {
+        commit('updateError', {isError: true})
       })
     }
   }

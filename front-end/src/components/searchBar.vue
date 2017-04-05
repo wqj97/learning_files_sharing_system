@@ -5,7 +5,9 @@
       <img class="img" v-else src="../assets/search.png">
     </div>
     <div class="right">
-      <input  :value="value" type="text" @input="$emit('input', $event.target.value)" :placeholder="placeholder" autofocus>
+      <form action="">
+      <input  v-on:keyup.13="$emit('submit', $event.target.value)" :value="value" type="search" @input="$emit('input', $event.target.value)" :placeholder="placeholder" autofocus>
+      </form>
     </div>
   </div>
 </template>

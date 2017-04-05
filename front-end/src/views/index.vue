@@ -48,15 +48,15 @@ import { Swiper, Tab, TabItem, SwiperItem} from 'vux'
 import {categoryList, fileList} from '../components/'
 import { mapState } from 'vuex'
 
-const imgList = [
-  'http://placeholder.qiniudn.com/100x100/FF3B3B/ffffff',
-  'http://placeholder.qiniudn.com/800x100/FFEF7D/ffffff',
-  'http://placeholder.qiniudn.com/800x100/8AEEB1/ffffff'
-]
-const demoList = imgList.map((one, index) => ({
-  url: 'javascript:',
-  img: one
-}))
+// const imgList = [
+//   'http://placeholder.qiniudn.com/100x100/FF3B3B/ffffff',
+//   'http://placeholder.qiniudn.com/800x100/FFEF7D/ffffff',
+//   'http://placeholder.qiniudn.com/800x100/8AEEB1/ffffff'
+// ]
+// const demoList = imgList.map((one, index) => ({
+//   url: 'javascript:',
+//   img: one
+// }))
 
 const tabList = ['全部分类', '本校热门']
 export default {
@@ -72,6 +72,7 @@ export default {
   mounted () {
     this.$store.dispatch('initUserInfo')
     this.$http.get('/index/home').then(data => {
+    this.imgList = data.body.bannerre
     })
   },
   data () {
@@ -79,7 +80,7 @@ export default {
       tabIndex: 0,
       currentTab:tabList[0],
       mainColor: "#F8421E",
-      imgList: demoList,
+      imgList: '',
       tabList: tabList,
       // university: localStorage.schoolName
     }

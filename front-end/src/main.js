@@ -23,9 +23,9 @@ router.afterEach(function (to) {
 })
 
 router.beforeEach((to, from, next) => {
-  if(!localStorage.schoolName && to.path !== '/schoolList') {
-    next({ path: '/schoolList', query: { redirect: true } })
-  }
+  // if(!localStorage.schoolName && to.path !== '/schoolList') {
+  //   next({ path: '/schoolList', query: { redirect: true } })
+  // }
   next()
 })
 
