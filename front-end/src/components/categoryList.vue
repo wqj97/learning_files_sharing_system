@@ -50,7 +50,7 @@ export default {
       this.$emit('input', this.transformArr(this.select))
     },
     transformArr(arr) {
-      if (!arr) return []
+      if (!arr || arr.length === 0) return [0]
       return arr.map(index => index.id)
     },
     toggleCheck(item) {
