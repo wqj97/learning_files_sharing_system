@@ -15,15 +15,12 @@
           选择文件
         </div>
         <div class="inputer">
-          <input type="file">
+          <input type="file" id="file">
         </div>
-        <div class="right-bottom" @click="steep = 2">
+        <div class="right-bottom" @click="upload">
           下一步 →
         </div>
       </div>
-
-
-
       <div class="panel" id="success" v-else>
         <div class="title">
           上传成功
@@ -44,10 +41,76 @@
 
 <script>
 import { fileIcon } from '../components'
+import { mapMutations } from 'vuex'
+import sha1 from 'sha1'
+function sha($file) {
+  return new Promise((resolve, reject) => {
+    var reader = new FileReader();
+      reader.onload = (callback) => {
+        console.log(sha1(reader.result))
+        console.log(reader)
+        resolve(sha1(reader.result))
+      }
+      reader.readAsBinaryString($file.files[0]);
+  })
+
+}
 export default {
   name: 'upload',
   components: {
     fileIcon
+  },
+  methods: {
+    upload() {
+      let $file = window.document.getElementById('file')
+      if (!$file.files[0]) {
+        this.$vux.toast.show({
+          text: '请选择文件',
+          type: 'warn'
+        })
+        return
+      }
+
+
+      this.setLoading({ isLoading: true })
+      sha(file).then(sha => {
+        this.checkSha1(sha).then(result => {
+          if (!result) {
+             this.setLoading({ isLoading: false })
+            this.$vux.toast.show({
+          text: '该文件已有人上传~',
+          type: 'warn'
+        })
+        return
+      }
+      this.uploadFile($file).then((result)=>{
+      this.setLoading({ isLoading: false })
+      this.steep = 2
+      })
+        })
+      })
+    },
+    checkSha1(sha) {
+     return new Promise((resolve, reject) => {
+        this.$http.get(`/file/upload/check?hash=${sha}`).then(res => {
+        if (res.body.result&&res.body.result === 'success') resolve(true)
+        resolve(false)
+      }, res => reject(res))
+     })
+    },
+    uploadFile($file) {
+      return new Promise((resolve, rejcet) => {
+        // TODO
+        this.$http.post('/file/upload', {file: $file.files[0]}).then(res => {
+          resolve(res.body)
+        }, err => {
+          reject(err)
+        })
+      })
+    },
+    ...mapMutations({
+      setLoading: 'updateLoadingStatus'
+    })
   },
   data() {
     return {
@@ -135,24 +198,25 @@ export default {
           border-bottom-color: #233142;
         }
       }
-      input[type="file"]{
+      input[type="file"] {
         // position:absolute;
         // opacity: 0;
       }
     }
   }
 }
-#success{
-text-align: center;
-align-items: center;
-color: #455D7A;
-.fileName {
-  font-weight: 400;
-  margin: 23px 0;
-}
-.thanks{
-  font-weight: 400;
-  margin: 23px 0;
-}
+
+#success {
+  text-align: center;
+  align-items: center;
+  color: #455D7A;
+  .fileName {
+    font-weight: 400;
+    margin: 23px 0;
+  }
+  .thanks {
+    font-weight: 400;
+    margin: 23px 0;
+  }
 }
 </style>
