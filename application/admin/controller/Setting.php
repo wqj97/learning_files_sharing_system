@@ -31,4 +31,16 @@ class Setting
         Db::execute("update Setting set S_value = ? where S_key = 'level'",[$level]);
         return json(["result" => "success"]);
     }
+
+    public function Banner()
+    {
+        $key = input('post.key');
+        $file = request()->file('file');
+        $info = $file->move($_SERVER['DOCUMENT_ROOT'] . '/upload/Banner');
+        $file_src = '/upload/Banner/' . date('Ymd') . "/" . $info->getFilename();
+        $bannerSetting = json_decode(Server_Setting('banner'));
+        $bannerSetting[$key] = $file_src;
+        $banner = json_encode($bannerSetting,256);
+        Db::execute("update Setting set S_value = ? where S_key = 'banner'",[$banner]);
+    }
 }

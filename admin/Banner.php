@@ -16,6 +16,11 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
   <link href="//cdn.bootcss.com/ionicons/2.0.1/css/ionicons.css" rel="stylesheet">
   <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
   <link rel="stylesheet" href="dist/css/skins/skin-black.min.css">
+  <style>
+    .timeline-body img {
+      width: 300px;
+    }
+  </style>
 </head>
 <body class="hold-transition skin-black sidebar-mini">
 <div class="wrapper">
@@ -90,8 +95,15 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
             </span>
           </a>
         </li>
-        <li class="treeview active">
+        <li class="treeview">
           <a href="Setting.php"><i class="fa fa-gear"></i> <span>设置</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right" style="transform: none"></i>
+            </span>
+          </a>
+        </li>
+        <li class="treeview active">
+          <a href="Banner.php"><i class="fa fa-tv"></i> <span>首页banner设置</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right" style="transform: none"></i>
             </span>
@@ -108,81 +120,68 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        设置
+        Banner设置
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-gear"></i> 设置</a></li>
-        <li class="active">设置</li>
+        <li class="active">Banner设置</li>
       </ol>
     </section>
-
+      <?php
+      $banner = json_decode($Db->query("SELECT S_value FROM Setting WHERE S_key = 'banner'")[0]["S_value"]);
+      ?>
     <!-- Main content -->
     <section class="content">
       <!-- Your Page Content Here -->
-      <div class="box box-success">
+      <div class="box box-info">
         <div class="box-header">
-          <h3 class="box-title">设置</h3>
+          <div class="box-title">
+            Banner设置 (点击图片修改)
+          </div>
         </div>
-        <!-- /.box-header -->
         <div class="box-body">
-            <?php
-            $user = $Db->query("SELECT * FROM Setting WHERE S_key = 'A_user'")[0];
-            $pwd = $Db->query("SELECT * FROM Setting WHERE S_key = 'A_pwd'")[0];
-            $file_credit = $Db->query("SELECT * FROM Setting WHERE S_key = 'file_credit'")[0];
-            $file_type = $Db->query("SELECT * FROM Setting WHERE S_key = 'file_type'")[0];
-            $levels = $Db->query("SELECT * FROM Setting WHERE S_key = 'level'")[0];
-            ?>
-          <div class="form-group">
-            <label>管理员账号</label>
-            <div class="input-group form-group">
-              <span class="input-group-addon"><i class="fa fa-user"></i></span>
-              <input type="text" class="form-control" name="A_user" value="<? echo $user["S_value"] ?>">
-            </div>
-            <label>管理员密码</label>
-            <div class="input-group form-group">
-              <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-              <input type="text" class="form-control" name="A_pwd" value="<? echo $pwd["S_value"] ?>">
-            </div>
-            <label>上传文件所得文件分数</label>
-            <div class="input-group form-group">
-              <span class="input-group-addon"><i class="fa fa-tag"></i></span>
-              <input type="number" class="form-control" name="file_credit" value="<? echo $file_credit["S_value"] ?>">
-            </div>
-            <div class="form-group">
-              <label>文件类型</label>
-                <?php
-                foreach (json_decode($file_type["S_value"]) as $key => $file) {
-                    echo "<div class=\"form-inline input-group\">
-                            <span class=\"input-group-addon\" style='min-width:100px;'>编号: $key</span>
-                            <input type=\"text\" class=\"form-control\" name=\"file_type\" data-keyNum='$key' value=\"$file\">
-                          </div>";
-                }
-                ?>
-            </div>
-            <div class="form-group">
-              <label>等级所需分数</label>
-            </div>
-              <?php
-              foreach (json_decode($levels["S_value"]) as $key => $level) {
-                  echo "<div class=\"form-inline input-group\">
-                          <span class=\"input-group-addon\" style='min-width:100px;'>等级: $key</span>
-                          <input type=\"text\" class=\"form-control\" name=\"level\" data-keyNum='$key' value=\"$level\">
-                        </div>";
-              }
-              ?>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <button type="button" class="btn btn-block btn-info btn-lg" onclick="save()">提交</button>
-            </div>
-          </div>
+          <ul class="timeline">
+            <li>
+              <i class="fa fa-tv bg-blue"></i>
+              <div class="timeline-item">
+                <h3 class="timeline-header"></h3>
+                <div class="timeline-body">
+                  <img src="<?php echo $banner[0] ?>" onclick="changeBanner(0)">
+                </div>
+                <div class="timeline-footer">
+                </div>
+              </div>
+            </li>
+            <li>
+              <i class="fa fa-tv bg-blue"></i>
+              <div class="timeline-item">
+                <h3 class="timeline-header"></h3>
+                <div class="timeline-body">
+                  <img src="<?php echo $banner[1] ?>" onclick="changeBanner(1)">
+                </div>
+                <div class="timeline-footer">
+                </div>
+              </div>
+            </li>
+            <li>
+              <i class="fa fa-tv bg-blue"></i>
+              <div class="timeline-item">
+                <h3 class="timeline-header"></h3>
+                <div class="timeline-body">
+                  <img src="<?php echo $banner[2] ?>" onclick="changeBanner(2)">
+                </div>
+                <div class="timeline-footer">
+                </div>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
     </section>
     <!-- /.content -->
   </div>
 </div>
-
+<input type="file" id="imgUpload" style="display: none">
 <!-- REQUIRED JS SCRIPTS -->
 
 <!-- jQuery 3.2.1 -->
@@ -193,27 +192,22 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
 <script src="dist/js/app.min.js"></script>
 
 <script>
-  function save () {
-    let file_type = {}
-    let level = {}
-    $("input[name=file_type]").each(function () {
-      let keyNum = $(this).data('keynum')
-      let val = $(this).val()
-      file_type[keyNum] = val
-    })
-    $("input[name=level]").each(function () {
-      let keyNum = $(this).data('keynum')
-      let val = $(this).val()
-      level[keyNum] = val
-    })
-    $.post('/admin/setting',{
-      A_user:$("input[name=A_user]").val(),
-      A_pwd:$("input[name=A_pwd]").val(),
-      file_credit: $("input[name=file_credit]").val(),
-      file_type:JSON.stringify(file_type),
-      level:JSON.stringify(level)
-    },function () {
-      location.reload()
+  function changeBanner (Key) {
+    $("#imgUpload").attr("onchange", `sendChange(${Key})`).click()
+  }
+  function sendChange (key) {
+    let form = new FormData()
+    form.append('file', $("#imgUpload")[0].files[0])
+    form.append('key', key)
+    $.ajax({
+      url: "/admin/setting/banner",
+      type: "post",
+      data: form,
+      contentType: false,
+      processData: false,
+      success: function () {
+        location.reload()
+      }
     })
   }
 </script>
