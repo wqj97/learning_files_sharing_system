@@ -47,7 +47,11 @@ export default {
         this.select.splice(index, 1)
       }
       this.toggleCheck(item)
-      this.$emit('input', this.select)
+      this.$emit('input', this.transformArr(this.select))
+    },
+    transformArr(arr) {
+      if (!arr) return []
+      return arr.map(index => index.id)
     },
     toggleCheck(item) {
       const index = this.renderList.indexOf(item)

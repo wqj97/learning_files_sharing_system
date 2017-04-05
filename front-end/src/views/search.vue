@@ -1,10 +1,11 @@
 <template>
   <div>
-  <searchBar :type="type"  shadow v-model="search"></searchBar>
-    {{search}}
+
+  <searchBar v-if="passIn" :type="type[0]"  shadow v-model="search"></searchBar>
+  <searchBar v-else  shadow v-model="search"></searchBar>
     <main class="container">
-    <fileList v-if="type"></fileList>
-    <categoryList v-else checkBox></categoryList>
+    <fileList v-if="passIn"></fileList>
+    <categoryList v-else v-model="type" checkBox></categoryList>
   </main>
   </div>
 </template>
@@ -18,12 +19,16 @@ export default {
   },
   mounted () {
   	console.log(this.$route)
-    this.type = this.$route.query.type
+    if(this.$route.query.type) {
+      this.type.push(this.$route.query.type)
+      this.passIn = true
+  }
   },
   data () {
     return {
       search: '',
-      type:''
+      passIn: false,
+      type:[]
     }
   }
 }
