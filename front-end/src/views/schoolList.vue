@@ -14,6 +14,7 @@
 
 <script>
 import { Group, Cell } from 'vux'
+import {mapActions} from 'vuex'
 export default {
   name: 'schoolLoaction',
   components: {
@@ -27,6 +28,7 @@ export default {
   },
   methods: {
     click(school) {
+      this.$store.dispatch('updateUserSchool', school)
       this.$router.push('/')
     }
   },
