@@ -28,10 +28,13 @@ export default new Vuex.Store({
     initUserInfo({state, commit}) {
       // debugger
       if (state.user.U_name) return
+      commit('updateLoadingStatus', {isLoading: true})
       Vue.http.get('/user').then(res => {
         commit('updateUser', {user:res.body})
+        commit('updateLoadingStatus', {isLoading: false})
       }, err => {
         commit('updateError', {isError: true})
+        commit('updateLoadingStatus', {isLoading: true})
       })
     }
   }

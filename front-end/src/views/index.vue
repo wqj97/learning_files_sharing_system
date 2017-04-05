@@ -81,7 +81,7 @@ export default {
       mainColor: "#F8421E",
       imgList: demoList,
       tabList: tabList,
-      university: localStorage.schoolName
+      // university: localStorage.schoolName
     }
   },
   methods: {
