@@ -40,6 +40,7 @@
       <div class="comments">
       <commentList></commentList>
       </div>
+      <!--<div class="bottom_btn" @click="newComment">新建评论</div>-->
     </div>
   </div>
 </template>
@@ -61,10 +62,11 @@ export default {
   background-color: #fff;
   color: #455D7A;
   width: 100%;
-  margin-top:19px;
+  padding-top:19px;
   padding-bottom: 18px;
   border-bottom: 1px solid #EEEEEE;
   .top{
+    padding-top:0px;
     padding-bottom: 0px;
     border: none;
     display: flex;
@@ -128,6 +130,18 @@ padding: 10px 43px;
 border:none;
   box-shadow: 0 2px 10px rgba(0, 185, 248, .6);
   }
+}
+.bottom_btn{
+position: fixed;
+width:100%;
+bottom: 0;
+height: 8vh;
+line-height: 8vh;
+text-align: center;
+color:#FFF;
+font-size: 18px;
+font-weight: 200;
 
+background-image: linear-gradient(-90deg, #EF5F3E 0%, #EB3369 100%);
 }
 </style>

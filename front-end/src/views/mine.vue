@@ -53,7 +53,7 @@
         系统通知
       </div>
     </div>
-      <div id="buy" @click="$router.push('/buy')">
+      <div class="bottom_btn" id="buy" @click="$router.push('/buy')">
         立即升级
       </div>
 
@@ -76,7 +76,7 @@ import { mapState } from 'vuex'
 </script>
 
 <style lang="scss" scoped>
-#buy{
+.bottom_btn{
 position: fixed;
 width:100%;
 bottom: 0;
