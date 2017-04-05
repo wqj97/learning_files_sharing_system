@@ -15,6 +15,7 @@ class Download
 {
     /**
      * 下载文件
+     * @get file_id
      * @return \think\response\Json || void
      */
     public function Index()

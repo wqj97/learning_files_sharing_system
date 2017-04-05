@@ -13,8 +13,15 @@ use think\Db;
 
 class Collect
 {
+    /**
+     * @get file_id 文件Id
+     * @return \think\response\Json
+     */
     public function Index() {
         $file_id = input('get.file_id');
+        if (empty($file_id)) {
+            return json(["reason" => "缺少参数"],400);
+        }
         $user_id = cookie('openid');
         $file_collected = Db::query("select * from Collect_record where C_file_Id = ? and C_user_Id = ?",[$file_id,$user_id]);
         $file_collected = !empty($file_collected);

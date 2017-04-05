@@ -38,17 +38,17 @@ class Index
             if (empty($name)) {
                 $files = Db::query("select * from File order by `F_join_time` desc LIMIT $start,12");
             }else{
-                $files = Db::query("select * from File where F_name = ? order by `F_join_time` desc LIMIT $start,12", [$name]);
+                $files = Db::query("select * from File where F_name like ? order by `F_join_time` desc LIMIT $start,12", ['%'.$name.'%']);
             }
         } else {
             $type = json_decode($type);
-            $sql = "select * from File where F_name = ?";
+            $sql = "select * from File where F_name like ?";
             foreach ($type as $each) {
                 $sql = $sql.' or F_type = '.$each.' ';
             }
+            echo $sql."\r\n";
             $sql = $sql."order by `F_join_time` desc LIMIT $start,12";
-            echo $sql;
-            $files = Db::query($sql, [$name]);
+            $files = Db::query($sql, ['%'.$name].'%');
         }
         return json($files);
     }

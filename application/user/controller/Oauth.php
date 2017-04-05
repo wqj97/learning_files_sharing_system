@@ -17,6 +17,9 @@ class Oauth
 {
     protected $app;
 
+    /**
+     * Oauth constructor.
+     */
     function __construct()
     {
         $option = require_once $_SERVER['DOCUMENT_ROOT'] . '/extend/wechat-master/config.php';

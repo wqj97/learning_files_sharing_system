@@ -34,22 +34,6 @@ class Index
     }
 
     /**
-     * 修改用户信息
-     * @post Int school
-     * @return \think\response\Json
-     */
-    public function Update()
-    {
-        $user_openid = cookie('openid');
-        if (empty($user_openid)) {
-            return json(["result" => 'failed', "reason" => "没有登录"], 403);
-        }
-        $school = input('post.school');
-        Db::execute("UPDATE User SET U_school = ? WHERE U_openid = ?", [$school, $user_openid]);
-        return json(["result" => "success"]);
-    }
-
-    /**
      * 返回用户等级
      * @param $credit
      * @return int

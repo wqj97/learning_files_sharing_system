@@ -22,8 +22,31 @@ class School
         return json($school_list);
     }
 
+    /**
+     * @get
+     * @return \think\response\Json
+     */
     public function list() {
         $school = Db::query("select S_Id as Id, S_name as name from School");
         return json($school);
+    }
+
+    /**
+     * 修改用户信息
+     * @post Int school
+     * @return \think\response\Json
+     */
+    public function Update()
+    {
+        $user_openid = cookie('openid');
+        if (empty($user_openid)) {
+            return json(["result" => 'failed', "reason" => "没有登录"], 403);
+        }
+        $school = input('post.school');
+        if (empty($school)) {
+            return json(["result" => 'failed', "reason" => "缺少参数school"], 400);
+        }
+        Db::execute("UPDATE User SET U_school = ? WHERE U_openid = ?", [$school, $user_openid]);
+        return json(["result" => "success"]);
     }
 }
