@@ -3,12 +3,12 @@
    <header id="header">
       <div id="basic_info" class="text_shdow" >
       <div class="left" @click="$router.push('/mine')">
-        <img class="avatar_photo vertical_center" src="../assets/defaultHead.jpg">
-      Lv.3
+        <img class="avatar_photo vertical_center" :src="user['U_head']">
+      Lv.{{user.level}}
       </div>
       <div class="right" @click="$router.push('/schoolList')">
         <img class="img vertical_center" src="../assets/location.png">
-          天津工业大学
+          {{user['U_school']}}
       </div>
     </div>
     <h3 class="title text_shdow">这里有你想要的所有</h3>
@@ -46,7 +46,7 @@
 <script>
 import { Swiper, Tab, TabItem, SwiperItem} from 'vux'
 import {categoryList, fileList} from '../components/'
-
+import { mapState } from 'vuex'
 
 const imgList = [
   'http://placeholder.qiniudn.com/100x100/FF3B3B/ffffff',
@@ -69,19 +69,30 @@ export default {
     SwiperItem,
     fileList
   },
+  mounted () {
+    this.$store.dispatch('initUserInfo')
+    this.$http.get('/index/home').then(data => {
+    })
+  },
   data () {
     return {
       tabIndex: 0,
       currentTab:tabList[0],
       mainColor: "#F8421E",
       imgList: demoList,
-      tabList: tabList
+      tabList: tabList,
+      university: localStorage.schoolName
     }
   },
   methods: {
     categoryListClick(val) {
     	this.$router.push({path: '/search', query: { type: val.title }})
     }
+  },
+  computed: {
+    ...mapState({
+      user: state => state.user
+    })
   }
 }
 </script>
