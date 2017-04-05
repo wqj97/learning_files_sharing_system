@@ -8,16 +8,16 @@
         <img src="../assets/defaultHead.jpg" alt="">
       </div>
       <div class="name">
-        万千钧
+      {{user['U_name']}}
       </div>
       <div class="num">
-        天津工业大学
+        {{user['U_school']}}
       </div>
     </div>
     <div class="record">
       <div class="doing">
         <div class="number">
-          1
+          {{user['level']}}
         </div>
         <div class="des">
           等级
@@ -25,7 +25,7 @@
       </div>
       <div class="did">
         <div class="number">
-          3
+          {{user['U_credit']}}
         </div>
         <div class="des">
           积分
@@ -61,7 +61,18 @@
 </template>
 
 <script>
-  export default {}
+import { mapState } from 'vuex'
+  export default {
+    name:'mine',
+    mounted () {
+  this.$store.dispatch('initUserInfo')
+    },
+    computed: {
+    ...mapState({
+        user: state => state.user
+      })
+    }
+  }
 </script>
 
 <style lang="scss" scoped>
