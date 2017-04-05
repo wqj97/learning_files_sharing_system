@@ -32,15 +32,15 @@ module.exports = {
     sourceImgPath: '/src/assets/',
        proxyTable: {
         '/user': {
-        target: 'http://wx.97qingnian.com',
+        target: 'https://wx.97qingnian.com',
         changeOrigin: true,
       },
         '/search': {
-        target: 'http://wx.97qingnian.com',
+        target: 'https://wx.97qingnian.com',
         changeOrigin: true,
       },
         '/file': {
-        target: 'http://wx.97qingnian.com',
+        target: 'https://wx.97qingnian.com',
         changeOrigin: true,
       },
 
