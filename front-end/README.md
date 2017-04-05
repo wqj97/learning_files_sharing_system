@@ -1,21 +1,30 @@
-# front-end
-
-> A Vue.js project
-
-## Build Setup
-
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-```
-
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+TODO list
+项目全局
+- 访问loading
+- 错误页
+学校列表页
+- [x]点击跳转到主页
+- [x]拦截回来提醒选择学校
+首页
+- []获取学校信息
+- []获取用户信息
+- []获取轮播图信息
+- []获取本校热门文件
+搜索页
+- []列表组件可选择, V-model返回数组
+- []显示数据分页
+上传页
+- []解析文件获取SHA-1, 有则提醒无需上传
+- []上传文件
+文件详情页
+- []获取基本信息
+- []文件预览
+- []文件评论
+- []点赞
+- []下载时检测权限
+个人中心
+- []获取个人信息 这里和首页是一样的吗? 一样的话存到vux中
+- []列表页? TODO
+购买
+- []获取购买价格
+- []付款过程

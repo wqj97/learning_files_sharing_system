@@ -6,7 +6,13 @@ import VueRouter from 'vue-router'
 import App from './App'
 import router from './router'
 import store from './store'
+import VueResource from 'vue-resource'
+import  { ToastPlugin } from 'vux'
 
+Vue.use(ToastPlugin)
+
+
+Vue.use(VueResource)
 router.beforeEach(function (to, from, next) {
   store.commit('updateLoadingStatus', {isLoading: true})
   next()
@@ -14,6 +20,13 @@ router.beforeEach(function (to, from, next) {
 
 router.afterEach(function (to) {
   store.commit('updateLoadingStatus', {isLoading: false})
+})
+
+router.beforeEach((to, from, next) => {
+  if(!localStorage.schoolName && to.path !== '/schoolList') {
+    next({ path: '/schoolList', query: { redirect: true } })
+  }
+  next()
 })
 
 FastClick.attach(document.body)

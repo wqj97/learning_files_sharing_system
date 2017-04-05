@@ -30,15 +30,12 @@ module.exports = {
     assetsPublicPath: '/',
     imgPublicPath: './dist/static/img',
     sourceImgPath: '/src/assets/',
-    proxyTable: {
-      '/': {
-        target: 'http://wx.97qingnian.com',
+       proxyTable: {
+        '/user': {
+        target: 'https://wx.97qingnian.com',
         changeOrigin: true,
         pathRewrite: {
-          '/file': '/file',
-          '/search': '/search',
-          '/user': '/user',
-          '/oauth': '/oauth'
+          '^/': '/'
         }
       }
     },
@@ -47,6 +44,6 @@ module.exports = {
     // (https://github.com/webpack/css-loader#sourcemaps)
     // In our experience, they generally work as expected,
     // just be aware of this issue when enabling this option.
-    cssSourceMap: true
+    cssSourceMap: false
   }
 }
