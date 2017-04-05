@@ -138,6 +138,7 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
             $file_credit = $Db->query("SELECT * FROM Setting WHERE S_key = 'file_credit'")[0];
             $file_type = $Db->query("SELECT * FROM Setting WHERE S_key = 'file_type'")[0];
             $levels = $Db->query("SELECT * FROM Setting WHERE S_key = 'level'")[0];
+            $price = $Db->query("SELECT * FROM Setting WHERE S_key = 'price'")[0];
             ?>
           <div class="form-group">
             <label>管理员账号</label>
@@ -178,9 +179,21 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
               }
               ?>
           </div>
+          <div class="form-group">
+            <label>等级所需价格</label>
+          </div>
+            <?php
+            foreach (json_decode($price["S_value"]) as $key => $level) {
+                echo "<div class=\"form-inline input-group\">
+                          <span class=\"input-group-addon\" style='min-width:100px;'>等级: $key</span>
+                          <input type=\"text\" class=\"form-control\" name=\"price\" data-keyNum='$key' value=\"$level\">
+                        </div>";
+            }
+            ?>
+        </div>
           <div class="row">
             <div class="col-md-12">
-              <button type="button" class="btn btn-block btn-info btn-lg" onclick="save()">提交</button>
+              <button type="button" class="btn btn-block btn-info btn-lg" onclick="save()">保存</button>
             </div>
           </div>
         </div>
@@ -203,6 +216,7 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
   function save () {
     let file_type = {}
     let level = {}
+    let price = {}
     $("input[name=file_type]").each(function () {
       let keyNum = $(this).data('keynum')
       let val = $(this).val()
@@ -213,11 +227,17 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
       let val = $(this).val()
       level[keyNum] = val
     })
+    $("input[name=price]").each(function () {
+      let keyNum = $(this).data('keynum')
+      let val = $(this).val()
+      price[keyNum] = val
+    })
     $.post('/admin/setting',{
       A_user:$("input[name=A_user]").val(),
       A_pwd:$("input[name=A_pwd]").val(),
       file_credit: $("input[name=file_credit]").val(),
       file_type:JSON.stringify(file_type),
+      price:JSON.stringify(price),
       level:JSON.stringify(level)
     },function () {
       location.reload()

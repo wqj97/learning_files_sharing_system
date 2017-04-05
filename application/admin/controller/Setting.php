@@ -24,11 +24,13 @@ class Setting
         $file_type = input('post.file_type');
         $file_credit = input('post.file_credit');
         $level = input('post.level');
+        $price = input('post.price');
         Db::execute("update Setting set S_value = ? where S_key = 'A_user'",[$A_admin]);
         Db::execute("update Setting set S_value = ? where S_key = 'A_pwd'",[$A_pwd]);
         Db::execute("update Setting set S_value = ? where S_key = 'file_type'",[$file_type]);
         Db::execute("update Setting set S_value = ? where S_key = 'file_credit'",[$file_credit]);
         Db::execute("update Setting set S_value = ? where S_key = 'level'",[$level]);
+        Db::execute("update Setting set S_value = ? where S_key = 'price'",[$price]);
         return json(["result" => "success"]);
     }
 
