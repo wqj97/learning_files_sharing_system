@@ -36,13 +36,13 @@ class Index
         $start = $page * 12;
         if ($type == '[0]') {
             if (empty($name)) {
-                $files = Db::query("select * from File order by `F_join_time` desc LIMIT $start,12");
+                $files = Db::query("select F_Id,F_name,F_type,F_level,(SELECT count(*) from Comment where C_file_Id = F_Id) as 'comment_count',F_download_count,(SELECT count(*) from Collect_record where C_file_Id = F_Id) as 'collect_record',F_school from File order by `F_join_time` desc LIMIT $start,12");
             }else{
-                $files = Db::query("select * from File where F_name like ? order by `F_join_time` desc LIMIT $start,12", ['%'.$name.'%']);
+                $files = Db::query("select F_Id,F_name,F_type,F_level,(SELECT count(*) from Comment where C_file_Id = F_Id) as 'comment_count',F_download_count,(SELECT count(*) from Collect_record where C_file_Id = F_Id) as 'collect_record',F_school from File where F_name like ? order by `F_join_time` desc LIMIT $start,12", ['%'.$name.'%']);
             }
         } else {
             $type = json_decode($type);
-            $sql = "select * from File where F_name like ?";
+            $sql = "select F_Id,F_name,F_type,F_level,(SELECT count(*) from Comment where C_file_Id = F_Id) as 'comment_count',F_download_count,(SELECT count(*) from Collect_record where C_file_Id = F_Id) as 'collect_record',F_school from File where F_name like ?";
             foreach ($type as $each) {
                 $sql = $sql.' or F_type = '.$each.' ';
             }
