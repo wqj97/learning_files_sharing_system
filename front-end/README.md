@@ -4,7 +4,7 @@ TODO list
 学校列表页
 - [x]点击跳转到主页
 - [x]拦截回来提醒选择学校
-- []提交学校到用户信息中    post /user/index/update   school: id
+- [x]提交学校到用户信息中    post /user/index/update   school: id
 首页
 - []获取本校热门文件    TODO
 - [x]获取学校信息
@@ -16,7 +16,7 @@ TODO list
 - []显示数据分页
 - [x]列表组件可选择, V-model返回数组
 上传页
-- [x]解析文件获取SHA-1, 有则提醒无需上传
+- [x]解析文件获取md5, 有则提醒无需上传
 - []上传文件                            return
 - []文件名
 文件详情页

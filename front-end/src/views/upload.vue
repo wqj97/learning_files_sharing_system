@@ -42,14 +42,14 @@
 <script>
 import { fileIcon } from '../components'
 import { mapMutations } from 'vuex'
-import sha1 from 'sha1'
+import md5 from 'MD5'
 function sha($file) {
   return new Promise((resolve, reject) => {
     var reader = new FileReader();
       reader.onload = (callback) => {
-        console.log(sha1(reader.result))
+        console.log(md5(reader.result))
         console.log(reader)
-        resolve(sha1(reader.result))
+        resolve(md5(reader.result))
       }
       reader.readAsBinaryString($file.files[0]);
   })
@@ -74,7 +74,7 @@ export default {
 
       this.setLoading({ isLoading: true })
       sha(file).then(sha => {
-        this.checkSha1(sha).then(result => {
+        this.checkMD5(sha).then(result => {
           if (!result) {
              this.setLoading({ isLoading: false })
             this.$vux.toast.show({
@@ -90,7 +90,7 @@ export default {
         })
       })
     },
-    checkSha1(sha) {
+    checkMD5(sha) {
      return new Promise((resolve, reject) => {
         this.$http.get(`/file/upload/check?hash=${sha}`).then(res => {
         if (res.body.result&&res.body.result === 'success') resolve(true)
