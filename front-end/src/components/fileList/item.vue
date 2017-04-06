@@ -1,5 +1,5 @@
 <template>
-  <div class="file-list-item" @click="$router.push('/download')">
+  <div class="file-list-item"  @click="$router.push(`/download?id=${id}`)">
     <div class="left">{{type}}</div>
     <div class="right">
       <div class="top">{{title}}</div>
@@ -35,6 +35,9 @@ export default {
       type: Number
     },
     likes: {
+      type: Number
+    },
+    id: {
       type: Number
     }
   },
