@@ -20,16 +20,16 @@ TODO list
 - [x]上传文件                            return
 - [x]文件名
 文件详情页
-- []获取基本信息                        file/:id
-- []文件预览                            网上找微软的那个
-- []文件评论[分页]                     GET /file/comment/  2
-- []创建评论                          POST /file/comment/new/
-- []点赞                             /file/collect/
+- []获取基本信息                        W
+- []文件预览                            W
+- []文件评论[分页]                     GET /file/comment/?file_id=1&page=0
+- []创建评论                          POST /file/comment/new/    file_id content 255
+- []点赞                             W GET /file/collect/   file_id
 - []下载时检测权限                     /
 - [] 下载接口                        跳转  /file/download/
 个人中心
 - [x]获取个人信息 这里和首页是一样的吗? 一样的话存到vux中
-- []各种列表  TODO
+- []各种列表
 购买
 - []获取购买价格  接口  TODO
 - []付款过程      接口  TODO

@@ -1,7 +1,12 @@
 <template>
-  <div >
-  <item avatarUrl="/static/img/defaultHead.jpg" date="2017-06-20" content="哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈" name="meta"></item>
-  <item avatarUrl="/static/img/defaultHead.jpg" date="2017-06-20" content="哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈" name="meta"></item>
+  <div>
+    <!--TODO  名字, 头像-->
+    <item v-for="(item, index) in list"
+          avatarUrl="/static/img/defaultHead.jpg"
+          :date="item['C_join_time']"
+          key="index"
+          :content="item['C_content']"
+          name="meta"></item>
   </div>
 </template>
 
@@ -12,7 +17,12 @@ export default {
   components: {
     item
   },
-  data () {
+  props: {
+    list: {
+      type: Array
+    }
+  },
+  data() {
     return {
 
     }

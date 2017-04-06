@@ -50,7 +50,6 @@ function sha($file) {
     var reader = new FileReader();
       reader.onload = (callback) => {
         console.log(md5(reader.result))
-        console.log(reader)
         resolve(md5(reader.result))
       }
       reader.readAsBinaryString($file.files[0]);

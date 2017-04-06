@@ -2,43 +2,50 @@
   <div>
     <div class="top">
       <div class="top">
-        <fileIcon type="pdf"
+        <fileIcon v-if="detail['F_ext']" :type="detail['F_ext']"
                   size="small"></fileIcon>
-                  <div class="right">
-                    <h2>2017年高数期末考试试卷</h2>
-                  <span>下载等级: Lv.3</span>
-                  </div>
+        <div class="right">
+          <h2>{{detail['F_name']}}</h2>
+          <span>下载等级: Lv.{{detail['F_level']}}</span>
+        </div>
       </div>
       <div class="middle">
-      <div class="item">
-        <img src="../assets/download.png">
-
-      </div>
         <div class="item">
-        <img src="../assets/eye.png" >
-      </div>
+          <img src="../assets/download.png">
+            {{detail['F_download_count']}}
+        </div>
         <div class="item">
-        <img src="../assets/humbuger.png" >
-      </div>
+          <img src="../assets/eye.png">
+          {{detail['F_download_count']}}
+        </div>
+        <div class="item">
+          <img src="../assets/humbuger.png">
+          {{detail['F_type']}}
+        </div>
       </div>
       <div class="bottom">
         <div class="left">
-          <div class="comment wrapper"><img src="../assets/commentColor.png"> 15</div>
-
+          <div class="comment wrapper"><img src="../assets/commentColor.png"> {{detail['comment_count']}}</div>
           <div class="like wrapper">
-            <img src="../assets/heartColor.png">
-            30
+            <img v-if="detail['liked']" src="../assets/heartColor.png">
+            <img v-else src="../assets/heart.png" @click="like">
+             {{detail['like_count']}}
           </div>
         </div>
         <div class="right">
-        <button id="download-btn">下载</button>
+          <button id="download-btn">下载</button>
         </div>
       </div>
     </div>
     <div class="tab">
-      <div class="preview"></div>
+      <div class="preview">
+        <!--<iframe src="http://view.officeapps.live.com/op/view.aspx?src=https://wx.97qingnian.com/upload/20170331/45ae784b3da3b7a1928998f99c9d70b2.doc"
+                frameborder="0"
+                style="width:100%;height:100%;">
+                </iframe>-->
+      </div>
       <div class="comments">
-      <commentList></commentList>
+        <commentList :list="commentArr"></commentList>
       </div>
       <!--<div class="bottom_btn" @click="newComment">新建评论</div>-->
     </div>
@@ -49,6 +56,45 @@
 import { fileIcon, commentList } from '@/components/'
 export default {
   name: 'download',
+  mounted() {
+    let id = this.$route.query.id
+    if (!id) {
+      this.$vux.toast.show({
+        text: '无文件id!',
+        type: 'warn'
+      })
+      this.$router.push('/')
+    }
+    this.$http.get(`/file?file_id=${id}`).then(res => {
+      this.detail = res.body
+    }, err => {
+      this.$store.commit('updateError', { isError: true })
+    })
+////////////////
+this.$http.get(`/file/comment/?file_id=${id}&page=0`).then(res => {
+  this.commentArr = res.body
+
+}, err => {
+ //TODO
+})
+  },
+  data () {
+    return {
+      detail: {},
+      commentArr: []
+    }
+  },
+  methods: {
+    like() {
+      this.$http.get(`/file/collect?file_id=${this.detail['F_Id']}`).then(res => {
+        //TODO
+        this.detail['liked'] = true
+        detail['like_count'] += 1
+      }, err => {
+        //TODO
+      })
+    }
+  },
   components: {
     fileIcon,
     commentList
@@ -58,90 +104,96 @@ export default {
 
 <style lang="scss" scoped>
 @import '../style/base.scss';
-.top{
+.top {
   background-color: #fff;
   color: #455D7A;
   width: 100%;
-  padding-top:19px;
+  padding-top: 19px;
   padding-bottom: 18px;
   border-bottom: 1px solid #EEEEEE;
-  .top{
-    padding-top:0px;
+  .top {
+    padding-top: 0px;
     padding-bottom: 0px;
     border: none;
     display: flex;
     justify-content: space-around;
-    .right{
+    .right {
       font-weight: 200;
-      h2{font-weight: 300;
-      font-size: 20px;}
+      h2 {
+        font-weight: 300;
+        font-size: 20px;
+      }
       text-align: center;
     }
   }
 }
-.middle{
+
+.middle {
   display: flex;
   justify-content: space-around;
   margin: 18px 75px;
   margin-bottom: 28px;
-  .item{
-    img{
+  .item {
+    img {
       vertical-align: middle;
       width: 20px;
       height: 20px;
+      margin-right: 20px;
     }
   }
 }
 
 $menuBarRadius: 4px;
-.bottom{
+.bottom {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  .left{
+  .left {
     box-sizing: border-box;
     display: flex;
-    img{
+    img {
       width: 16px;
       height: 15px;
     }
-    .wrapper{
+    .wrapper {
       padding: 17px 20px;
     }
-    .comment{
+    .comment {
       border: 1px solid $baseColor;
       border-top-left-radius: $menuBarRadius;
       border-bottom-left-radius: $menuBarRadius;
     }
-    .like{
+    .like {
       border: 1px solid $redColor;
       border-top-right-radius: $menuBarRadius;
       border-bottom-right-radius: $menuBarRadius;
     }
   }
-  #download-btn{
+  #download-btn {
     /* Rectangle 3: */
-background-image: linear-gradient(-180deg, #00B9F8 0%, #2ECAFF 100%);
-border-radius: 100px;
-font-size: 18px;
-color: #FFFFFF;
-letter-spacing: 0px;
-padding: 10px 43px;
-border:none;
-  box-shadow: 0 2px 10px rgba(0, 185, 248, .6);
+    background-image: linear-gradient(-180deg, #00B9F8 0%, #2ECAFF 100%);
+    border-radius: 100px;
+    font-size: 18px;
+    color: #FFFFFF;
+    letter-spacing: 0px;
+    padding: 10px 43px;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 185, 248, .6);
   }
 }
-.bottom_btn{
-position: fixed;
-width:100%;
-bottom: 0;
-height: 8vh;
-line-height: 8vh;
-text-align: center;
-color:#FFF;
-font-size: 18px;
-font-weight: 200;
 
-background-image: linear-gradient(-90deg, #EF5F3E 0%, #EB3369 100%);
+.bottom_btn {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  height: 8vh;
+  line-height: 8vh;
+  text-align: center;
+  color: #FFF;
+  font-size: 18px;
+  font-weight: 200;
+
+  background-image: linear-gradient(-90deg, #EF5F3E 0%, #EB3369 100%);
 }
+
 </style>
