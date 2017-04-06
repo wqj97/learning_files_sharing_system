@@ -30,7 +30,8 @@ class Db
     {
         $result = $this->sql->query($query);
         if ($this->sql->error) {
-            throw new Exception($this->sql->error);
+            echo $this->sql->error;
+            throw new Exception();
         }
         return $result->fetch_all(1);
     }

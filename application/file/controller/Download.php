@@ -26,16 +26,16 @@ class Download
         if (empty($file_id) || empty($user_openid)) {
             return json("禁止访问", 403);
         }
-        $file_Info = Db::query("SELECT F_url,F_name,F_level FROM File WHERE F_Id = ?", [$file_id])[0];
+        $file_Info = Db::query("SELECT F_url,F_name,F_level,F_ext FROM File WHERE F_Id = ?", [$file_id])[0];
         $user_credit = Db::query("SELECT U_credit FROM User WHERE U_openid = ?", [$user_openid])[0];
         $user_level = $this->getLevel($user_credit);
         if ($user_level < $file_Info["F_level"]) {
             return json("权限不足", 403);
         }
         Db::execute("UPDATE File SET F_download_count = F_download_count + 1 WHERE F_Id = ?", [$file_id]);
-        Db::execute("Insert into Download_record (D_user_Id, D_file_Id) VALUES (?,?)",[$user_openid,$file_id]);
+        Db::execute("Insert into Download_record (D_user_openid, D_file_Id) VALUES (?,?)",[$user_openid,$file_id]);
         $file_obj = new \SplFileObject($_SERVER['DOCUMENT_ROOT'] . $file_Info["F_url"], 'r');
-        Header("Content-Disposition: attachment; filename=" . $file_Info["F_name"]);
+        Header("Content-Disposition: attachment; filename=" . $file_Info["F_name"].".".$file_Info["F_ext"]);
         header("Content-type:text/html;charset=utf-8");
         Header("Content-type: application/octet-stream");
         Header("Accept-Ranges: bytes");

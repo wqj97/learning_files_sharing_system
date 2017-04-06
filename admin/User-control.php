@@ -170,7 +170,7 @@ $start = $page * 12;
    FROM School
    WHERE S_Id = U_school)          AS 'school_name',
   (SELECT COUNT(*)
-   FROM FILE
+   FROM File
    WHERE F_user_openid = U_openid) AS File_count,
   U_credit,
   U_join_date
