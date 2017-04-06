@@ -38,7 +38,7 @@
       </swiper>-->
 <transition name="fade">
   <categoryList v-if="tabIndex === 0" @click="categoryListClick"></categoryList>
-  <fileList v-else="tabIndex !== 0"></fileList>
+  <fileList :list="topFileList" v-else="tabIndex !== 0"></fileList>
 </transition>
    </section>
   </div>
@@ -72,7 +72,9 @@ export default {
   mounted () {
     this.$store.dispatch('initUserInfo')
     this.$http.get('/index/home').then(data => {
-    this.imgList = data.body.banner
+    const body = data.body
+    this.imgList = body.banner
+    this.topFileList = body['top_file']
     })
   },
   data () {
@@ -82,12 +84,13 @@ export default {
       mainColor: "#F8421E",
       imgList: [],
       tabList: tabList,
+      topFileList: []
       // university: localStorage.schoolName
     }
   },
   methods: {
     categoryListClick(val) {
-    	this.$router.push({path: '/search', query: { type: val.title }})
+    	this.$router.push({path: '/search', query: { type: val.id }})
     }
   },
   computed: {

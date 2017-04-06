@@ -13,6 +13,7 @@
   </div>
 </template>
 <script>
+// import {ids, titleList } from '../utils'
 const ids =        [2        ,4        ,8      ,16    ,32       ,64      ,128    ]
 const titleList = ['科目习题', '科目精华', '英语', '考研', '资格考试', '工具书', '其他']
 const imgPath = '/static/img/category/'
@@ -34,24 +35,30 @@ export default {
       type: Boolean
     }
   },
+  created() {
+    if(!this.value)  return
+    this.value.forEach(id => {
+      if (id === 0) return
+      let index = ids.indexOf(id)
+      console.log('index:' + index)
+      if (!index) throw "传入的type数据有误"
+      this.renderList[index].checked = true
+    })
+  },
   methods: {
     click(item) {
       this.$emit('click', item)
       if (!this.checkBox) return
-      const index = this.select.indexOf(item)
-      if(index === -1) {
-        // 没有被选中
-        this.select.push(item)
-      } else {
-        // 被选中
-        this.select.splice(index, 1)
-      }
       this.toggleCheck(item)
-      this.$emit('input', this.transformArr(this.select))
+      this.$emit('input', this.transformArr())
     },
-    transformArr(arr) {
-      if (!arr || arr.length === 0) return [0]
-      return arr.map(index => index.id)
+    transformArr() {
+      let tempArr = []
+      this.renderList.forEach(item => {
+        if (item.checked)  tempArr.push(item.id)
+      })
+      if (tempArr.length === 0) tempArr.push(0)
+      return tempArr
     },
     toggleCheck(item) {
       const index = this.renderList.indexOf(item)

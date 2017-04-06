@@ -6,18 +6,14 @@
               ref="scroller"
               @on-pullup-loading="refresh">
       <div>
-        <item type="DOC"
-              title="2017年高数期末考试试卷"
-              :comments="15"
-              :times="203"
-              :views="305"
-              :likes="30"></item>
-        <item type="DOC"
-              title="2017年高数期末考试试卷"
-              :comments="15"
-              :times="203"
-              :views="305"
-              :likes="30"></item>
+        <item v-for="(i, index) in list" type="DOC"
+              :title="i['F_name']"
+              :comments="i['comment_count']"
+              :times="i['F_download_count']"
+              :views="i['F_view_count']"
+              :likes="i['collect_record']"
+              :key="index"
+             :id="i['F_Id']"></item>
       </div>
     </Scroller>
   </div>

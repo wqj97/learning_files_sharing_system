@@ -1,21 +1,40 @@
 <template>
   <div>
-    <!--TODO  名字, 头像-->
-    <item v-for="(item, index) in list"
-          avatarUrl="/static/img/defaultHead.jpg"
+    <refresh @refresh="$emit('refresh')" ref="fresh">
+      <item v-for="(item, index) in list"
+          :avatarUrl="item['U_head']"
           :date="item['C_join_time']"
-          key="index"
           :content="item['C_content']"
-          name="meta"></item>
+          key="index"
+          :name="item['U_name']"></item>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+          <li>1</li>
+
+    </refresh>
   </div>
 </template>
 
 <script>
 import item from './item'
+import refresh from '../pullRefresh'
 export default {
   name: '',
   components: {
-    item
+    item,
+    refresh
   },
   props: {
     list: {
@@ -24,7 +43,14 @@ export default {
   },
   data() {
     return {
-
+    }
+  },
+  methods: {
+    noMoreData () {
+      this.$refs.fresh.noMore()
+    },
+    done () {
+      this.$refs.fresh.done()
     }
   }
 }

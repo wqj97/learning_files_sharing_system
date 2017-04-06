@@ -1,19 +1,13 @@
 <template>
   <div>
-
-    <searchBar v-if="passIn"
-               :type="type[0]"
-               @submit="submit"
-               shadow
-               v-model="search"></searchBar>
-    <searchBar v-else
-               shadow
+    <searchBar shadow
                v-model="search"
                @submit="submit"></searchBar>
     <main class="container">
-      <fileList isScroll v-if="passIn"></fileList>
-      <categoryList v-else
-                    v-model="type"
+      <fileList isScroll
+                :list="searchResult"
+                v-if="isSearch"></fileList>
+      <categoryList v-model="type"
                     checkBox></categoryList>
     </main>
   </div>
@@ -26,26 +20,20 @@ export default {
   components: {
     searchBar, fileList, categoryList
   },
-  mounted() {
-    console.log(this.$route)
-    if (this.$route.query.type) {
-      const arr = []
-      arr.push(this.$route.query.type)
-      this.type = arr
+  created() {
+    let id = this.$route.query.type
+    if (id) {
+      this.type.push(Number(id))
       this.passIn = true
+    } else {
+      this.type.push(0)
     }
   },
   methods: {
     submit() {
-      // if (this.type.length === 0) {
-      //   this.$vux.toast.show({
-      //     text: '至少选中一个分类',
-      //     type: 'warn'
-      //   })
-      //   return
-      // }
+      this.isSearch = true
       this.$http.get(`/search?name=${this.search}&page=0&type=${JSON.stringify(this.type)}`).then(res => {
-        console.log(res)
+        this.searchResult = res.body
       }, res => {
         this.$vux.toast.show({
           text: '网络错误',
@@ -57,8 +45,10 @@ export default {
   data() {
     return {
       search: '',
+      searchResult: '',
+      isSearch: false,
       passIn: false,
-      type: [0]
+      type: []
     }
   }
 }

@@ -16,24 +16,24 @@
         </div>
         <div class="item">
           <img src="../assets/eye.png">
-          {{detail['F_download_count']}}
+          {{detail['F_view_count']}}
         </div>
         <div class="item">
           <img src="../assets/humbuger.png">
-          {{detail['F_type']}}
+          {{type}}
         </div>
       </div>
       <div class="bottom">
         <div class="left">
           <div class="comment wrapper"><img src="../assets/commentColor.png"> {{detail['comment_count']}}</div>
-          <div class="like wrapper">
+          <div class="like wrapper" @click="like">
             <img v-if="detail['liked']" src="../assets/heartColor.png">
-            <img v-else src="../assets/heart.png" @click="like">
+            <img  v-else src="../assets/heart.png">
              {{detail['like_count']}}
           </div>
         </div>
         <div class="right">
-          <button id="download-btn">下载</button>
+          <button id="download-btn" @click="downloadClick">下载</button>
         </div>
       </div>
     </div>
@@ -54,6 +54,8 @@
 
 <script>
 import { fileIcon, commentList } from '@/components/'
+import { getCategroyListById } from '@/utils'
+import { mapState } from 'vuex'
 export default {
   name: 'download',
   mounted() {
@@ -85,15 +87,33 @@ this.$http.get(`/file/comment/?file_id=${id}&page=0`).then(res => {
     }
   },
   methods: {
+    downloadClick() {
+      if (this.user.level < this.detail['F_level']) {
+       this.$vux.toast.show({
+          text: '权限不够哦~ 请去个人中心升级权限',
+          type: 'warn'
+        })
+      return
+      }
+      window.location.href = `https://wx.97qingnian.com/file/download/?file_id=${this.detail['F_Id']}`
+    },
     like() {
       this.$http.get(`/file/collect?file_id=${this.detail['F_Id']}`).then(res => {
-        //TODO
-        this.detail['liked'] = true
-        detail['like_count'] += 1
+        let isLiked = res.body['0'] === 'Collected'
+        this.detail['liked'] = isLiked
+        isLiked ? this.detail['like_count'] += 1 : this.detail['like_count'] -= 1
       }, err => {
         //TODO
       })
     }
+  },
+  computed: {
+    type () {
+      return getCategroyListById(this.detail['F_type'])
+    },
+    ...mapState({
+     user: state => state.user
+    })
   },
   components: {
     fileIcon,
@@ -131,7 +151,7 @@ this.$http.get(`/file/comment/?file_id=${id}&page=0`).then(res => {
 .middle {
   display: flex;
   justify-content: space-around;
-  margin: 18px 75px;
+  margin: 18px 40px;
   margin-bottom: 28px;
   .item {
     img {
