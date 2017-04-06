@@ -26,9 +26,9 @@
       <div class="bottom">
         <div class="left">
           <div class="comment wrapper"><img src="../assets/commentColor.png"> {{detail['comment_count']}}</div>
-          <div class="like wrapper">
+          <div class="like wrapper" @click="like">
             <img v-if="detail['liked']" src="../assets/heartColor.png">
-            <img v-else src="../assets/heart.png" @click="like">
+            <img  v-else src="../assets/heart.png">
              {{detail['like_count']}}
           </div>
         </div>
@@ -99,9 +99,9 @@ this.$http.get(`/file/comment/?file_id=${id}&page=0`).then(res => {
     },
     like() {
       this.$http.get(`/file/collect?file_id=${this.detail['F_Id']}`).then(res => {
-        //TODO
-        this.detail['liked'] = true
-        detail['like_count'] += 1
+        let isLiked = res.body['0'] === 'Collected'
+        this.detail['liked'] = isLiked
+        isLiked ? this.detail['like_count'] += 1 : this.detail['like_count'] -= 1
       }, err => {
         //TODO
       })
