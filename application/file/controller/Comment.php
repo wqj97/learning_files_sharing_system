@@ -45,7 +45,7 @@ class Comment
         if (empty($file_id)) {
             return json(["result" => "failed", "reason" => "缺少参数"], 400);
         }
-        $comments = Db::query("select * from Comment where C_file_Id = ? LIMIT ?,8",[$file_id,$start]);
+        $comments = Db::query("select C_content,C_join_time,(select U_name FROM User where U_openid = C_user) as 'U_name',(select U_head FROM User where U_openid = C_user) as 'U_head' from Comment where C_file_Id = ? LIMIT ?,8",[$file_id,$start]);
         return json($comments);
     }
 }
