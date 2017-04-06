@@ -16,11 +16,11 @@
         </div>
         <div class="item">
           <img src="../assets/eye.png">
-          {{detail['F_download_count']}}
+          {{detail['F_view_count']}}
         </div>
         <div class="item">
           <img src="../assets/humbuger.png">
-          {{detail['F_type']}}
+          {{type}}
         </div>
       </div>
       <div class="bottom">
@@ -54,6 +54,7 @@
 
 <script>
 import { fileIcon, commentList } from '@/components/'
+import { getCategroyListById } from '@/utils'
 export default {
   name: 'download',
   mounted() {
@@ -95,6 +96,11 @@ this.$http.get(`/file/comment/?file_id=${id}&page=0`).then(res => {
       })
     }
   },
+  computed: {
+    type () {
+      return getCategroyListById(this.detail['F_type'])
+    }
+  },
   components: {
     fileIcon,
     commentList
@@ -131,7 +137,7 @@ this.$http.get(`/file/comment/?file_id=${id}&page=0`).then(res => {
 .middle {
   display: flex;
   justify-content: space-around;
-  margin: 18px 75px;
+  margin: 18px 40px;
   margin-bottom: 28px;
   .item {
     img {

@@ -1,12 +1,11 @@
 <template>
   <div>
-    <!--TODO  名字, 头像-->
     <item v-for="(item, index) in list"
-          avatarUrl="/static/img/defaultHead.jpg"
+          :avatarUrl="item['U_head']"
           :date="item['C_join_time']"
-          key="index"
           :content="item['C_content']"
-          name="meta"></item>
+          key="index"
+          :name="item['U_name']"></item>
   </div>
 </template>
 

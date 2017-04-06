@@ -1,31 +1,19 @@
 TODO list
 项目全局
 - []错误页
-学校列表页
-- [x]点击跳转到主页
-- [x]拦截回来提醒选择学校
-- [x]提交学校到用户信息中    post /user/index/update   school: id
 首页
-- #[x]获取本校热门文件
-- [x]获取学校信息
-- [x]获取用户信息
-- [x]获取轮播图信息
+
 搜索页
 - #[]手机上测试搜索按键
-- #[x]显示回传数据
 - []显示数据分页
-- []处理点击分类进入的问题
-- [x]列表组件可选择, V-model返回数组
 上传页
-- [x]解析文件获取md5, 有则提醒无需上传
-- [x]上传文件                            return
-- [x]文件名
+
 文件详情页
-- []获取基本信息
+- [x]获取基本信息
 - []文件预览
 - []文件评论[分页]                     GET /file/comment/?file_id=1&page=0
 - []创建评论                          POST /file/comment/new/    file_id content 255
-- []点赞                             W GET /file/collect/   file_id
+- [x]点赞                             W GET /file/collect/   file_id
 - []下载时检测权限                     /
 - [] 下载接口                        跳转  /file/download/
 个人中心

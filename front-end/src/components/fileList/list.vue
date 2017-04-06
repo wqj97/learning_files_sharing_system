@@ -10,11 +10,10 @@
               :title="i['F_name']"
               :comments="i['comment_count']"
               :times="i['F_download_count']"
-              :views="i['F_download_count']"
+              :views="i['F_view_count']"
               :likes="i['collect_record']"
               :key="index"
              :id="i['F_Id']"></item>
-              <!--TODO views-->
       </div>
     </Scroller>
   </div>
