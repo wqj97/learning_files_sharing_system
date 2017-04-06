@@ -34,24 +34,33 @@ export default {
       type: Boolean
     }
   },
+  created() {
+    console.log('created')
+    console.log(this.value)
+    if(!this.value)  return
+    this.value.forEach(id => {
+      console.log(id)
+      if (id === 0) return
+      let index = ids.indexOf(id)
+      console.log('index:' + index)
+      if (!index) throw "传入的type数据有误"
+      this.renderList[index].checked = true
+    })
+  },
   methods: {
     click(item) {
       this.$emit('click', item)
       if (!this.checkBox) return
-      const index = this.select.indexOf(item)
-      if(index === -1) {
-        // 没有被选中
-        this.select.push(item)
-      } else {
-        // 被选中
-        this.select.splice(index, 1)
-      }
       this.toggleCheck(item)
-      this.$emit('input', this.transformArr(this.select))
+      this.$emit('input', this.transformArr())
     },
-    transformArr(arr) {
-      if (!arr || arr.length === 0) return [0]
-      return arr.map(index => index.id)
+    transformArr() {
+      let tempArr = []
+      this.renderList.forEach(item => {
+        if (item.checked)  tempArr.push(item.id)
+      })
+      if (tempArr.length === 0) tempArr.push(0)
+      return tempArr
     },
     toggleCheck(item) {
       const index = this.renderList.indexOf(item)

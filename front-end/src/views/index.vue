@@ -90,7 +90,7 @@ export default {
   },
   methods: {
     categoryListClick(val) {
-    	this.$router.push({path: '/search', query: { type: val.title }})
+    	this.$router.push({path: '/search', query: { type: val.id }})
     }
   },
   computed: {

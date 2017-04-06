@@ -1,15 +1,13 @@
 <template>
   <div>
-    <searchBar v-if="passIn"
-               @submit="submit"
-               shadow
-               v-model="search"></searchBar>
+    <searchBar shadow
+               v-model="search"
+               @submit="submit"></searchBar>
     <main class="container">
       <fileList isScroll
-                  :list="searchResult"
-                  v-if="isSearch"></fileList>
-      <categoryList v-if="passIn"
-                    v-model="type"
+                :list="searchResult"
+                v-if="isSearch"></fileList>
+      <categoryList v-model="type"
                     checkBox></categoryList>
     </main>
   </div>
@@ -22,12 +20,13 @@ export default {
   components: {
     searchBar, fileList, categoryList
   },
-  mounted() {
-    if (this.$route.query.type) {
-      const arr = []
-      arr.push(this.$route.query.type)
-      this.type = arr
+  created() {
+    let id = this.$route.query.type
+    if (id) {
+      this.type.push(Number(id))
       this.passIn = true
+    } else {
+      this.type.push(0)
     }
   },
   methods: {
@@ -49,7 +48,7 @@ export default {
       searchResult: '',
       isSearch: false,
       passIn: false,
-      type: [0]
+      type: []
     }
   }
 }
