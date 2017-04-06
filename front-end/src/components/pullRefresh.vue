@@ -1,8 +1,11 @@
 <template>
 
   <div id="refresh">
-  <span v-show="refreshFlag">加载中...</span>
   <slot></slot>
+  <div class="footer">
+    <span v-show="refreshFlag">加载中...</span>
+  <span v-show="noMoreData">没有更多数据</span>
+  </div>
   </div>
 </template>
 
@@ -21,6 +24,7 @@ export default {
     },
     noMore() {
       this.noMoreData = true
+      this.refreshFlag = false
     }
   },
   mounted() {
@@ -49,5 +53,9 @@ export default {
 
 
 <style lang="scss" scoped>
-
+.footer{
+  text-align: center;
+  padding-top: 10px;
+  color: #455D7A;
+}
 </style>

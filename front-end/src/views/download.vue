@@ -2,7 +2,8 @@
   <div>
     <div class="top">
       <div class="top">
-        <fileIcon v-if="detail['F_ext']" :type="detail['F_ext']"
+        <fileIcon v-if="detail['F_ext']"
+                  :type="detail['F_ext']"
                   size="small"></fileIcon>
         <div class="right">
           <h2>{{detail['F_name']}}</h2>
@@ -11,41 +12,43 @@
       </div>
       <div class="middle">
         <div class="item">
-          <img src="../assets/download.png">
-            {{detail['F_download_count']}}
+          <img src="../assets/download.png"> {{detail['F_download_count']}}
         </div>
         <div class="item">
-          <img src="../assets/eye.png">
-          {{detail['F_view_count']}}
+          <img src="../assets/eye.png"> {{detail['F_view_count']}}
         </div>
         <div class="item">
-          <img src="../assets/humbuger.png">
-          {{type}}
+          <img src="../assets/humbuger.png"> {{type}}
         </div>
       </div>
       <div class="bottom">
         <div class="left">
           <div class="comment wrapper"><img src="../assets/commentColor.png"> {{detail['comment_count']}}</div>
-          <div class="like wrapper" @click="like">
-            <img v-if="detail['liked']" src="../assets/heartColor.png">
-            <img  v-else src="../assets/heart.png">
-             {{detail['like_count']}}
+          <div class="like wrapper"
+               @click="like">
+            <img v-if="detail['liked']"
+                 src="../assets/heartColor.png">
+            <img v-else
+                 src="../assets/heart.png"> {{detail['like_count']}}
           </div>
         </div>
         <div class="right">
-          <button id="download-btn" @click="downloadClick">下载</button>
+          <button id="download-btn"
+                  @click="downloadClick">下载</button>
         </div>
       </div>
     </div>
     <div class="tab">
       <div class="preview">
         <!--<iframe src="http://view.officeapps.live.com/op/view.aspx?src=https://wx.97qingnian.com/upload/20170331/45ae784b3da3b7a1928998f99c9d70b2.doc"
-                frameborder="0"
-                style="width:100%;height:100%;">
-                </iframe>-->
+                  frameborder="0"
+                  style="width:100%;height:100%;">
+                  </iframe>-->
       </div>
       <div class="comments">
-        <commentList :list="commentArr"></commentList>
+        <commentList :list="commentArr"
+                     @refresh="commentRefresh"
+                     ref="refresh"></commentList>
       </div>
       <!--<div class="bottom_btn" @click="newComment">新建评论</div>-->
     </div>
@@ -67,33 +70,46 @@ export default {
       })
       this.$router.push('/')
     }
+    this.id = id
     this.$http.get(`/file?file_id=${id}`).then(res => {
       this.detail = res.body
     }, err => {
       this.$store.commit('updateError', { isError: true })
     })
-////////////////
-this.$http.get(`/file/comment/?file_id=${id}&page=0`).then(res => {
-  this.commentArr = res.body
-
-}, err => {
- //TODO
-})
+    ////////////////
+   this.getComment()
   },
-  data () {
+  data() {
     return {
+      id: '',
       detail: {},
-      commentArr: []
+      commentArr: [],
+      commentPage: 0
     }
   },
   methods: {
+    commentRefresh() {
+      this.getComment()
+    },
+    getComment() {
+       this.$http.get(`/file/comment/?file_id=${this.id}&page=${this.commentPage}`).then(res => {
+         if (res.body.length === 0) this.noMoreData()
+      this.commentArr = this.commentArr.concat(res.body)
+    }, err => {
+      //TODO
+    })
+    this.commentPage++
+  },
+  noMoreData() {
+    this.$refs.refresh.noMoreData()
+  },
     downloadClick() {
       if (this.user.level < this.detail['F_level']) {
-       this.$vux.toast.show({
+        this.$vux.toast.show({
           text: '权限不够哦~ 请去个人中心升级权限',
           type: 'warn'
         })
-      return
+        return
       }
       window.location.href = `https://wx.97qingnian.com/file/download/?file_id=${this.detail['F_Id']}`
     },
@@ -108,11 +124,11 @@ this.$http.get(`/file/comment/?file_id=${id}&page=0`).then(res => {
     }
   },
   computed: {
-    type () {
+    type() {
       return getCategroyListById(this.detail['F_type'])
     },
     ...mapState({
-     user: state => state.user
+      user: state => state.user
     })
   },
   components: {
@@ -215,5 +231,4 @@ $menuBarRadius: 4px;
 
   background-image: linear-gradient(-90deg, #EF5F3E 0%, #EB3369 100%);
 }
-
 </style>

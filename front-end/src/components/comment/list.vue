@@ -7,22 +7,6 @@
           :content="item['C_content']"
           key="index"
           :name="item['U_name']"></item>
-          <li>1</li>
-          <li>1</li>
-          <li>1</li>
-          <li>1</li>
-          <li>1</li>
-          <li>1</li>
-          <li>1</li>
-          <li>1</li>
-          <li>1</li>
-          <li>1</li>
-          <li>1</li>
-          <li>1</li>
-          <li>1</li>
-          <li>1</li>
-          <li>1</li>
-
     </refresh>
   </div>
 </template>
