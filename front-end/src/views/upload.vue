@@ -5,18 +5,20 @@
         <div class="title">
           上传文件
         </div>
-        <div class="sub-title">
+        <form enctype="multipart/form-data" id="form" action="">
+          <div class="sub-title">
           文件名称(如不填写, 将自动获取)
         </div>
         <div class="inputer">
-          <input type="text">
+          <input name="file_name" v-model="fileName" type="text">
         </div>
         <div class="sub-title">
           选择文件
         </div>
         <div class="inputer">
-          <input type="file" id="file">
+          <input name="file" type="file" id="file">
         </div>
+        </form>
         <div class="right-bottom" @click="upload">
           下一步 →
         </div>
@@ -26,9 +28,9 @@
           上传成功
         </div>
         <!--!!!!!!!!!!!-->
-        <fileIcon type="pdf" size="big"></fileIcon>
+        <fileIcon :type="ext" size="big"></fileIcon>
         <!--12312312312312-->
-          <div class="fileName">高数2017期末考试.doc</div>
+          <div class="fileName">{{fileName}}</div>
           <h3 class="thanks">谢谢您的贡献</h3>
           <h5>+3积分</h5>
           <div class="right-bottom" @click="$router.push('/')">
@@ -55,6 +57,10 @@ function sha($file) {
   })
 
 }
+function getFileName($file) {
+  let file = $file.files[0]
+  return file.name.split('.')[0]
+}
 export default {
   name: 'upload',
   components: {
@@ -70,9 +76,9 @@ export default {
         })
         return
       }
-
-
       this.setLoading({ isLoading: true })
+      if (this.fileName === '') this.fileName = getFileName($file)
+
       sha(file).then(sha => {
         this.checkMD5(sha).then(result => {
           if (!result) {
@@ -85,7 +91,12 @@ export default {
       }
       this.uploadFile($file).then((result)=>{
       this.setLoading({ isLoading: false })
+      console.log(result)
+      this.ext = result['file_info']['file_ext']
+      this.fileName = result['file_info']['file_name']
       this.steep = 2
+      }, err=> {
+        this.setLoading({ isLoading: false })
       })
         })
       })
@@ -100,11 +111,16 @@ export default {
     },
     uploadFile($file) {
       return new Promise((resolve, rejcet) => {
-        // TODO
-        this.$http.post('/file/upload', {file: $file.files[0]}).then(res => {
+        const form = new FormData(document.getElementById('form'))
+        this.$http.post('/file/upload', form).then(res => {
           resolve(res.body)
         }, err => {
-          reject(err)
+          this.setLoading({ isLoading: false })
+           this.$vux.toast.show({
+            text: err.body.reason,
+           type: 'warn'
+        })
+          // reject(err)
         })
       })
     },
@@ -115,7 +131,9 @@ export default {
   data() {
     return {
       steep: 1,
-      transitionName: 'slide-left'
+      transitionName: 'slide-left',
+      fileName: '',
+      ext: ''
     }
   },
   watch: {

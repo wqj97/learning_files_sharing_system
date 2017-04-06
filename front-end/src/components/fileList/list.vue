@@ -1,7 +1,10 @@
 <template>
   <div>
-    <Scroller :use-pullup="isScroll" :pullup-config="pullupConfig" lock-x
-    v-model="status">
+    <Scroller :use-pullup="isScroll"
+              :pullup-config="pullupConfig"
+              lock-x
+              ref="scroller"
+              @on-pullup-loading="refresh">
       <div>
         <item type="DOC"
               title="2017年高数期末考试试卷"
@@ -35,31 +38,45 @@ export default {
     },
     isScroll: {
       type: Boolean,
-      default:false
+      default: false
     }
   },
   name: 'fileList',
+  methods: {
+    refresh() {
+      console.log('???')
+
+      setTimeout(() => {
+        this.endRefresh()
+      },500)
+    },
+    endRefresh() {
+      console.log('in')
+
+      this.$refs.scroller.donePullup()
+    }
+  },
   data() {
     return {
-      status:'default',
+      status: 'default',
       pullupConfig: {
-  content: '下拉刷新',
-  pullUpHeight: 60,
-  height: 40,
-  autoRefresh: false,
-  downContent: '松开刷新',
-  upContent: '松开刷新',
-  loadingContent: '刷新中...'
-}
+        content: '下拉刷新',
+        pullUpHeight: 60,
+        height: 40,
+        autoRefresh: false,
+        downContent: '刷新',
+        upContent: '??',
+        loadingContent: '刷新中...'
+      }
     }
   }
 }
 </script>
 
 <style lang="scss" >
-.xs-plugin-pullup-undefined{
-  padding-top:5px;
-  position:static !important;
-  color:#888686;
+.xs-plugin-pullup-undefined {
+  padding-top: 5px;
+  position: static !important;
+  color: #888686;
 }
 </style>
