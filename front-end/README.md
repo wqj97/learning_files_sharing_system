@@ -12,16 +12,17 @@ TODO list
 - [x]获取轮播图信息
 搜索页
 - #[]手机上测试搜索按键
-- #[]显示回传数据           缺少详细的数据                 // 0 开始 0全部
+- #[x]显示回传数据
 - []显示数据分页
+- []处理点击分类进入的问题
 - [x]列表组件可选择, V-model返回数组
 上传页
 - [x]解析文件获取md5, 有则提醒无需上传
 - [x]上传文件                            return
 - [x]文件名
 文件详情页
-- []获取基本信息                        W
-- []文件预览                            W
+- []获取基本信息
+- []文件预览
 - []文件评论[分页]                     GET /file/comment/?file_id=1&page=0
 - []创建评论                          POST /file/comment/new/    file_id content 255
 - []点赞                             W GET /file/collect/   file_id
