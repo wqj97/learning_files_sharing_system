@@ -35,11 +35,8 @@ export default {
     }
   },
   created() {
-    console.log('created')
-    console.log(this.value)
     if(!this.value)  return
     this.value.forEach(id => {
-      console.log(id)
       if (id === 0) return
       let index = ids.indexOf(id)
       console.log('index:' + index)
