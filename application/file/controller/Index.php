@@ -15,10 +15,11 @@ class Index
 {
     /**
      * 查询文件信息
+     * @get file_id
      * @return \think\response\Json
      */
     public function Index() {
-        $Id = input('get.Id');
+        $Id = input('get.file_id');
         $openid = cookie('openid');
         $file_info = Db::query("select * from File where F_Id = ?",[$Id])[0];
         $file_info["comment_count"] = Db::query("select count(0) from Comment where C_file_Id = $file_info[F_Id]")[0]["count(0)"];
