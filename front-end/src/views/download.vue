@@ -33,7 +33,7 @@
           </div>
         </div>
         <div class="right">
-          <button id="download-btn">下载</button>
+          <button id="download-btn" @click="downloadClick">下载</button>
         </div>
       </div>
     </div>
@@ -55,6 +55,7 @@
 <script>
 import { fileIcon, commentList } from '@/components/'
 import { getCategroyListById } from '@/utils'
+import { mapState } from 'vuex'
 export default {
   name: 'download',
   mounted() {
@@ -86,6 +87,16 @@ this.$http.get(`/file/comment/?file_id=${id}&page=0`).then(res => {
     }
   },
   methods: {
+    downloadClick() {
+      if (this.user.level < this.detail['F_level']) {
+       this.$vux.toast.show({
+          text: '权限不够哦~ 请去个人中心升级权限',
+          type: 'warn'
+        })
+      return
+      }
+      window.location.href = `https://wx.97qingnian.com/file/download/?file_id=${this.detail['F_Id']}`
+    },
     like() {
       this.$http.get(`/file/collect?file_id=${this.detail['F_Id']}`).then(res => {
         //TODO
@@ -99,7 +110,10 @@ this.$http.get(`/file/comment/?file_id=${id}&page=0`).then(res => {
   computed: {
     type () {
       return getCategroyListById(this.detail['F_type'])
-    }
+    },
+    ...mapState({
+     user: state => state.user
+    })
   },
   components: {
     fileIcon,
