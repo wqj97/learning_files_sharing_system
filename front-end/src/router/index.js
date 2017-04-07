@@ -43,6 +43,10 @@ const router = new Router({
     {
       path: '/buy',
       component: asyncImport('buy')
+    },
+    {
+      path: '/netWorkError',
+      component: asyncImport('netWorkError')
     }
 
   ]
