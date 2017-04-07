@@ -6,13 +6,13 @@ TODO list
 搜索页
 - #[]手机上测试搜索按键
 - [x]显示数据分页
-- []清除状态
+- [x]清除状态
 上传页
 
 文件详情页
 - [x]获取基本信息
 - []文件预览
-- []创建评论                          POST /file/comment/new/    file_id content 255
+- [x]创建评论                          POST /file/comment/new/    file_id content 255
 - [x]下载时检测权限                     /
 个人中心
 - [x]获取个人信息 这里和首页是一样的吗? 一样的话存到vux中

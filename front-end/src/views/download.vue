@@ -1,5 +1,10 @@
 <template>
   <div>
+    <x-dialog v-model="isShowNewComment" hide-on-blur>
+      <div class="comment_title">新建评论</div>
+       <x-textarea  v-model="newCommentContent" placeholder="请输入你的评论" :max="40"></x-textarea>
+ <x-button @click.native="submitComment">评论</x-button>
+    </x-dialog>
     <div class="top">
       <div class="top">
         <fileIcon v-if="detail['F_ext']"
@@ -50,7 +55,7 @@
                      @refresh="commentRefresh"
                      ref="refresh"></commentList>
       </div>
-      <!--<div class="bottom_btn" @click="newComment">新建评论</div>-->
+      <div class="bottom_btn" @click="isShowNewComment = true">新建评论</div>
     </div>
   </div>
 </template>
@@ -59,6 +64,7 @@
 import { fileIcon, commentList } from '@/components/'
 import { getCategroyListById } from '@/utils'
 import { mapState } from 'vuex'
+import {XDialog, XTextarea, XButton} from 'vux'
 export default {
   name: 'download',
   mounted() {
@@ -76,18 +82,37 @@ export default {
     }, err => {
       this.$store.commit('updateError', { isError: true })
     })
-    ////////////////
    this.getComment()
   },
   data() {
     return {
       id: '',
+      isShowNewComment: false,
+      newCommentContent: '',
       detail: {},
       commentArr: [],
       commentPage: 0
     }
   },
   methods: {
+    submitComment() {
+      if (this.newCommentContent === '') {
+         this.$vux.toast.show({
+          text: '内容不能为空',
+          type: 'warn'
+        })
+        return
+      }
+      this.$http.post(`/file/comment/new/`, {file_id: this.detail['F_Id'], content: this.newCommentContent}).then(res => {
+       this.$vux.toast.show({
+          text: '成功!'
+        })
+       this.isShowNewComment = false
+      }, err => {
+        //TODO
+
+      })
+    },
     commentRefresh() {
       this.getComment()
     },
@@ -133,7 +158,10 @@ export default {
   },
   components: {
     fileIcon,
-    commentList
+    commentList,
+    XDialog,
+    XTextarea,
+    XButton
   }
 }
 </script>
@@ -230,5 +258,8 @@ $menuBarRadius: 4px;
   font-weight: 200;
 
   background-image: linear-gradient(-90deg, #EF5F3E 0%, #EB3369 100%);
+}
+.comment_title{
+  padding:10px;
 }
 </style>
