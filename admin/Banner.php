@@ -149,7 +149,7 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
                 <h3 class=\"timeline-header\"></h3>
                 <div class=\"timeline-body\">
                   <div class=\"form-group\">
-                    <img src=\"$item[image]\" alt=\"\" onclick='imageChange(this)'>
+                    <img src=\"$item[image]\" alt=\"\" data-url='$item[image]' onclick='imageChange(this)'>
                     <div class=\"input-group\" style=\"margin: 20px 0;\">
                       <div class=\"input-group-addon\">
                         网址
@@ -163,6 +163,7 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
               }
               ?>
           </ul>
+          <button class="btn btn-block btn-info btn-lg" onclick="save()">提交</button>
         </div>
       </div>
     </section>
@@ -186,12 +187,47 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
 
   function imageChange (el) {
     $("#imgUpload").click().off("change").on("change", function () {
-      save(el)
+      changeCallBack(el)
     })
   }
 
-  function save (el) {
-
+  function changeCallBack (el) {
+    let form = new FormData();
+    form.append('file',document.getElementById('imgUpload').files[0])
+    $.ajax({
+      url:"/admin/setting/Banner_file_upload",
+      type:"post",
+      data:form,
+      processData:false,
+      contentType:false,
+      success:function (url) {
+        el.src = url.src
+        $(el).data('url',url.src)
+      }
+    })
+  }
+  
+  function save () {
+    let banner = []
+    $(".timeline li").each(function () {
+      let img_src = $(this).find("img").data('url')
+      let img_url = $(this).find("input").val()
+      banner.push({
+        image: img_src,
+        url: img_url
+      })
+    })
+    $.ajax({
+      url:'/admin/setting/Banner_save',
+      type:"post",
+      data: {
+        banner: JSON.stringify(banner)
+      },
+      success:function () {
+        location.reload()
+      }
+    })
+    console.log(banner)
   }
 </script>
 
