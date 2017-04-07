@@ -7,15 +7,14 @@
         <div class="price">￥5</div>
       </div>
       <div class="slogan">可享受部分资料</div>
-        <div class="line"></div>
     </div>
     <div class="item lv2">
       <div class="main">
         <div class="level">Lv.2</div>
         <div class="price">￥10</div>
+
       </div>
       <div class="slogan">可享受大部分资料</div>
-        <div class="line"></div>
     </div>
     <div class="item lv3">
       <div class="main">
@@ -23,7 +22,6 @@
         <div class="price">￥30</div>
       </div>
       <div class="slogan">可享受全部资料</div>
-        <div class="line"></div>
     </div>
   </div>
 </template>
@@ -47,6 +45,7 @@ border-radius: 15px;
 margin:50px 18px;
 color:#FFF;
 text-align: center;
+padding-bottom: 40px;
   .main{
     font-size: 36px;
     font-weight: 300;

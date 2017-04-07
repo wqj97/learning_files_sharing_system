@@ -26,6 +26,7 @@ export default {
   created() {
     let id = this.$route.query.type
     if (id) {
+      this.type=[]
       this.type.push(Number(id))
       this.passIn = true
     } else {

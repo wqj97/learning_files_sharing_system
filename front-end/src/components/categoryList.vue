@@ -35,13 +35,16 @@ export default {
       type: Boolean
     }
   },
-  created() {
+  mounted() {
     if(!this.value)  return
+    this.renderList.forEach(item => {
+      item.checked = false
+    })
     this.value.forEach(id => {
       if (id === 0) return
       let index = ids.indexOf(id)
       console.log('index:' + index)
-      if (!index) throw "传入的type数据有误"
+      if (index === -1) throw "传入的type数据有误"
       this.renderList[index].checked = true
     })
   },
