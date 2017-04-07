@@ -107,6 +107,7 @@ export default {
        this.$vux.toast.show({
           text: '成功!'
         })
+      this.newCommentContent = ''
        this.isShowNewComment = false
       }, err => {
         this.$vux.toast.show({
@@ -122,6 +123,7 @@ export default {
        this.$http.get(`/file/comment/?file_id=${this.id}&page=${this.commentPage}`).then(res => {
          if (res.body.length === 0) this.noMoreData()
       this.commentArr = this.commentArr.concat(res.body)
+      this.$refs.refresh.done()
     }, err => {
         this.$vux.toast.show({
           text: '失败, 未知错误',
