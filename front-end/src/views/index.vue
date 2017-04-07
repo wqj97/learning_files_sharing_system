@@ -8,7 +8,7 @@
       </div>
       <div class="right" @click="$router.push('/schoolList')">
         <img class="img vertical_center" src="../assets/location.png">
-          {{user['U_school']}}
+          <span style="font-size:12px;">{{user['U_school']}}</span>
       </div>
     </div>
     <h3 class="title text_shdow">这里有你想要的所有</h3>
@@ -22,7 +22,7 @@
     </div>
    </header>
    <section class="slide_show">
-    <swiper loop :list="imgList" :show-desc-mask="false" height="100px" style="width:100%;margin:0 auto; height:100%" dots-class="custom-bottom" dots-position="center"></swiper>
+    <swiper loop :list="imgList" auto :show-desc-mask="false" height="100px" style="width:100%;margin:0 auto; height:100%" dots-class="custom-bottom" dots-position="center"></swiper>
    </section>
    <section class="list">
      <Tab v-model="tabIndex" :active-color="mainColor" :bar-active-color="mainColor" :line-width="2" defaultColor="#00B9F8">
@@ -132,7 +132,7 @@ export default {
   background-image: linear-gradient(-180deg, #00B9F8 0%, #2ECAFF 100%);
   .title{
     /* 这有你想要的所有: */
-font-weight: 100;
+font-weight: 300;
 font-size: 20px;
 color: #FFFFFF;
 letter-spacing: -0.49px;
