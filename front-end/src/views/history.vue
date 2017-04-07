@@ -1,10 +1,9 @@
 <template>
   <div>
     <div class="list-container"v-if="list.length!=0">
-    <div  class="item" v-for="item in list" @click = "$router.push(item.url)">
-    {{item.title}}
+    <div  class="item" v-for="item in list" @click = "$router.push(`/download?id=${item['F_Id']}`)">
+    {{item['F_name']}}
     </div>
-
   </div>
   <div class="item" v-else>
       没有更多内容
@@ -15,12 +14,17 @@
 <script>
 export default {
   name: 'history',
+  mounted() {
+    this.type = this.$route.query.type
+    this.$http.get(`/user/lists/${this.type}`).then(res => {
+      this.list = res.body
+    })
+
+  },
   data() {
     return {
-      list : [{
-        title: '123',
-        url:'123'
-      }]
+      type: '',
+      list : []
     }
   }
 }
