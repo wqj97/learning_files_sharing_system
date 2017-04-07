@@ -20,7 +20,7 @@ const imgPath = '/static/img/category/'
 const defaultList = titleList.map((item, index) => {
   return {
     title: item,
-    image: `${imgPath}${index + 1}.png`,
+    image: `${imgPath}${index + 1}.svg`,
     id: ids[index],
     checked: false
   }
