@@ -25,24 +25,27 @@ class Setting
         $file_credit = input('post.file_credit');
         $level = input('post.level');
         $price = input('post.price');
-        Db::execute("update Setting set S_value = ? where S_key = 'A_user'",[$A_admin]);
-        Db::execute("update Setting set S_value = ? where S_key = 'A_pwd'",[$A_pwd]);
-        Db::execute("update Setting set S_value = ? where S_key = 'file_type'",[$file_type]);
-        Db::execute("update Setting set S_value = ? where S_key = 'file_credit'",[$file_credit]);
-        Db::execute("update Setting set S_value = ? where S_key = 'level'",[$level]);
-        Db::execute("update Setting set S_value = ? where S_key = 'price'",[$price]);
+        Db::execute("UPDATE Setting SET S_value = ? WHERE S_key = 'A_user'", [$A_admin]);
+        Db::execute("UPDATE Setting SET S_value = ? WHERE S_key = 'A_pwd'", [$A_pwd]);
+        Db::execute("UPDATE Setting SET S_value = ? WHERE S_key = 'file_type'", [$file_type]);
+        Db::execute("UPDATE Setting SET S_value = ? WHERE S_key = 'file_credit'", [$file_credit]);
+        Db::execute("UPDATE Setting SET S_value = ? WHERE S_key = 'level'", [$level]);
+        Db::execute("UPDATE Setting SET S_value = ? WHERE S_key = 'price'", [$price]);
         return json(["result" => "success"]);
     }
 
-    public function Banner()
+    public function Banner_file_upload()
     {
-        $key = input('post.key');
         $file = request()->file('file');
         $info = $file->move($_SERVER['DOCUMENT_ROOT'] . '/upload/Banner');
         $file_src = '/upload/Banner/' . date('Ymd') . "/" . $info->getFilename();
-        $bannerSetting = json_decode(Server_Setting('banner'));
-        $bannerSetting[$key] = $file_src;
-        $banner = json_encode($bannerSetting,256);
-        Db::execute("update Setting set S_value = ? where S_key = 'banner'",[$banner]);
+        return json(["result" => "success", "src" => $file_src]);
+    }
+
+    public function Banner_save()
+    {
+        $banner = input('post.banner');
+        Db::execute("UPDATE Setting SET S_value = ? WHERE S_key = 'banner'", [$banner]);
+        return json(["result" => "success"], 200);
     }
 }

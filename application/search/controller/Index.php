@@ -46,9 +46,8 @@ class Index
             foreach ($type as $each) {
                 $sql = $sql.' or F_type = '.$each.' ';
             }
-            echo $sql."\r\n";
             $sql = $sql."order by `F_join_time` desc LIMIT $start,12";
-            $files = Db::query($sql, ['%'.$name].'%');
+            $files = Db::query($sql, ['%'.$name.'%']);
         }
         return json($files);
     }

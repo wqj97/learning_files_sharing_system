@@ -128,7 +128,7 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
       </ol>
     </section>
       <?php
-      $banner = json_decode($Db->query("SELECT S_value FROM Setting WHERE S_key = 'banner'")[0]["S_value"]);
+      $banner = json_decode($Db->query("SELECT S_value FROM Setting WHERE S_key = 'banner'")[0]["S_value"], true);
       ?>
     <!-- Main content -->
     <section class="content">
@@ -141,39 +141,27 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
         </div>
         <div class="box-body">
           <ul class="timeline">
-            <li>
-              <i class="fa fa-tv bg-blue"></i>
-              <div class="timeline-item">
-                <h3 class="timeline-header"></h3>
-                <div class="timeline-body">
-                  <img src="<?php echo $banner[0] ?>" onclick="changeBanner(0)">
-                </div>
-                <div class="timeline-footer">
-                </div>
-              </div>
-            </li>
-            <li>
-              <i class="fa fa-tv bg-blue"></i>
-              <div class="timeline-item">
-                <h3 class="timeline-header"></h3>
-                <div class="timeline-body">
-                  <img src="<?php echo $banner[1] ?>" onclick="changeBanner(1)">
-                </div>
-                <div class="timeline-footer">
+              <?php
+              foreach ($banner as $item) {
+                  echo "<li>
+              <i class=\"fa fa-tv bg-blue\"></i>
+              <div class=\"timeline-item\">
+                <h3 class=\"timeline-header\"></h3>
+                <div class=\"timeline-body\">
+                  <div class=\"form-group\">
+                    <img src=\"$item[image]\" alt=\"\" onclick='imageChange(this)'>
+                    <div class=\"input-group\" style=\"margin: 20px 0;\">
+                      <div class=\"input-group-addon\">
+                        网址
+                      </div>
+                      <input type=\"url\" class=\"form-control\" value='$item[url]'>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </li>
-            <li>
-              <i class="fa fa-tv bg-blue"></i>
-              <div class="timeline-item">
-                <h3 class="timeline-header"></h3>
-                <div class="timeline-body">
-                  <img src="<?php echo $banner[2] ?>" onclick="changeBanner(2)">
-                </div>
-                <div class="timeline-footer">
-                </div>
-              </div>
-            </li>
+            </li>";
+              }
+              ?>
           </ul>
         </div>
       </div>
@@ -195,20 +183,15 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
   function changeBanner (Key) {
     $("#imgUpload").attr("onchange", `sendChange(${Key})`).click()
   }
-  function sendChange (key) {
-    let form = new FormData()
-    form.append('file', $("#imgUpload")[0].files[0])
-    form.append('key', key)
-    $.ajax({
-      url: "/admin/setting/banner",
-      type: "post",
-      data: form,
-      contentType: false,
-      processData: false,
-      success: function () {
-        location.reload()
-      }
+
+  function imageChange (el) {
+    $("#imgUpload").click().off("change").on("change", function () {
+      save(el)
     })
+  }
+
+  function save (el) {
+
   }
 </script>
 
