@@ -38,7 +38,7 @@ export default new Vuex.Store({
       })
     },
     updateUserSchool({state, commit}, {Id, name}) {
-      Vue.http.post('/user/index/update', {school: Id}).then(res => {
+      Vue.http.post('/user/school/update', {school: Id}).then(res => {
         if (state.user.U_name) {
           state.user.U_school = name
         } else {
