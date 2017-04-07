@@ -1,11 +1,6 @@
 <template>
   <div>
-    <Scroller :use-pullup="isScroll"
-              :pullup-config="pullupConfig"
-              lock-x
-              ref="scroller"
-              @on-pullup-loading="refresh">
-      <div>
+    <Refresh ref="fresh" @refresh="$emit('refresh')">
         <item v-for="(i, index) in list" type="DOC"
               :title="i['F_name']"
               :comments="i['comment_count']"
@@ -13,22 +8,20 @@
               :views="i['F_view_count']"
               :likes="i['collect_record']"
               :key="index"
-             :id="i['F_Id']"></item>
-      </div>
-    </Scroller>
+             :id="i['F_Id']"
+             ></item>
+    </Refresh>
   </div>
 </template>
-
 <script>
 import item from './item'
-import { Scroller } from 'vux'
+import Refresh from '../pullRefresh'
 export default {
   components: {
     item,
-    Scroller
+    Refresh
   },
   props: {
-    // TODO: 不知道数据的命名规则
     list: {
       type: Array
     },
@@ -38,41 +31,32 @@ export default {
     }
   },
   name: 'fileList',
+  mounted() {
+    console.log('file list init')
+    if (!this.isScroll) {
+      this.noMoreData()
+    }
+  },
   methods: {
-    refresh() {
-      console.log('???')
-
-      setTimeout(() => {
-        this.endRefresh()
-      },500)
+    noMoreData () {
+      this.$refs.fresh.noMore()
     },
-    endRefresh() {
-      console.log('in')
-
-      this.$refs.scroller.donePullup()
+    done () {
+      this.$refs.fresh.done()
+    },
+    resetState() {
+      this.$nextTick(() => {
+        this.$refs.fresh.resetState()
+      })
     }
   },
   data() {
     return {
-      status: 'default',
-      pullupConfig: {
-        content: '下拉刷新',
-        pullUpHeight: 60,
-        height: 40,
-        autoRefresh: false,
-        downContent: '刷新',
-        upContent: '??',
-        loadingContent: '刷新中...'
-      }
     }
   }
 }
 </script>
 
 <style lang="scss" >
-.xs-plugin-pullup-undefined {
-  padding-top: 5px;
-  position: static !important;
-  color: #888686;
-}
+
 </style>

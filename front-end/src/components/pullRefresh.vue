@@ -25,6 +25,10 @@ export default {
     noMore() {
       this.noMoreData = true
       this.refreshFlag = false
+    },
+    resetState() {
+      this.noMoreData = false
+      this.refreshFlag = false
     }
   },
   mounted() {

@@ -6,8 +6,11 @@
     <main class="container">
       <fileList isScroll
                 :list="searchResult"
-                v-if="isSearch"></fileList>
-      <categoryList v-model="type"
+                v-if="isSearch"
+                @refresh="loadMore"
+                ref="scroll"></fileList>
+      <categoryList v-else
+                    v-model="type"
                     checkBox></categoryList>
     </main>
   </div>
@@ -30,25 +33,43 @@ export default {
     }
   },
   methods: {
+    loadMore() {
+      this.searchData()
+    },
     submit() {
-      this.isSearch = true
-      this.$http.get(`/search?name=${this.search}&page=0&type=${JSON.stringify(this.type)}`).then(res => {
-        this.searchResult = res.body
+      this.page = 0
+      this.isSearch = true         // 显示list组件
+      this.searchResult = []
+      this.$nextTick(function () {
+    this.$refs.scroll.resetState()
+    })
+      this.searchData()
+    },
+    searchData() {
+      this.$http.get(`/search?name=${this.search}&page=${this.page}&type=${JSON.stringify(this.type)}`).then(res => {
+        if (res.body.length === 0) {
+          this.$refs.scroll.noMoreData()
+          return
+      }
+        this.searchResult = this.searchResult.concat(res.body)
+        this.page++
       }, res => {
         this.$vux.toast.show({
           text: '网络错误',
           type: 'warn'
         })
       })
+      this.page++
     }
   },
   data() {
     return {
       search: '',
-      searchResult: '',
+      searchResult: [],
       isSearch: false,
       passIn: false,
-      type: []
+      type: [],
+      page: 0
     }
   }
 }

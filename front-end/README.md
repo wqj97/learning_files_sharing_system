@@ -5,17 +5,15 @@ TODO list
 
 搜索页
 - #[]手机上测试搜索按键
-- []显示数据分页
+- [x]显示数据分页
+- []清除状态
 上传页
 
 文件详情页
 - [x]获取基本信息
 - []文件预览
-- []文件评论[分页]                     GET /file/comment/?file_id=1&page=0
 - []创建评论                          POST /file/comment/new/    file_id content 255
-- [x]点赞                             W GET /file/collect/   file_id
-- []下载时检测权限                     /
-- [x] 下载接口                        跳转  /file/download/
+- [x]下载时检测权限                     /
 个人中心
 - [x]获取个人信息 这里和首页是一样的吗? 一样的话存到vux中
 - []各种列表
@@ -25,5 +23,7 @@ TODO list
 ## 优化
 - [] 常量提出
 - [] md5检测失败
+- [] 刷新方向监测
+- [] 刷新的特效
 ##问题
 更新学校接口
