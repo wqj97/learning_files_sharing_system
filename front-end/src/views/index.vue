@@ -22,7 +22,7 @@
     </div>
    </header>
    <section class="slide_show">
-    <swiper  :list="imgList" auto style="width:100%;margin:0 auto; height:100%" dots-class="custom-bottom" dots-position="center"></swiper>
+    <swiper loop :list="imgList" auto height="100px" style="width:100%;margin:0 auto; height:100%" dots-class="custom-bottom" dots-position="center"></swiper>
    </section>
    <section class="list">
      <Tab v-model="tabIndex" :active-color="mainColor" :bar-active-color="mainColor" :line-width="2" defaultColor="#00B9F8">
