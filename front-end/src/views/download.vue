@@ -109,8 +109,10 @@ export default {
         })
        this.isShowNewComment = false
       }, err => {
-        //TODO
-
+        this.$vux.toast.show({
+          text: '失败, 未知错误',
+          type: 'warn'
+        })
       })
     },
     commentRefresh() {
@@ -121,7 +123,10 @@ export default {
          if (res.body.length === 0) this.noMoreData()
       this.commentArr = this.commentArr.concat(res.body)
     }, err => {
-      //TODO
+        this.$vux.toast.show({
+          text: '失败, 未知错误',
+          type: 'warn'
+        })
     })
     this.commentPage++
   },
@@ -144,7 +149,10 @@ export default {
         this.detail['liked'] = isLiked
         isLiked ? this.detail['like_count'] += 1 : this.detail['like_count'] -= 1
       }, err => {
-        //TODO
+          this.$vux.toast.show({
+          text: '失败, 未知错误',
+          type: 'warn'
+        })
       })
     }
   },
