@@ -1,15 +1,23 @@
 <template>
   <div>
-    <searchBar shadow
+    <searchBar
+               v-if="passIn"
+               shadow
+               :type="type[0]"
+               v-model="search"
+               @submit="submit"></searchBar>
+     <searchBar
+               v-else
+               shadow
                v-model="search"
                @submit="submit"></searchBar>
     <main class="container">
       <fileList isScroll
                 :list="searchResult"
-                v-if="isSearch"
+                v-if="isSearch || passIn"
                 @refresh="loadMore"
                 ref="scroll"></fileList>
-      <categoryList v-else
+      <categoryList v-show="!passIn && !isSearch"
                     v-model="type"
                     checkBox></categoryList>
     </main>
@@ -26,8 +34,10 @@ export default {
   created() {
     let id = this.$route.query.type
     if (id) {
+      this.type=[]
       this.type.push(Number(id))
       this.passIn = true
+      this.searchData()
     } else {
       this.type.push(0)
     }

@@ -1,7 +1,7 @@
 <template>
   <div :class="{'searchBar': true,'searchBar-shadow' : this.shadow}">
     <div class="left">
-      <span class="vertical_center" v-if="type">{{type}}</span>
+      <span class="vertical_center" v-if="type">{{title}}</span>
       <img class="img" v-else src="../assets/search.png">
     </div>
     <div class="right">
@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import {getCategroyListById} from '../utils'
 export default {
   name: 'searchBar',
   props: {
@@ -20,7 +21,7 @@ export default {
       type: String
     },
     type: {
-      type:String
+      type:Number
     },
     shadow:{
       type: Boolean
@@ -31,12 +32,16 @@ export default {
       // return '搜索' + !this.type ? this.type : '...'   // why can't
       const lastpart = !this.type == undefined ? this.type : '...'
       return '搜索' + lastpart
+    },
+    title () {
+      return getCategroyListById(this.type)
     }
   },
   methods: {
     empty() {
     }
   },
+
   data () {
     return {
 

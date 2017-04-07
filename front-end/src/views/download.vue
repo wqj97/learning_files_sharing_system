@@ -77,8 +77,10 @@ export default {
       this.$router.push('/')
     }
     this.id = id
+     this.$store.commit('updateLoadingStatus', {isLoading: true})
     this.$http.get(`/file?file_id=${id}`).then(res => {
       this.detail = res.body
+      this.$store.commit('updateLoadingStatus', {isLoading: false})
     }, err => {
       this.$store.commit('updateError', { isError: true })
     })
@@ -107,6 +109,7 @@ export default {
        this.$vux.toast.show({
           text: '成功!'
         })
+      this.newCommentContent = ''
        this.isShowNewComment = false
       }, err => {
         this.$vux.toast.show({
@@ -122,6 +125,7 @@ export default {
        this.$http.get(`/file/comment/?file_id=${this.id}&page=${this.commentPage}`).then(res => {
          if (res.body.length === 0) this.noMoreData()
       this.commentArr = this.commentArr.concat(res.body)
+      this.$refs.refresh.done()
     }, err => {
         this.$vux.toast.show({
           text: '失败, 未知错误',

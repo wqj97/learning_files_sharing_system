@@ -16,8 +16,10 @@ export default {
   name: 'history',
   mounted() {
     this.type = this.$route.query.type
+     this.$store.commit('updateLoadingStatus', {isLoading: true})
     this.$http.get(`/user/lists/${this.type}`).then(res => {
       this.list = res.body
+      this.$store.commit('updateLoadingStatus', {isLoading: false})
     })
 
   },

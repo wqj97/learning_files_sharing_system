@@ -40,9 +40,11 @@ export default {
       type: 'text',
       position:'middle'
     })
-    }
+  }
+  this.$store.commit('updateLoadingStatus', {isLoading: true})
     this.$http.get('/user/school/list').then(res => {
       this.list = res.body
+       this.$store.commit('updateLoadingStatus', {isLoading: false})
     })
   }
 }

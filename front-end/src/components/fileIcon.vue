@@ -26,7 +26,7 @@ export default {
   },
   computed: {
     fileUrl() {
-      return imgBaseUrl + this.type.toLowerCase() + '.png'
+      return imgBaseUrl + this.type.toLowerCase() + '.svg'
     }
   }
 }
