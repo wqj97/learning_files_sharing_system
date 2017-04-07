@@ -77,8 +77,10 @@ export default {
       this.$router.push('/')
     }
     this.id = id
+     this.$store.commit('updateLoadingStatus', {isLoading: true})
     this.$http.get(`/file?file_id=${id}`).then(res => {
       this.detail = res.body
+      this.$store.commit('updateLoadingStatus', {isLoading: false})
     }, err => {
       this.$store.commit('updateError', { isError: true })
     })
