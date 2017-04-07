@@ -35,7 +35,7 @@ export default {
   .item{
     color: $baseFontColor;
     text-align: center;
-    padding: 38px 0;
+    padding: 25px 0;
     border-bottom: 1px solid #EEEEEE;
   }
 </style>

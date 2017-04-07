@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Group>
+    <Group title="学校列表">
       <span v-for="item in list" @click="click(item)">
         <Cell
             :title="item.name"
