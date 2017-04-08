@@ -1,6 +1,6 @@
 <template>
   <div class="file-list-item"  @click="$router.push(`/download?id=${id}`)">
-    <div class="left">{{type}}</div>
+    <div class="left">{{formatType}}</div>
     <div class="right">
       <div class="top">{{title}}</div>
       <div class="bottom">
@@ -41,10 +41,10 @@ export default {
       type: Number
     }
   },
-  data() {
-    return {
-
-    }
+  computed: {
+    formatType () {
+      return this.type.toUpperCase()
+  }
   }
 }
 </script>
@@ -71,7 +71,8 @@ $radius: 5px;
     align-items: center;
     justify-content: center;
     color: #FFF;
-    font-size: 24px;
+    font-size: 22px;
+    overflow: hidden;
   }
   .right{
     box-sizing: border-box;

@@ -67,6 +67,7 @@ export default {
   },
   methods: {
     upload() {
+
       let $file = window.document.getElementById('file')
       if (!$file.files[0]) {
         this.$vux.toast.show({
@@ -75,13 +76,15 @@ export default {
         })
         return
       }
-      this.setLoading({ isLoading: true })
+      this.$vux.loading.show({
+        text: '上传中...'
+    })
       if (this.fileName === '') this.fileName = getFileName($file)
 
       sha(file).then(sha => {
         this.checkMD5(sha).then(result => {
           if (!result) {
-             this.setLoading({ isLoading: false })
+             this.$vux.loading.hide()
             this.$vux.toast.show({
           text: '该文件已有人上传~',
           type: 'warn'
@@ -89,13 +92,13 @@ export default {
         return
       }
       this.uploadFile($file).then((result)=>{
-      this.setLoading({ isLoading: false })
+      this.$vux.loading.hide()
       console.log(result)
       this.ext = result['file_info']['file_ext']
       this.fileName = result['file_info']['file_name']
       this.steep = 2
       }, err=> {
-        this.setLoading({ isLoading: false })
+        this.$vux.loading.hide()
       })
         })
       })
@@ -114,7 +117,7 @@ export default {
         this.$http.post('/file/upload', form).then(res => {
           resolve(res.body)
         }, err => {
-          this.setLoading({ isLoading: false })
+         this.$vux.loading.hide()
            this.$vux.toast.show({
             text: err.body.reason,
            type: 'warn'

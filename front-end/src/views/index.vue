@@ -137,6 +137,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   .avatar_photo {
+box-shadow: 0px 2px 7px 0px rgba(0,0,0,0.24);
     width: 28px;
     height: 28px;
     border-radius: 100%;

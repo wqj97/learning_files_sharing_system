@@ -7,7 +7,8 @@
     </x-dialog>
     <div class="top">
       <div class="top">
-        <fileIcon v-if="detail['F_ext']"
+        <fileIcon class="fileIcon"
+                  v-if="detail['F_ext']"
                   :type="detail['F_ext']"
                   size="small"></fileIcon>
         <div class="right">
@@ -109,6 +110,8 @@ export default {
        this.$vux.toast.show({
           text: '成功!'
         })
+      this.commentPage = 0
+      this.getComment()
       this.newCommentContent = ''
        this.isShowNewComment = false
       }, err => {
@@ -145,7 +148,7 @@ export default {
         })
         return
       }
-      window.location.href = `https://wx.97qingnian.com/file/download/?file_id=${this.detail['F_Id']}`
+      window.location.href = `${window.location.origin}/file/download/?file_id=${this.detail['F_Id']}`
     },
     like() {
       this.$http.get(`/file/collect?file_id=${this.detail['F_Id']}`).then(res => {
@@ -188,11 +191,13 @@ export default {
   padding-bottom: 18px;
   border-bottom: 1px solid #EEEEEE;
   .top {
-    padding-top: 0px;
-    padding-bottom: 0px;
     border: none;
     display: flex;
     justify-content: space-around;
+    padding: 0 6px;
+    .fileIcon{
+      min-width: 60px;
+    }
     .right {
       font-weight: 200;
       h2 {
