@@ -8,6 +8,7 @@
               :views="i['F_view_count']"
               :likes="i['collect_record']"
               :key="index"
+              :type="i['F_ext']"
              :id="i['F_Id']"
              ></item>
     </Refresh>
