@@ -4,11 +4,11 @@
     <div class="right">
       <div class="top">{{title}}</div>
       <div class="bottom">
-        <div class="item"><img src="../../assets/comment.png">{{comments}}</div>
-        <div class="item"><img src="../../assets/download.png">{{times}}</div>
+        <div class="item"><img src="../../assets/comment.svg">{{comments}}</div>
+        <div class="item"><img src="../../assets/download.svg">{{times}}</div>
 
-        <div class="item"><img src="../../assets/eye.png">{{views}}</div>
-        <div class="item"><img src="../../assets/heart.png">{{likes}}</div>
+        <div class="item"><img src="../../assets/views.svg">{{views}}</div>
+        <div class="item"><img src="../../assets/Collect.svg">{{likes}}</div>
       </div>
     </div>
   </div>
