@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <x-dialog v-model="isShowNewComment" hide-on-blur>
       <div class="comment_title">新建评论</div>
        <x-textarea  v-model="newCommentContent" placeholder="请输入你的评论" :max="40"></x-textarea>
@@ -183,6 +183,9 @@ export default {
 
 <style lang="scss" scoped>
 @import '../style/base.scss';
+.container{
+  margin-bottom: 8vh;
+}
 .top {
   background-color: #fff;
   color: #455D7A;

@@ -91,6 +91,7 @@ export default {
 }
 
 .Mine {
+  margin-bottom: 8vh;
   .Mine-bg {
     height: 200px;
     overflow: hidden;
