@@ -46,7 +46,11 @@ module.exports = {
             '/index': {
         target: 'https://wx.97qingnian.com',
         changeOrigin: true,
-      }
+      },
+      '/upload': {
+        target: 'https://wx.97qingnian.com',
+        changeOrigin: true,
+      },
 
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
