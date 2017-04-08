@@ -4,7 +4,7 @@
     <transition :name="transitionName" mode="out-in">
       <div class="panel" v-if="steep === 1">
         <div class="title">
-          上传文件
+          上传文件 <span v-show="isLoading">:{{tip}}</span>
         </div>
         <form enctype="multipart/form-data" id="form" action="">
           <div class="sub-title">
@@ -69,8 +69,8 @@ export default {
         return
       }
       this.isLoading = true
-      this.$nextTick(() => {
-        if (this.fileName === '') {
+        this.$nextTick( () => {
+          if (this.fileName === '') {
           this.tip = "自动获取文件名称"
           this.fileName = getFileName($file)
         }
@@ -83,7 +83,7 @@ export default {
             }, err => {
               this.isLoading = false
             })
-      })
+        })
     },
     checkMD5(sha) {
       return new Promise((resolve, reject) => {
