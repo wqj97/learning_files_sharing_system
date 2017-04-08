@@ -8,8 +8,6 @@ import router from './router'
 import store from './store'
 import VueResource from 'vue-resource'
 import  { ToastPlugin } from 'vux'
-import  { LoadingPlugin } from 'vux'
-Vue.use(LoadingPlugin)
 Vue.use(ToastPlugin)
 
 

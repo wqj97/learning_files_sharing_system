@@ -1,5 +1,6 @@
 <template lang='html'>
   <div class='goBind'>
+<loading v-model="isLoading" :text="tip"></loading>
     <transition :name="transitionName" mode="out-in">
       <div class="panel" v-if="steep === 1">
         <div class="title">
@@ -44,18 +45,9 @@
 <script>
 import { fileIcon } from '../components'
 import { mapMutations } from 'vuex'
+import { Loading } from 'vux'
 import md5 from 'MD5'
-function sha($file) {
-  return new Promise((resolve, reject) => {
-    var reader = new FileReader();
-      reader.onload = (callback) => {
-        console.log(md5(reader.result))
-        resolve(md5(reader.result))
-      }
-      reader.readAsBinaryString($file.files[0]);
-  })
 
-}
 function getFileName($file) {
   let file = $file.files[0]
   return file.name.split('.')[0]
@@ -63,11 +55,11 @@ function getFileName($file) {
 export default {
   name: 'upload',
   components: {
-    fileIcon
+    fileIcon,
+    Loading
   },
   methods: {
     upload() {
-
       let $file = window.document.getElementById('file')
       if (!$file.files[0]) {
         this.$vux.toast.show({
@@ -76,56 +68,75 @@ export default {
         })
         return
       }
-      this.$vux.loading.show({
-        text: '上传中...'
-    })
-      if (this.fileName === '') this.fileName = getFileName($file)
-
-      sha(file).then(sha => {
-        this.checkMD5(sha).then(result => {
-          if (!result) {
-             this.$vux.loading.hide()
-            this.$vux.toast.show({
-          text: '该文件已有人上传~',
-          type: 'warn'
-        })
-        return
-      }
-      this.uploadFile($file).then((result)=>{
-      this.$vux.loading.hide()
-      console.log(result)
-      this.ext = result['file_info']['file_ext']
-      this.fileName = result['file_info']['file_name']
-      this.steep = 2
-      }, err=> {
-        this.$vux.loading.hide()
-      })
+      this.isLoading = true
+      this.$nextTick( () => {
+        if (this.fileName === '') {
+          this.tip = "自动获取文件名称"
+          this.fileName = getFileName($file)
+        }
+        this.tip = '上传中...'
+        this.sha(file).then(sha => {
+          this.checkMD5(sha).then(result => {
+            if (!result) {
+              this.isLoading = false
+              this.$vux.toast.show({
+                text: '该文件已有人上传~',
+                type: 'warn'
+              })
+              return
+            }
+            this.uploadFile($file).then((result) => {
+              this.isLoading = false
+              this.ext = result['file_info']['file_ext']
+              this.fileName = result['file_info']['file_name']
+              this.steep = 2
+            }, err => {
+              this.isLoading = false
+            })
+          })
         })
       })
     },
     checkMD5(sha) {
-     return new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         this.$http.get(`/file/upload/check?hash=${sha}`).then(res => {
-        if (res.body.result&&res.body.result === 'success') resolve(true)
-        resolve(false)
-      }, res => reject(res))
-     })
+          if (res.body.result && res.body.result === 'success') resolve(true)
+          resolve(false)
+        }, res => reject(res))
+      })
     },
     uploadFile($file) {
       return new Promise((resolve, rejcet) => {
         const form = new FormData(document.getElementById('form'))
-        this.$http.post('/file/upload', form).then(res => {
+        this.$http.post('/file/upload', form, { progress: this.getProgress }).then(res => {
           resolve(res.body)
         }, err => {
-         this.$vux.loading.hide()
-           this.$vux.toast.show({
+          this.isLoading = false
+          this.$vux.toast.show({
             text: err.body.reason,
-           type: 'warn'
-        })
+            type: 'warn'
+          })
           // reject(err)
         })
       })
     },
+    getProgress(event) {
+      let num = (((event.loaded / event.total)* 100 ).toFixed()).toString() + '%'
+      this.tip = num
+    },
+    sha($file) {
+  return new Promise((resolve, reject) => {
+    var reader = new FileReader()
+    reader.onload = (callback) => {
+      let result
+      setTimeout(() => {
+      result = md5(reader.result)
+      resolve(result)
+      }, 600)
+    }
+    reader.readAsBinaryString($file.files[0]);
+  })
+},
     ...mapMutations({
       setLoading: 'updateLoadingStatus'
     })
@@ -135,7 +146,9 @@ export default {
       steep: 1,
       transitionName: 'slide-left',
       fileName: '',
-      ext: ''
+      ext: '',
+      isLoading: false,
+      tip: '加载中...'
     }
   },
   watch: {
