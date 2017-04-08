@@ -46,7 +46,7 @@
 import { fileIcon } from '../components'
 import { mapMutations } from 'vuex'
 import { Loading } from 'vux'
-import md5 from 'MD5'
+// import md5 from 'MD5'
 
 function getFileName($file) {
   let file = $file.files[0]
@@ -69,23 +69,13 @@ export default {
         return
       }
       this.isLoading = true
-      this.$nextTick( () => {
+      this.$nextTick(() => {
         if (this.fileName === '') {
           this.tip = "自动获取文件名称"
           this.fileName = getFileName($file)
         }
         this.tip = '上传中...'
-        this.sha(file).then(sha => {
-          this.checkMD5(sha).then(result => {
-            if (!result) {
-              this.isLoading = false
-              this.$vux.toast.show({
-                text: '该文件已有人上传~',
-                type: 'warn'
-              })
-              return
-            }
-            this.uploadFile($file).then((result) => {
+          this.uploadFile($file).then((result) => {
               this.isLoading = false
               this.ext = result['file_info']['file_ext']
               this.fileName = result['file_info']['file_name']
@@ -93,8 +83,6 @@ export default {
             }, err => {
               this.isLoading = false
             })
-          })
-        })
       })
     },
     checkMD5(sha) {
