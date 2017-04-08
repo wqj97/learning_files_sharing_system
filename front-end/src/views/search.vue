@@ -56,7 +56,9 @@ export default {
       this.searchData()
     },
     searchData() {
+       this.$store.commit('updateLoadingStatus', {isLoading: true})
       this.$http.get(`/search?name=${this.search}&page=${this.page}&type=${JSON.stringify(this.type)}`).then(res => {
+        this.$store.commit('updateLoadingStatus', {isLoading: false})
         if (res.body.length === 0) {
           this.$refs.scroll.noMoreData()
           return
