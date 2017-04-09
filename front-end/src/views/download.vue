@@ -29,7 +29,7 @@
       </div>
       <div class="bottom">
         <div class="left">
-          <div class="comment wrapper"><img src="../assets/commentColor.png"> {{detail['comment_count']}}</div>
+          <div class="comment wrapper" @click="isShowCommentList = !isShowCommentList"><img src="../assets/commentColor.png"> {{detail['comment_count']}}</div>
           <div class="like wrapper"
                @click="like">
             <img v-if="detail['liked']"
@@ -45,13 +45,11 @@
       </div>
     </div>
     <div class="tab">
-      <div class="preview">
-        <!--<iframe src="http://view.officeapps.live.com/op/view.aspx?src=https://wx.97qingnian.com/upload/20170331/45ae784b3da3b7a1928998f99c9d70b2.doc"
-                  frameborder="0"
-                  style="width:100%;height:100%;">
-                  </iframe>-->
+      <div class="preview" v-show="!isShowCommentList">
+    <iframe  style="width:100vw;height:100%;" :src="iframeUrl" frameborder="0"></iframe>
+    <!--<iframe style="width:100vw;height:100%;" src="https://www.baidu.com" frameborder="0"></iframe>-->
       </div>
-      <div class="comments">
+      <div class="comments" v-show="isShowCommentList">
         <commentList :list="commentArr"
                      @refresh="commentRefresh"
                      ref="refresh"></commentList>
@@ -90,6 +88,7 @@ export default {
   data() {
     return {
       id: '',
+      isShowCommentList: false,
       isShowNewComment: false,
       newCommentContent: '',
       detail: {},
@@ -167,6 +166,9 @@ export default {
     type() {
       return getCategroyListById(this.detail['F_type'])
     },
+    iframeUrl() {
+      return 'https://view.officeapps.live.com/op/view.aspx?src=' + encodeURI(window.location.origin + this.detail['F_url'])
+    },
     ...mapState({
       user: state => state.user
     })
@@ -192,7 +194,7 @@ export default {
   width: 100%;
   padding-top: 19px;
   padding-bottom: 18px;
-  border-bottom: 1px solid #EEEEEE;
+  // border-bottom: 1px solid #EEEEEE;
   .top {
     border: none;
     display: flex;
@@ -276,10 +278,13 @@ $menuBarRadius: 4px;
   color: #FFF;
   font-size: 18px;
   font-weight: 200;
-
-  background-image: linear-gradient(-90deg, #EF5F3E 0%, #EB3369 100%);
+ background-image: linear-gradient(-180deg, #00B9F8 0%, #2ECAFF 100%);
 }
 .comment_title{
   padding:10px;
+}
+.preview{
+  z-index: -1;
+  height:500px;
 }
 </style>
