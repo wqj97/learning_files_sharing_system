@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="record">
-      <div class="doing">
+      <div class="doing" @click="levelClicked">
         <div class="number">
           {{user['level']}}
         </div>
@@ -23,7 +23,7 @@
           等级
         </div>
       </div>
-      <div class="did">
+      <div class="did" @click="scoreClicked">
         <div class="number">
           {{user['U_credit']}}
         </div>
@@ -66,6 +66,16 @@ export default {
   name: 'mine',
   mounted() {
     this.$store.dispatch('initUserInfo')
+  },
+  methods: {
+levelClicked () {
+this.redirect('https://mp.weixin.qq.com/s?__biz=MzIxNDYyOTU2OA==&mid=100000633&idx=1&sn=57ae7d369ec5686657ed531ddb405947&chksm=17a5eed620d267c026343853df1a5c2d37cd32800cced996dfbc55ad90aa3ec28bda7a3fb287&key=c2525146f07f2fe81868bdb0a0a244c6054394c58dc99a12ab4b595032cbb0ab36517ce18c74c949183bf97c0a89f76a093ceb1778c6f862592ce9b2115a03d1a00e86f93063538182ca3cc644bc091a&ascene=0&uin=MzI5OTA4ODU%3D&devicetype=iMac+MacBookAir7%2C2+OSX+OSX+10.12.3+build(16D32)&version=12020010&nettype=WIFI&fontScale=100&pass_ticket=hIVJi1Sk8IEWqIiDe6YsmJpJnj5E1VdP2l9nQJLcPrM%3D')
+},scoreClicked () {
+this.redirect('https://mp.weixin.qq.com/s?__biz=MzIxNDYyOTU2OA==&mid=100000632&idx=1&sn=4786efa8a08a99c332efeb131fc8c586&chksm=17a5eed720d267c105f4fa050cbede03c0e8b32092121daee3d39ba623dc5df3db3ecb9e8349&key=019f1c355eb8650ad14cd61163a70ddea9dcfb4b28ce6e1b655054fc42ed006b79e0fd8d02501f05af385c6342b94e9066cdeadfad55be931736038c1ebe385bf7f1aa9048d96bc224111505f622926e&ascene=0&uin=MzI5OTA4ODU%3D&devicetype=iMac+MacBookAir7%2C2+OSX+OSX+10.12.3+build(16D32)&version=12020010&nettype=WIFI&fontScale=100&pass_ticket=hIVJi1Sk8IEWqIiDe6YsmJpJnj5E1VdP2l9nQJLcPrM%3D')
+},
+redirect(url) {
+  window.location.href=url
+}
   },
   computed: {
     ...mapState({
