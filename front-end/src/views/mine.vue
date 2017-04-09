@@ -43,12 +43,12 @@
       </div>
     </div>
         <div class="Mine-menu">
-      <div>
+      <div @click="$router.push('/history?type=share')">
 
           <img src="../assets/mine/share.svg">
           分享记录
       </div>
-      <div>
+      <div @click="$router.push('/history?type=notice')">
         <img src="../assets/mine/letter.svg">
         系统通知
       </div>
