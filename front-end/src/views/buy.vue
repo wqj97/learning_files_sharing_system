@@ -4,14 +4,14 @@
     <div class="item">
       <div class="main">
         <div class="level">Lv.1</div>
-        <div class="price">￥5</div>
+        <div class="price">￥{{prices["0"]}}</div>
       </div>
       <div class="slogan">可享受部分资料</div>
     </div>
     <div class="item lv2">
       <div class="main">
         <div class="level">Lv.2</div>
-        <div class="price">￥10</div>
+        <div class="price">￥{{prices["1"]}}</div>
 
       </div>
       <div class="slogan">可享受大部分资料</div>
@@ -19,7 +19,7 @@
     <div class="item lv3">
       <div class="main">
         <div class="level">Lv.3</div>
-        <div class="price">￥30</div>
+        <div class="price">￥{{prices["2"]}}</div>
       </div>
       <div class="slogan">可享受全部资料</div>
     </div>
@@ -28,9 +28,22 @@
 <script>
 export default {
   name: 'buy',
-  data () {
+  mounted () {
+    this.$store.commit('updateError', {isError: true})
+     this.$store.commit('updateLoadingStatus', {isLoading: true})
+    this.$http.get('/pay/price').then(res => {
+      this.$store.commit('updateLoadingStatus', {isLoading: false})
+      this.prices = JSON.parse(res.body)
+    }, err => {
+          this.$vux.toast.show({
+          text: '失败, 未知错误',
+          type: 'warn'
+        })
+    })
+  },
+   data () {
     return {
-
+      prices: {}
     }
   }
 }
