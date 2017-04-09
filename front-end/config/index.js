@@ -51,6 +51,10 @@ module.exports = {
         target: 'https://wx.97qingnian.com',
         changeOrigin: true,
       },
+      '/pay': {
+        target: 'https://wx.97qingnian.com',
+        changeOrigin: true,
+      },
 
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
