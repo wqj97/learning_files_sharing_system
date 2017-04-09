@@ -14,7 +14,7 @@
 </template>
 <script>
 import {ids, titleList } from '../utils'
-const imgPath = process.env === 'production' ?  '/home/static/img/category/' : '/static/img/category/'
+const imgPath = process.env.NODE_ENV === 'development' ?  '/static/img/category/' : '/home/static/img/category/'
 const defaultList = titleList.map((item, index) => {
   return {
     title: item,

@@ -46,8 +46,7 @@
     </div>
     <div class="tab">
       <div class="preview" v-show="!isShowCommentList">
-    <!--<iframe  style="width:100vw;height:100%;" :src="iframeUrl" frameborder="0"></iframe>-->
-    <iframe style="width:100vw;height:100%;" src="https://www.baidu.com" frameborder="0"></iframe>
+    <iframe  style="width:100vw;height:100%;" :src="iframeUrl" frameborder="0"></iframe>
       </div>
       <div class="comments" v-show="isShowCommentList">
         <commentList :list="commentArr"
@@ -167,6 +166,7 @@ export default {
       return getCategroyListById(this.detail['F_type'])
     },
     iframeUrl() {
+      if (process.env.NODE_ENV === 'development') return 'https://www.baidu.com'
       return 'https://view.officeapps.live.com/op/view.aspx?src=' + encodeURI(window.location.origin + this.detail['F_url'])
     },
     ...mapState({
