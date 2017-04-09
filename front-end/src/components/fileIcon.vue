@@ -5,7 +5,7 @@
 </template>
 
 <script>
-const imgBaseUrl = '/static/img/fileType/'
+const imgBaseUrl = './static/img/fileType/'
 export default {
   name: 'fileIcon',
   props: {
