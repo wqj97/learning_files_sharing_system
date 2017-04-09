@@ -69,9 +69,13 @@ export default {
   color: #455D7A;
   font-size: 9px;
   display: flex;
+  text-align: center;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+  margin-right: 4px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .img{
   width: 20px;
@@ -81,6 +85,7 @@ export default {
 .right {
   width: 100%;
   input{
+    width: 100%;
     vertical-align: middle;
     color:#9E9E9E;
     font-size: 14px;
