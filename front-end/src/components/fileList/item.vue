@@ -4,11 +4,11 @@
     <div class="right">
       <div class="top">{{title}}</div>
       <div class="bottom">
-        <div class="item"><img src="../../assets/comment.svg">{{comments}}</div>
-        <div class="item"><img src="../../assets/download.svg">{{times}}</div>
+        <div class="item"><img class="img" src="../../assets/comment.svg">{{comments}}</div>
+        <div class="item"><img class="img" src="../../assets/download.svg">{{times}}</div>
 
-        <div class="item"><img src="../../assets/views.svg">{{views}}</div>
-        <div class="item"><img src="../../assets/Collect.svg">{{likes}}</div>
+        <div class="item"><img class="img" src="../../assets/views.svg">{{views}}</div>
+        <div class="item"><img class="img" src="../../assets/Collect.svg">{{likes}}</div>
       </div>
     </div>
   </div>
@@ -65,7 +65,7 @@ $radius: 5px;
     border-bottom-left-radius: $radius;
     background-image: linear-gradient(0deg, #2ECAFF 0%, #00B9F8 100%);
     // height: 100%;
-    width: 88px;
+    width: 140px;
 
     display: flex;
     align-items: center;
@@ -98,4 +98,9 @@ $radius: 5px;
   }
 
 }
+
+  .img{
+    margin-right: 3px;
+  }
+
 </style>

@@ -5,7 +5,7 @@
     </div>
     <div class="Mine-info">
       <div class="head">
-        <img src="../assets/defaultHead.jpg" alt="">
+        <img :src="user['U_head']" alt="">
       </div>
       <div class="name">
       {{user['U_name']}}
