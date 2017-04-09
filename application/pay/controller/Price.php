@@ -11,7 +11,6 @@ class Price
 {
     /**
      * 获取价格列表
-     * @get
      * @return \think\response\Json
      */
     public function Index()

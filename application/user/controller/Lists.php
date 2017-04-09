@@ -55,7 +55,7 @@ class Lists
     public function notice()
     {
         $start = input('get.page',0) * 12;
-        $notice_list = Db::query("select * from Notice_record ORDER BY Id DESC LIMIT $start,12");
+        $notice_list = Db::query("select * from Notice_record ORDER BY N_Id DESC LIMIT $start,12");
         return json($notice_list);
     }
 
@@ -67,7 +67,7 @@ class Lists
     public function share()
     {
         $start = input('get.page',0) * 12;
-        $notice_list = Db::query("select * from Share_record ORDER BY Id DESC LIMIT $start,12");
+        $notice_list = Db::query("select * from Share_record ORDER BY SH_Id DESC LIMIT $start,12");
         return json($notice_list);
     }
 }

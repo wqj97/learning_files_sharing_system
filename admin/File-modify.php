@@ -104,6 +104,13 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
             </span>
           </a>
         </li>
+        <li class="treeview">
+          <a href="Notice.php"><i class="fa fa-volume-up"></i> <span>通知设置</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right" style="transform: none"></i>
+            </span>
+          </a>
+        </li>
       </ul>
       <!-- /.sidebar-menu -->
     </section>

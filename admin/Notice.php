@@ -1,6 +1,8 @@
 <?php
 require_once 'SQL/Db.php';
 $Db = new Db();
+$page = isset($_GET['page']) ? $_GET["page"] : 0;
+$keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
 ?>
 <!DOCTYPE html>
 <html>
@@ -20,7 +22,7 @@ $Db = new Db();
   <!-- Main Header -->
   <header class="main-header">
     <!-- Logo -->
-    <a href="home.php" class="logo">
+    <a href="#" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>医</b></span>
       <!-- logo for regular state and mobile devices -->
@@ -56,14 +58,14 @@ $Db = new Db();
       <ul class="sidebar-menu">
         <li class="header">菜单</li>
         <!-- Optionally, you can add icons to the links -->
-        <li class="treeview active">
+        <li class="treeview">
           <a href="#"><i class="fa fa-file"></i> <span>文件管理</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li class="active">
+            <li>
               <a href="File-check.php"><i class="fa fa-hand-peace-o"></i>文件审批</a>
             </li>
             <li>
@@ -102,7 +104,7 @@ $Db = new Db();
             </span>
           </a>
         </li>
-        <li class="treeview">
+        <li class="treeview active">
           <a href="Notice.php"><i class="fa fa-volume-up"></i> <span>通知设置</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right" style="transform: none"></i>
@@ -120,53 +122,66 @@ $Db = new Db();
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        文件审批
+        通知列表
       </h1>
       <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-file"></i> 文件管理</a></li>
-        <li class="active">文件审批</li>
+        <li><a href="#"><i class="fa fa-volume-up"></i> 通知列表</a></li>
+        <li class="active">通知列表</li>
       </ol>
     </section>
 
     <!-- Main content -->
     <section class="content">
+      <!-- Your Page Content Here -->
       <div class="box box-success">
         <div class="box-header">
-          <h3 class="box-title">未审批文件</h3>
+          <h3 class="box-title">通知列表</h3>
         </div>
         <!-- /.box-header -->
         <div class="box-body">
           <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+            <div class="row col-md-2">
+              <button class="btn btn-block btn-info btn-lg" onclick="showNewNotice()">新建通知</button>
+            </div>
+            <div class="row">
+              <div class="pull-right" style="padding-right: 15px;">
+                <div>
+                  <label>通知标题:
+                    <input type="search" class="form-control" onkeydown="if(event.keyCode === 13) search(this.value)"
+                           value="<?php echo $keywords ?>">
+                  </label>
+                </div>
+              </div>
+            </div>
             <div class="row">
               <div class="col-sm-12">
                 <table id="example1" class="table table-bordered table-striped dataTable" role="grid"
                        aria-describedby="example1_info">
                   <thead>
                   <tr role="row">
-                    <!--                      <th>文件Id</th>-->
-                    <th>文件名</th>
-                    <th>文件扩展名</th>
-                    <th>文件上传用户</th>
-                    <th>文件上传时间</th>
+                    <!--                    <th>文件Id</th>-->
+                    <th>通知标题</th>
+                    <th>通知链接</th>
                     <th>操作</th>
                   </tr>
                   </thead>
                   <tbody>
                   <?php
-                  $unsolve_file = $Db->query("SELECT F_Id,F_name,F_ext,F_user_openid,F_join_time FROM File WHERE `F_type` IS NULL");
-                  foreach ($unsolve_file as $row) {
-                      $userName = $Db->query("select U_name,(select S_name from School where S_Id = U_school) as 'school_name' from User where U_openid = '$row[F_user_openid]'")[0];
+                  $start = $page * 12;
+                  if ($keywords) {
+                      $notice_list = $Db->query("select * from Notice_record where N_title like '%$keywords%' ORDER BY N_Id desc LIMIT $start,12");
+                  } else {
+                      $notice_list = $Db->query("select * from Notice_record ORDER BY N_Id desc LIMIT $start,12");
+                  }
+                  foreach ($notice_list as $row) {
                       echo "
                       <tr role=\"row\" class=\"even\">
-                      <td class=\"sorting_1\" id='$row[F_Id]'>$row[F_name]</td>
-                      <td class=\"sorting_1\">$row[F_ext]</td>
-                      <td class=\"sorting_1\">$userName[U_name] [ $userName[school_name] ]</td>
-                      <td class=\"sorting_1\">$row[F_join_time]</td>
+                      <td class=\"sorting_1\">$row[N_title]</td>
+                      <td class=\"sorting_1\"><a href='$row[N_url]'>$row[N_url]</a></td>
                       <td class=\"sorting_1\">
                       <div class=\"btn-group\">
-                        <button type=\"button\" class=\"btn btn-info\" onclick='getFile($row[F_Id])'>查看</button>
-                        <button type=\"button\" class=\"btn btn-success\" onclick='showAgree($row[F_Id])'>通过</button>
-                        <button type=\"button\" class=\"btn btn-danger\" onclick='refuse($row[F_Id])'>删除</button>
+                        <button type=\"button\" class=\"btn btn-primary\" onclick='showEdit($row[N_Id])'>修改</button>
+                        <button type=\"button\" class=\"btn btn-danger\" onclick='refuse($row[N_Id])'>删除</button>
                       </div>
                       </td>
                       ";
@@ -175,85 +190,84 @@ $Db = new Db();
                   </tbody>
                   <tfoot>
                   <tr>
-                    <!--                      <th>文件Id</th>-->
-                    <th>文件名</th>
-                    <th>文件类型</th>
-                    <th>文件上传用户</th>
-                    <th>文件上传时间</th>
+                    <!--                    <th>文件Id</th>-->
+                    <th>通知标题</th>
+                    <th>通知链接</th>
                     <th>操作</th>
                   </tr>
                   </tfoot>
                 </table>
               </div>
             </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="dataTables_info" id="example2_info" role="status" aria-live="polite">
+                    <?php
+                    $count = $Db->query("SELECT count(*) FROM File")[0]["count(*)"];
+                    $echoCount = $start + 1;
+                    echo "当前 $echoCount 到 " . ($echoCount + 11) . ", 共 $count 个文件";
+                    ?>
+                </div>
+              </div>
+              <div class="col-sm-12 text-center">
+                <div class="dataTables_paginate paging_simple_numbers">
+                  <ul class="pagination">
+                    <li class="paginate_button previous <?
+                    if ($page == 0) {
+                        echo "disabled";
+                    }
+                    ?>">
+                      <a href="<?php
+                      $prewPage = $page - 1;
+                      echo "File-modify.php?page=$prewPage&keyWords=$keywords";
+                      ?>">上一页</a>
+                    <li class="paginate_button next">
+                      <a href="<?php
+                      $nextPage = $page + 1;
+                      echo "File-modify.php?page=$nextPage&keyWords=$keywords";
+                      ?>">下一页</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <form class="form-group" action="">
+                  <label>跳转到: </label>
+                  <input type="number" name="page" class="form-control" value="<?php echo $page ?>">
+                  <button type="submit" class="btn btn-info">跳转</button>
+                  <input type="hidden" name="keyWords" value="<?php echo $keywords ?>">
+                </form>
+              </div>
+            </div>
           </div>
-          <!-- /.box-body -->
         </div>
-        <!-- /.box -->
+        <!-- /.box-body -->
       </div>
-
-      <!-- Your Page Content Here -->
-
     </section>
     <!-- /.content -->
   </div>
 </div>
-<div class="modal fade" id="preview">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">×</span></button>
-        <h4 class="modal-title">文件预览</h4>
-      </div>
-      <div class="modal-body" style="display: flex"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="agree-btn">通过</button>
-        <button type="button" class="btn btn-danger" id="refuse-btn">删除</button>
-        <button type="button" class="btn btn-default">关闭</button>
-      </div>
-    </div>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
 
-<div class="modal fade" id="file_type">
+<div class="modal fade" id="Notice_edit">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span></button>
-        <h4 class="modal-title">文件类型</h4>
+        <h4 class="modal-title">通知编辑</h4>
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <label>文件名: </label>
-          <input type="text" class="form-control" placeholder="文件名" id="file_name">
+          <label>通知标题: </label>
+          <input type="text" class="form-control" placeholder="通知标题" id="Notice_title">
         </div>
         <div class="form-group">
-          <label>文件分类</label>
-          <select class="form-control" id="file_type_code">
-              <?php
-              $types = json_decode($Db->query("SELECT S_value FROM Setting WHERE S_key = 'file_type'")[0]["S_value"]);
-              foreach ($types as $key => $type) {
-                  echo "<option value='$key'>$type</option>";
-              }
-              ?>
-          </select>
-          <label>文件等级</label>
-          <select class="form-control" id="file_level">
-              <?php
-              $types = json_decode($Db->query("SELECT S_value FROM Setting WHERE S_key = 'level'")[0]["S_value"]);
-              foreach ($types as $key => $val) {
-                  echo "<option value='$key'>$key 级 [$val 分]</option>";
-              }
-              ?>
-          </select>
+          <label>通知链接: </label>
+          <input type="url" class="form-control" placeholder="通知链接" id="Noitce_url">
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="agreeBtn">通过</button>
+        <button type="button" class="btn btn-success" id="editBtn">修改</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
       </div>
     </div>
@@ -271,42 +285,50 @@ $Db = new Db();
 <script src="dist/js/app.min.js"></script>
 
 <script>
-  function getFile (Id) {
-    $.get("/admin/File?file_id=" + Id, function (data) {
-      data = "http://wx.97qingnian.com" + data["F_url"];
-      console.log(data);
-      $("#preview .modal-body").html('').append('<iframe frameborder="0" width="1024px" height="768px" src="http://view.officeapps.live.com/op/view.aspx?src=' + data + '"></iframe>');
-      $("#preview").modal();
-      $("#agree-btn").attr("onclick", "showAgree(" + Id + ")");
-      $("#refuse-btn").attr("onclick", "refuse(" + Id + ")");
+  function showEdit (Id) {
+    $.get('/admin/notice/get?notice_id=' + Id, function (data) {
+      $("#Notice_title").val(data.N_title)
+      $("#Noitce_url").val(data.N_url)
+      $("#editBtn").attr("onclick", `save(${Id})`)
+      $("#Notice_edit").modal()
     })
   }
 
-  function showAgree (Id) {
-    $("#file_type").modal();
-    $("#file_name").val($("#" + Id).html());
-    $("#agreeBtn").attr("onclick", "agree(" + Id + ")");
+  function showNewNotice () {
+    $("#Notice_title").val('')
+    $("#Noitce_url").val('')
+    $("#editBtn").attr("onclick", `newNotice()`)
+    $("#Notice_edit").modal()
   }
 
-  function agree (Id) {
-    let type = $("#file_type_code").val();
-    let level = $("#file_level").val();
-    let file_name = $("#file_name").val();
-    $.get('/admin/File/Agree?file_id=' + Id + '&file_type_code=' + type + '&file_level=' + level + '&file_name=' + file_name, function (data) {
-      if (data.result === "success") {
-        location.reload()
-      }
+  function save (Id) {
+    $.post('/admin/notice/edit', {
+      notice_id: Id,
+      notice_title: $("#Notice_title").val(),
+      notice_url: $("#Noitce_url").val()
+    },function () {
+      location.reload()
+    })
+  }
+
+  function newNotice () {
+    $.post('/admin/notice/new',{
+      notice_title: $("#Notice_title").val(),
+      notice_url: $("#Noitce_url").val()
+    },function () {
+      location.reload()
     })
   }
 
   function refuse (Id) {
-    $.get('/admin/File/Refuse?file_id=' + Id, function (data) {
-      if (data.result === "success") {
-        location.reload()
-      }
+    $.post('/admin/notice/delete',{
+      notice_id: Id
+    },function () {
+      location.reload()
     })
   }
 </script>
+
 
 </body>
 </html>
