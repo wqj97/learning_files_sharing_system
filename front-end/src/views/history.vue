@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="list-container"v-if="list.length!=0">
-    <div  class="item" v-for="item in list" @click = "$router.push(`/download?id=${item['F_Id']}`)">
-    {{item['F_name']}}
+    <div  class="item" v-for="item in list" @click = "click(item)">
+    {{item['F_name']? item['F_name']: item['N_Id']}}
     </div>
   </div>
   <div class="item" v-else>
@@ -21,7 +21,15 @@ export default {
       this.list = res.body
       this.$store.commit('updateLoadingStatus', {isLoading: false})
     })
-
+  },
+  methods: {
+    click(item) {
+     if(item['F_Id']) {
+       this.$router.push(`/download?id=${item['F_Id']}`)
+       } else {
+         window.location.href=item['N_url']
+       }
+    }
   },
   data() {
     return {
