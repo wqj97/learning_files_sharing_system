@@ -18,24 +18,24 @@
       </div>
       <div class="middle">
         <div class="item">
-          <img src="../assets/download.png"> {{detail['F_download_count']}}
+          <img src="../assets/download.svg"> {{detail['F_download_count']}}
         </div>
         <div class="item">
-          <img src="../assets/eye.png"> {{detail['F_view_count']}}
+          <img src="../assets/views.svg"> {{detail['F_view_count']}}
         </div>
         <div class="item">
-          <img src="../assets/humbuger.png"> {{type}}
+          <img src="../assets/humbuger.svg"> {{type}}
         </div>
       </div>
       <div class="bottom">
         <div class="left">
-          <div class="comment wrapper" @click="isShowCommentList = !isShowCommentList"><img src="../assets/commentColor.png"> {{detail['comment_count']}}</div>
+          <div class="comment wrapper" @click="isShowCommentList = !isShowCommentList"><img src="../assets/commentColor.svg"> {{detail['comment_count']}}</div>
           <div class="like wrapper"
                @click="like">
             <img v-if="detail['liked']"
-                 src="../assets/heartColor.png">
+                 src="../assets/heartColor.svg">
             <img v-else
-                 src="../assets/heart.png"> {{detail['like_count']}}
+                 src="../assets/Collect.svg"> {{detail['like_count']}}
           </div>
         </div>
         <div class="right">
@@ -46,8 +46,8 @@
     </div>
     <div class="tab">
       <div class="preview" v-show="!isShowCommentList">
-    <iframe  style="width:100vw;height:100%;" :src="iframeUrl" frameborder="0"></iframe>
-    <!--<iframe style="width:100vw;height:100%;" src="https://www.baidu.com" frameborder="0"></iframe>-->
+    <!--<iframe  style="width:100vw;height:100%;" :src="iframeUrl" frameborder="0"></iframe>-->
+    <iframe style="width:100vw;height:100%;" src="https://www.baidu.com" frameborder="0"></iframe>
       </div>
       <div class="comments" v-show="isShowCommentList">
         <commentList :list="commentArr"
@@ -222,9 +222,9 @@ export default {
   .item {
     img {
       vertical-align: middle;
-      width: 20px;
-      height: 20px;
-      margin-right: 20px;
+      width: 22px;
+      height: 30px;
+      margin-right: 10px;
     }
   }
 }
