@@ -47,5 +47,27 @@ class Lists
         return json($collect_list);
     }
 
+    /**
+     * 通知记录
+     * @get page Int 页码
+     * @return \think\response\Json
+     */
+    public function notice()
+    {
+        $start = input('get.page',0) * 12;
+        $notice_list = Db::query("select * from Notice_record ORDER BY Id DESC LIMIT $start,12");
+        return json($notice_list);
+    }
 
+    /**
+     * 分享记录
+     * @get page Int 页码
+     * @return \think\response\Json
+     */
+    public function share()
+    {
+        $start = input('get.page',0) * 12;
+        $notice_list = Db::query("select * from Share_record ORDER BY Id DESC LIMIT $start,12");
+        return json($notice_list);
+    }
 }

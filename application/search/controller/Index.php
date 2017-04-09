@@ -38,7 +38,7 @@ class Index
             $files = Db::query("select F_Id,F_name,F_type,F_level,F_ext,(SELECT count(*) from Comment where C_file_Id = F_Id) as 'comment_count',F_download_count,(SELECT count(*) from Collect_record where C_file_Id = F_Id) as 'collect_record',F_school from File where F_name like ? and F_type is NOT NULL order by `F_join_time` desc LIMIT $start,12", ['%' . $name . '%']);
         } else {
             $type = json_decode($type);
-            $sql = "SELECT F_Id,F_name,F_type,F_level,F_ext,(SELECT count(*) FROM Comment WHERE C_file_Id = F_Id) AS 'comment_count',F_download_count,(SELECT count(*) FROM Collect_record WHERE C_file_Id = F_Id) AS 'collect_record',F_school FROM File WHERE F_name LIKE ? AND F_type IS NOT NULL ";
+            $sql = "SELECT F_Id,F_name,F_type,F_level,F_ext,(SELECT count(*) FROM Comment WHERE C_file_Id = F_Id) AS 'comment_count',F_download_count,(SELECT count(*) FROM Collect_record WHERE C_file_Id = F_Id) AS 'collect_record',F_view_count,F_school FROM File WHERE F_name LIKE ? AND F_type IS NOT NULL ";
             foreach ($type as $each) {
                 $sql = $sql . ' or F_type = ' . $each . ' ';
             }
