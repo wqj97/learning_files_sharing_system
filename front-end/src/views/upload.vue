@@ -16,9 +16,10 @@
         <div class="sub-title">
           选择文件
         </div>
-        <div class="inputer">
-          <input name="file" type="file" id="file">
-        </div>
+        <label for="file" class="inputer file_inputer" >
+          <input @change="setUploadFileName" name="file" type="file"  id="file">
+          <span> <span v-show="uploadFileName===''">点击选择你要上传的文件 </span> {{this.uploadFileName}}</span>
+        </label>
         </form>
         <div class="right-bottom" @click="upload">
           下一步 →
@@ -48,20 +49,27 @@ import { mapMutations } from 'vuex'
 import { Loading } from 'vux'
 // import md5 from 'MD5'
 
-function getFileName($file) {
-  let file = $file.files[0]
-  return file.name.split('.')[0]
-}
+
 export default {
   name: 'upload',
   components: {
     fileIcon,
     Loading
   },
+  mounted() {
+    this.file = window.document.getElementById('file')
+  },
   methods: {
+    setUploadFileName() {
+      this.uploadFileName = this.getFileName()
+    },
+    getFileName() {
+      let file = this.file.files[0]
+      if (!file) return
+      return file.name.split('.')[0]
+    },
     upload() {
-      let $file = window.document.getElementById('file')
-      if (!$file.files[0]) {
+      if (!this.file.files[0]) {
         this.$vux.toast.show({
           text: '请选择文件',
           type: 'warn'
@@ -69,21 +77,21 @@ export default {
         return
       }
       this.isLoading = true
-        this.$nextTick( () => {
-          if (this.fileName === '') {
-          this.tip = "自动获取文件名称"
-          this.fileName = getFileName($file)
+      this.$nextTick(() => {
+        if (this.fileName === '') {
+          this.tip = '自动获取文件名称'
+          this.fileName = this.getFileName()
         }
         this.tip = '上传中...'
-          this.uploadFile($file).then((result) => {
-              this.isLoading = false
-              this.ext = result['file_info']['file_ext']
-              this.fileName = result['file_info']['file_name']
-              this.steep = 2
-            }, err => {
-              this.isLoading = false
-            })
+        this.uploadFile().then((result) => {
+          this.isLoading = false
+          this.ext = result['file_info']['file_ext']
+          this.fileName = result['file_info']['file_name']
+          this.steep = 2
+        }, err => {
+          this.isLoading = false
         })
+      })
     },
     checkMD5(sha) {
       return new Promise((resolve, reject) => {
@@ -93,13 +101,15 @@ export default {
         }, res => reject(res))
       })
     },
-    uploadFile($file) {
+    uploadFile() {
       return new Promise((resolve, rejcet) => {
-        const form = new FormData(document.getElementById('form'))
+      this.$nextTick( () => {
+          const form = new FormData(document.getElementById('form'))
         this.$http.post('/file/upload', form, { progress: this.getProgress }).then(res => {
           resolve(res.body)
         }, err => {
           this.isLoading = false
+          this.fileName = ''
           this.$vux.toast.show({
             text: err.body.reason,
             type: 'warn'
@@ -107,31 +117,34 @@ export default {
           // reject(err)
         })
       })
+      })
     },
     getProgress(event) {
-      let num = (((event.loaded / event.total)* 100 ).toFixed()).toString() + '%'
+      let num = (((event.loaded / event.total) * 100).toFixed()).toString() + '%'
       this.tip = num
     },
     sha($file) {
-  return new Promise((resolve, reject) => {
-    var reader = new FileReader()
-    reader.onload = (callback) => {
-      let result
-      setTimeout(() => {
-      result = md5(reader.result)
-      resolve(result)
-      }, 600)
-    }
-    reader.readAsBinaryString($file.files[0]);
-  })
-},
+      return new Promise((resolve, reject) => {
+        var reader = new FileReader()
+        reader.onload = (callback) => {
+          let result
+          setTimeout(() => {
+            result = md5(reader.result)
+            resolve(result)
+          }, 600)
+        }
+        reader.readAsBinaryString($file.files[0]);
+      })
+    },
     ...mapMutations({
       setLoading: 'updateLoadingStatus'
     })
   },
   data() {
     return {
+      uploadFileName: '',
       steep: 1,
+      file: '',
       transitionName: 'slide-left',
       fileName: '',
       ext: '',
@@ -149,6 +162,16 @@ export default {
 
 
 <style lang="scss" rel="stylesheet/scss" type="text/css">
+.file_inputer {
+  #file {
+    position: absolute;
+    top: -100px;
+  }
+  span {
+    padding-bottom: 10px;
+  }
+}
+
 .goBind {
   height: 100vh;
   background-image: linear-gradient(-180deg, #233142 0%, #455D7A 100%);
@@ -205,7 +228,9 @@ export default {
       right: 30px;
     }
     .inputer {
-      input {
+      input,
+      span {
+        display: block;
         appearance: none;
         border: none;
         border-bottom: 1px solid #e0e0e0;
@@ -218,10 +243,6 @@ export default {
           border-radius: 0;
           border-bottom-color: #233142;
         }
-      }
-      input[type="file"] {
-        // position:absolute;
-        // opacity: 0;
       }
     }
   }

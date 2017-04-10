@@ -28,7 +28,7 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
-FastClick.attach(document.body)
+// FastClick.attach(document.body)
 
 Vue.config.productionTip = false
 
