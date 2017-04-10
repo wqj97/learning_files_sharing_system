@@ -15,11 +15,11 @@ $Db = new Db();
   <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
   <link rel="stylesheet" href="dist/css/skins/skin-black.min.css">
   <style>
-    .info-box-text{
+    .info-box-text {
       display: flex;
       justify-content: center;
       align-items: center;
-      height:80px;
+      height: 80px;
     }
   </style>
 </head>
@@ -198,6 +198,68 @@ $Db = new Db();
           </div>
         </form>
       </div>
+      <div class="box box-info">
+        <div class="box-header with-border">
+          <h3 class="box-title">多文件上传</h3>
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
+        <form role="form" id="file_form_multiple">
+          <div class="box-body">
+            <div class="form-group">
+              <label>选择文件</label>
+              <input type="file" name="file" multiple class="form-control" id="multiple_files">
+            </div>
+            <div class="form-group">
+              <label>文件分类</label>
+              <select class="form-control" name="file_type_multiple">
+                  <?php
+                  $types = json_decode($Db->query("SELECT S_value FROM Setting WHERE S_key = 'file_type'")[0]["S_value"]);
+                  foreach ($types as $key => $type) {
+                      echo "<option value='$key'>$type</option>";
+                  }
+                  ?>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>文件等级</label>
+              <select class="form-control" name="file_level_multiple">
+                  <?php
+                  $types = json_decode($Db->query("SELECT S_value FROM Setting WHERE S_key = 'level'")[0]["S_value"]);
+                  foreach ($types as $key => $val) {
+                      echo "<option value='$key'>$key 级 [$val 分]</option>";
+                  }
+                  ?>
+              </select>
+            </div>
+            <div class="col-md-12">
+              <div class="info-box bg-aqua">
+                <span class="info-box-icon"><i class="fa fa-file"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text">文件上传</span>
+                  <div class="progress">
+                    <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+                  </div>
+                  <span class="progress-description">
+                    当前第 <span id="now">0</span> 个, 共 <span id="total">0</span> 个
+                  </span>
+                </div>
+                <!-- /.info-box-content -->
+              </div>
+              <!-- /.info-box -->
+            </div>
+          </div>
+          <div class="col-md-12" id="failedList">
+
+          </div>
+          <!-- /.box-body -->
+
+          <div class="box-footer">
+            <button type="button" class="btn btn-primary" onclick="ajaxUpload_multiple()" id="uploadBtn_multiple">上传</button>
+          </div>
+        </form>
+      </div>
     </section>
     <!-- /.content -->
   </div>
@@ -248,6 +310,35 @@ $Db = new Db();
         $("#resultBox").html(result);
       }
     })
+  }
+  function ajaxUpload_multiple () {
+    let files = document.getElementById('multiple_files').files
+    let total = files.length
+    let now = 0
+    $("#total").html(total)
+    $.each(files,function (key,val) {
+      let form = new FormData();
+      form.append('file_type',$("input[name=file_type_multiple]").val())
+      form.append('file_level',$("input[name=file_level_multiple]").val())
+      form.append('file',val)
+      $.ajax({
+        url: '/admin/File/add',
+        type: 'post',
+        data: form,
+        processData: false,
+        contentType: false,
+        success: function () {
+          now += 1
+          let progress = Math.ceil((now / total) * 100)
+          $("#now").html(total)
+          $('#progress-bar').css('width',progress + '%')
+        },
+        error: function (result) {
+          $("#failedList").append("<p>"+ result.responseJSON.reason +"</p>")
+        }
+      })
+    })
+
   }
 </script>
 

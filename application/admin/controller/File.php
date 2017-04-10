@@ -10,6 +10,7 @@ namespace app\admin\controller;
 
 
 use think\Db;
+use think\Debug;
 
 class File
 {
@@ -55,6 +56,7 @@ class File
 
     /**
      * 管理员上传文件
+     * @post file 文件
      * @post file_name 文件名
      * @post file_type 文件类型
      * @post file_level 文件等级
@@ -64,12 +66,18 @@ class File
     {
         $file = request()->file('file');
         $file_hash = $file->hash('md5');
+        $file_name = $file->getFilename();
+        $hashInDb = Db::query("select * from aiuyi.File where F_hash = ?",[$file_hash]);
+        if (!empty($hashInDb)) {
+            return json(["result" => "failed", "reason" => "$file_name 文件已存在"],403);
+        }
         $info = $file->move($_SERVER['DOCUMENT_ROOT'] . '/upload');
         $file_ext = $info->getExtension();
-        $file_name = input('post.file_name');
         $file_type = input('post.file_type');
         $file_level = input('post.file_level');
-        return json();
+        $file_src = '/upload/' . date('Ymd') . "/" . $info->getFilename();
+        Db::execute("insert into aiuyi.File (F_hash, F_name, F_ext, F_type, F_url, F_user_openid,F_level) VALUES (?,?,?,?,?,?,?)",[$file_hash,$file_name,$file_ext,$file_type,$file_src,'owFqbv0psVKX1WwKHFylzNXqGL34',$file_level]);
+        return json(["result"=>"success"]);
     }
 
     /**
