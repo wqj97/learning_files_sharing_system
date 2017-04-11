@@ -1,9 +1,12 @@
 <template>
   <div class="container">
-    <x-dialog v-model="isShowNewComment" hide-on-blur>
+    <x-dialog v-model="isShowNewComment"
+              hide-on-blur>
       <div class="comment_title">新建评论</div>
-       <x-textarea  v-model="newCommentContent" placeholder="请输入你的评论" :max="40"></x-textarea>
- <x-button @click.native="submitComment">评论</x-button>
+      <x-textarea v-model="newCommentContent"
+                  placeholder="请输入你的评论"
+                  :max="40"></x-textarea>
+      <x-button @click.native="submitComment">评论</x-button>
     </x-dialog>
     <div class="top">
       <div class="top">
@@ -29,7 +32,8 @@
       </div>
       <div class="bottom">
         <div class="left">
-          <div class="comment wrapper" @click="isShowCommentList = !isShowCommentList"><img src="../assets/commentColor.svg"> {{detail['comment_count']}}</div>
+          <div class="comment wrapper"
+               @click="isShowCommentList = !isShowCommentList"><img src="../assets/commentColor.svg"> {{detail['comment_count']}}</div>
           <div class="like wrapper"
                @click="like">
             <img v-if="detail['liked']"
@@ -45,15 +49,20 @@
       </div>
     </div>
     <div class="tab">
-      <div class="preview" v-show="!isShowCommentList">
-    <iframe  style="width:100vw;height:100%;" :src="iframeUrl" frameborder="0"></iframe>
+      <div class="preview"
+           v-show="!isShowCommentList">
+        <!--<iframe style="width:100vw;height:100%;"
+                :src="iframeUrl"
+                frameborder="0"></iframe>-->
       </div>
-      <div class="comments" v-show="isShowCommentList">
+      <div class="comments"
+           v-show="isShowCommentList">
         <commentList :list="commentArr"
                      @refresh="commentRefresh"
                      ref="refresh"></commentList>
       </div>
-      <div class="bottom_btn" @click="isShowNewComment = true">新建评论</div>
+      <div class="bottom_btn"
+           @click="isShowNewComment = true">新建评论</div>
     </div>
   </div>
 </template>
@@ -62,7 +71,8 @@
 import { fileIcon, commentList } from '@/components/'
 import { getCategroyListById } from '@/utils'
 import { mapState } from 'vuex'
-import {XDialog, XTextarea, XButton} from 'vux'
+import { XDialog, XTextarea, XButton } from 'vux'
+// import wx from '../jsjdk.js'
 export default {
   name: 'download',
   mounted() {
@@ -75,14 +85,43 @@ export default {
       this.$router.push('/')
     }
     this.id = id
-     this.$store.commit('updateLoadingStatus', {isLoading: true})
+    this.$store.commit('updateLoadingStatus', { isLoading: true })
     this.$http.get(`/file?file_id=${id}`).then(res => {
       this.detail = res.body
-      this.$store.commit('updateLoadingStatus', {isLoading: false})
+      this.$store.commit('updateLoadingStatus', { isLoading: false })
     }, err => {
       this.$store.commit('updateError', { isError: true })
     })
-   this.getComment()
+    this.getComment()
+
+     //////////////////////////
+
+
+
+               this.$http.post('/file/share', {file_id:49}).then( res => {
+              this.$vux.toast.show({
+          text: '分享成功!'
+        })
+          })
+
+
+    this.$http.post('/jssdk/sign', {url: window.location.href}).then(res => {
+      wx.config(JSON.parse(res.body))
+    })
+    wx.ready(function () {
+      console.log('jsjdkConfig success!')
+    })
+
+    wx.error(function (res) {
+      console.log('jsjdkConfig error' + res)
+    })
+    wx.onMenuShareTimeline(this.fileShareInfo)
+    wx.onMenuShareAppMessage(this.fileShareInfo)
+    wx.onMenuShareQQ(this.fileShareInfo)
+    wx.onMenuShareQZone(this.fileShareInfo)
+    /////////////////////////
+
+
   },
   data() {
     return {
@@ -98,20 +137,20 @@ export default {
   methods: {
     submitComment() {
       if (this.newCommentContent === '') {
-         this.$vux.toast.show({
+        this.$vux.toast.show({
           text: '内容不能为空',
           type: 'warn'
         })
         return
       }
-      this.$http.post(`/file/comment/new/`, {file_id: this.detail['F_Id'], content: this.newCommentContent}).then(res => {
-       this.$vux.toast.show({
+      this.$http.post(`/file/comment/new/`, { file_id: this.detail['F_Id'], content: this.newCommentContent }).then(res => {
+        this.$vux.toast.show({
           text: '成功!'
         })
-      this.commentPage = 0
-      this.getComment()
-      this.newCommentContent = ''
-       this.isShowNewComment = false
+        this.commentPage = 0
+        this.getComment()
+        this.newCommentContent = ''
+        this.isShowNewComment = false
       }, err => {
         this.$vux.toast.show({
           text: '失败, 未知错误',
@@ -123,21 +162,21 @@ export default {
       this.getComment()
     },
     getComment() {
-       this.$http.get(`/file/comment/?file_id=${this.id}&page=${this.commentPage}`).then(res => {
-         if (res.body.length === 0) this.noMoreData()
-      this.commentArr = this.commentArr.concat(res.body)
-      this.$refs.refresh.done()
-    }, err => {
+      this.$http.get(`/file/comment/?file_id=${this.id}&page=${this.commentPage}`).then(res => {
+        if (res.body.length === 0) this.noMoreData()
+        this.commentArr = this.commentArr.concat(res.body)
+        this.$refs.refresh.done()
+      }, err => {
         this.$vux.toast.show({
           text: '失败, 未知错误',
           type: 'warn'
         })
-    })
-    this.commentPage++
-  },
-  noMoreData() {
-    this.$refs.refresh.noMoreData()
-  },
+      })
+      this.commentPage++
+    },
+    noMoreData() {
+      this.$refs.refresh.noMoreData()
+    },
     downloadClick() {
       if (this.user.level < this.detail['F_level']) {
         this.$vux.toast.show({
@@ -154,7 +193,7 @@ export default {
         this.detail['liked'] = isLiked
         isLiked ? this.detail['like_count'] += 1 : this.detail['like_count'] -= 1
       }, err => {
-          this.$vux.toast.show({
+        this.$vux.toast.show({
           text: '失败, 未知错误',
           type: 'warn'
         })
@@ -162,11 +201,29 @@ export default {
     }
   },
   computed: {
+    fileShareInfo() {
+      return {
+        title: this.detail['F_name'], // 分享标题
+        link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        desc: '你的好友给你分享文件啦!',
+        imgUrl: '', // 分享图标
+        success:  () => {
+          this.$http.post('/file/share', {'file_id':this.detail['F_Id']}).then( res => {
+              this.$vux.toast.show({
+          text: '分享成功!'
+        })
+          })
+        },
+        cancel: function () {
+          console.log('用户取消')
+        }
+      }
+    },
     type() {
       return getCategroyListById(this.detail['F_type'])
     },
     iframeUrl() {
-      if (process.env.NODE_ENV === 'development') return 'https://www.baidu.com'
+      if (process.env.NODE_ENV === 'development') return 'https://broven.github.io'
       return 'https://view.officeapps.live.com/op/view.aspx?src=' + encodeURI(window.location.origin + this.detail['F_url'])
     },
     ...mapState({
@@ -185,22 +242,22 @@ export default {
 
 <style lang="scss" scoped>
 @import '../style/base.scss';
-.container{
+.container {
   margin-bottom: 8vh;
 }
+
 .top {
   background-color: #fff;
   color: #455D7A;
   width: 100%;
   padding-top: 19px;
-  padding-bottom: 18px;
-  // border-bottom: 1px solid #EEEEEE;
+  padding-bottom: 18px; // border-bottom: 1px solid #EEEEEE;
   .top {
     border: none;
     display: flex;
     justify-content: space-around;
     padding: 0 6px;
-    .fileIcon{
+    .fileIcon {
       min-width: 60px;
     }
     .right {
@@ -278,13 +335,15 @@ $menuBarRadius: 4px;
   color: #FFF;
   font-size: 18px;
   font-weight: 200;
- background-image: linear-gradient(-180deg, #00B9F8 0%, #2ECAFF 100%);
+  background-image: linear-gradient(-180deg, #00B9F8 0%, #2ECAFF 100%);
 }
-.comment_title{
-  padding:10px;
+
+.comment_title {
+  padding: 10px;
 }
-.preview{
+
+.preview {
   z-index: -1;
-  height:500px;
+  height: 500px;
 }
 </style>
