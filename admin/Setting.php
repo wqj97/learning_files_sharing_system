@@ -192,7 +192,7 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
             <?php
             foreach (json_decode($price["S_value"]) as $key => $level) {
                 echo "<div class=\"form-inline input-group\">
-                          <span class=\"input-group-addon\" style='min-width:100px;'>等级: $key</span>
+                          <span class=\"input-group-addon\" style='min-width:100px;'>等级: ".($key + 1)."</span>
                           <input type=\"text\" class=\"form-control\" name=\"price\" data-keyNum='$key' value=\"$level\">
                         </div>";
             }

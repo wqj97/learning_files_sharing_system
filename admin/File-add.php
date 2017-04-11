@@ -318,8 +318,8 @@ $Db = new Db();
     $("#total").html(total)
     $.each(files,function (key,val) {
       let form = new FormData();
-      form.append('file_type',$("input[name=file_type_multiple]").val())
-      form.append('file_level',$("input[name=file_level_multiple]").val())
+      form.append('file_type',$("select[name=file_type_multiple]").val())
+      form.append('file_level',$("select[name=file_level_multiple]").val())
       form.append('file',val)
       $.ajax({
         url: '/admin/File/add',

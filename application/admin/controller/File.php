@@ -66,7 +66,7 @@ class File
     {
         $file = request()->file('file');
         $file_hash = $file->hash('md5');
-        $file_name = $file->getFilename();
+        $file_name = $file->getInfo()["name"];
         $hashInDb = Db::query("select * from aiuyi.File where F_hash = ?",[$file_hash]);
         if (!empty($hashInDb)) {
             return json(["result" => "failed", "reason" => "$file_name 文件已存在"],403);

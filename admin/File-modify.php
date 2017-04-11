@@ -302,6 +302,25 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
   </div>
   <!-- /.modal-dialog -->
 </div>
+<div class="modal fade" id="preview">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span></button>
+        <h4 class="modal-title">文件预览</h4>
+      </div>
+      <div class="modal-body" style="display: flex"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="agree-btn">通过</button>
+        <button type="button" class="btn btn-danger" id="refuse-btn">删除</button>
+        <button type="button" class="btn btn-default">关闭</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
 <!-- REQUIRED JS SCRIPTS -->
 
 <!-- jQuery 3.2.1 -->
@@ -318,7 +337,7 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
   function getFile (Id) {
     $.get("/admin/File?file_id=" + Id, function (data) {
       data = "http://wx.97qingnian.com" + data["F_url"];
-      $("#preview .modal-body").html('').append('<iframe frameborder="0" width="1024px" height="768px" src="http://view.officeapps.live.com/op/view.aspx?src=' + data + '"></iframe>');
+      $("#preview .modal-body").html('').append('<iframe frameborder="0" width="1024px" height="768px" src="https://view.officeapps.live.com/op/view.aspx?src=' + data + '"></iframe>');
       $("#preview").modal();
       $("#refuse-btn").attr("onclick", "refuse(" + Id + ")");
     })

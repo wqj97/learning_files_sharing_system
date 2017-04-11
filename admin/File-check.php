@@ -275,7 +275,7 @@ $Db = new Db();
     $.get("/admin/File?file_id=" + Id, function (data) {
       data = "http://wx.97qingnian.com" + data["F_url"];
       console.log(data);
-      $("#preview .modal-body").html('').append('<iframe frameborder="0" width="1024px" height="768px" src="http://view.officeapps.live.com/op/view.aspx?src=' + data + '"></iframe>');
+      $("#preview .modal-body").html('').append('<iframe frameborder="0" width="1024px" height="768px" src="https://view.officeapps.live.com/op/view.aspx?src=' + data + '"></iframe>');
       $("#preview").modal();
       $("#agree-btn").attr("onclick", "showAgree(" + Id + ")");
       $("#refuse-btn").attr("onclick", "refuse(" + Id + ")");
