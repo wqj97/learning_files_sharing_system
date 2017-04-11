@@ -51,9 +51,11 @@
     <div class="tab">
       <div class="preview"
            v-show="!isShowCommentList">
-        <!--<iframe style="width:100vw;height:100%;"
+
+        <iframe style="width:100vw;height:100%;"
                 :src="iframeUrl"
-                frameborder="0"></iframe>-->
+                frameborder="0"></iframe>
+
       </div>
       <div class="comments"
            v-show="isShowCommentList">
@@ -72,7 +74,7 @@ import { fileIcon, commentList } from '@/components/'
 import { getCategroyListById } from '@/utils'
 import { mapState } from 'vuex'
 import { XDialog, XTextarea, XButton } from 'vux'
-// import wx from '../jsjdk.js'
+
 export default {
   name: 'download',
   mounted() {
@@ -95,14 +97,6 @@ export default {
     this.getComment()
 
      //////////////////////////
-
-
-
-               this.$http.post('/file/share', {file_id:49}).then( res => {
-              this.$vux.toast.show({
-          text: '分享成功!'
-        })
-          })
 
 
     this.$http.post('/jssdk/sign', {url: window.location.href}).then(res => {
