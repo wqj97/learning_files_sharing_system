@@ -191,7 +191,7 @@ class Payment
     }
 
     /**
-     * [JSSDK] Generate js config for payment.
+     * [jssdk] Generate js config for payment.
      *
      * <pre>
      * wx.chooseWXPay({...});
