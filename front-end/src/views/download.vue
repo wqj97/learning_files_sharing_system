@@ -74,7 +74,8 @@ import { fileIcon, commentList } from '@/components/'
 import { getCategroyListById } from '@/utils'
 import { mapState } from 'vuex'
 import { XDialog, XTextarea, XButton } from 'vux'
-
+let flag = 0
+// require('vconsole')
 export default {
   name: 'download',
   mounted() {
@@ -90,32 +91,11 @@ export default {
     this.$store.commit('updateLoadingStatus', { isLoading: true })
     this.$http.get(`/file?file_id=${id}`).then(res => {
       this.detail = res.body
-      this.$store.commit('updateLoadingStatus', { isLoading: false })
+      this.signWechat(res.body)
     }, err => {
       this.$store.commit('updateError', { isError: true })
     })
     this.getComment()
-
-     //////////////////////////
-
-
-    this.$http.post('/jssdk/sign', {url: window.location.href}).then(res => {
-      wx.config(JSON.parse(res.body))
-    })
-    wx.ready(function () {
-      console.log('jsjdkConfig success!')
-    })
-
-    wx.error(function (res) {
-      console.log('jsjdkConfig error' + res)
-    })
-    wx.onMenuShareTimeline(this.fileShareInfo)
-    wx.onMenuShareAppMessage(this.fileShareInfo)
-    wx.onMenuShareQQ(this.fileShareInfo)
-    wx.onMenuShareQZone(this.fileShareInfo)
-    /////////////////////////
-
-
   },
   data() {
     return {
@@ -129,6 +109,54 @@ export default {
     }
   },
   methods: {
+    signWechat(data) {
+      console.log('signWechat')
+      let fileShareInfo = {
+        title: data['F_name'], // 分享标题
+        link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        desc: '你的好友给你分享文件啦!',
+        imgUrl: '', // 分享图标
+        success: () => {
+          console.log('share ok')
+          this.$http.post('/file/share', { 'file_id': this.detail['F_Id'] }).then(res => {
+            this.$vux.toast.show({
+              text: '分享成功!'
+            })
+          })
+        },
+        cancel: function () {
+          console.log('用户取消')
+        },
+        trigger: function () {
+          console.log('action trigger')
+        }
+      }
+      console.log('fileShareInfo:' + JSON.stringify(fileShareInfo))
+
+      this.$http.post('/jssdk/sign', { url: location.href.split('#')[0] }).then(res => {
+        console.log('config:' + JSON.stringify(res.body))
+        let config = JSON.parse(res.body[0])
+        // config['debug'] = true
+        this.$store.commit('updateLoadingStatus', { isLoading: false })
+        wx.config(config)
+      })
+      wx.ready( () => {
+        console.log('jsjdkConfig success, set hooks...')
+        wx.onMenuShareTimeline(fileShareInfo)
+        wx.onMenuShareAppMessage(fileShareInfo)
+        wx.onMenuShareQQ(fileShareInfo)
+        wx.onMenuShareQZone(fileShareInfo)
+      })
+
+      wx.error( (res) => {
+        flag++
+        if (flag === 3) return
+        console.log('jsjdkConfig error' + JSON.stringify(res))
+        window.setTimeout(() => {
+          this.signWechat(data)
+        },600)
+      })
+    },
     submitComment() {
       if (this.newCommentContent === '') {
         this.$vux.toast.show({
@@ -195,24 +223,6 @@ export default {
     }
   },
   computed: {
-    fileShareInfo() {
-      return {
-        title: this.detail['F_name'], // 分享标题
-        link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-        desc: '你的好友给你分享文件啦!',
-        imgUrl: '', // 分享图标
-        success:  () => {
-          this.$http.post('/file/share', {'file_id':this.detail['F_Id']}).then( res => {
-              this.$vux.toast.show({
-          text: '分享成功!'
-        })
-          })
-        },
-        cancel: function () {
-          console.log('用户取消')
-        }
-      }
-    },
     type() {
       return getCategroyListById(this.detail['F_type'])
     },
