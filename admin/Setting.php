@@ -146,6 +146,7 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
             $file_type = $Db->query("SELECT * FROM Setting WHERE S_key = 'file_type'")[0];
             $levels = $Db->query("SELECT * FROM Setting WHERE S_key = 'level'")[0];
             $price = $Db->query("SELECT * FROM Setting WHERE S_key = 'price'")[0];
+            $share_credit = $Db->query("SELECT * FROM Setting WHERE S_key = 'share_credit'")[0];
             ?>
           <div class="form-group">
             <label>管理员账号</label>
@@ -162,6 +163,11 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
             <div class="input-group form-group">
               <span class="input-group-addon"><i class="fa fa-tag"></i></span>
               <input type="number" class="form-control" name="file_credit" value="<? echo $file_credit["S_value"] ?>">
+            </div>
+            <label>分享文件所得分数</label>
+            <div class="input-group form-group">
+              <span class="input-group-addon"><i class="fa fa-share"></i></span>
+              <input type="number" class="form-control" name="share_credit" value="<? echo $share_credit["S_value"] ?>">
             </div>
             <div class="form-group">
               <label>文件类型</label>
@@ -245,7 +251,8 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
       file_credit: $("input[name=file_credit]").val(),
       file_type:JSON.stringify(file_type),
       price:JSON.stringify(price),
-      level:JSON.stringify(level)
+      level:JSON.stringify(level),
+      share_credit: $("input[name=share_credit]").val()
     },function () {
       location.reload()
     })

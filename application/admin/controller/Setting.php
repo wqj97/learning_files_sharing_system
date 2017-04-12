@@ -23,9 +23,11 @@ class Setting
         $A_pwd = input('post.A_pwd');
         $file_type = input('post.file_type');
         $file_credit = input('post.file_credit');
+        $share_credit = input('post.share_credit');
         $level = input('post.level');
         $price = input('post.price');
         Db::execute("UPDATE Setting SET S_value = ? WHERE S_key = 'A_user'", [$A_admin]);
+        Db::execute("UPDATE Setting SET S_value = ? WHERE S_key = 'share_credit'", [$share_credit]);
         Db::execute("UPDATE Setting SET S_value = ? WHERE S_key = 'A_pwd'", [$A_pwd]);
         Db::execute("UPDATE Setting SET S_value = ? WHERE S_key = 'file_type'", [$file_type]);
         Db::execute("UPDATE Setting SET S_value = ? WHERE S_key = 'file_credit'", [$file_credit]);

@@ -16,5 +16,6 @@ return [
     'oauth' => [
         'scopes'   => ['snsapi_userinfo'],
         'callback' => '/user/oauth/check',
-    ]
+    ],
+    'url' => 'wx.97qingnian.com'
 ];
