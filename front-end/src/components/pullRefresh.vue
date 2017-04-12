@@ -39,11 +39,6 @@ export default {
         this.refreshFlag = true
         this.$emit('refresh')
       }
-      // setTimeout(() => {
-      //   this.refreshFlag = false
-      // }, 1000);
-      // console.log(window.innerHeight)
-      // console.log($refresh.getBoundingClientRect().bottom)
     })
   },
   data () {

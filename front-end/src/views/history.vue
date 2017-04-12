@@ -1,26 +1,27 @@
 <template>
   <div>
-    <div class="list-container"v-if="list.length!=0">
+    <div class="list-container">
+      <refresh
+      ref="fresh"
+      @refresh="getPage">
     <div  class="item" v-for="item in list" @click = "click(item)">
-    {{item['F_name']? item['F_name']: item['N_Id']}}
+    {{item['name']? item['name']: item['Id']}}
     </div>
+     </refresh>
   </div>
-  <div class="item" v-else>
-      没有更多内容
-    </div>
   </div>
 </template>
 
 <script>
+import { refresh } from '../components'
 export default {
   name: 'history',
+  components: {
+    refresh
+  },
   mounted() {
     this.type = this.$route.query.type
-     this.$store.commit('updateLoadingStatus', {isLoading: true})
-    this.$http.get(`/user/lists/${this.type}`).then(res => {
-      this.list = res.body
-      this.$store.commit('updateLoadingStatus', {isLoading: false})
-    })
+    this.getPage()
   },
   methods: {
     click(item) {
@@ -29,12 +30,24 @@ export default {
        } else {
          window.location.href=item['N_url']
        }
+    },
+    getPage () {
+       this.$store.commit('updateLoadingStatus', {isLoading: true})
+    this.$http.get(`/user/lists/${this.type}?page=${this.page}`).then(res => {
+      console.log(this)
+      if (res.body.length === 0) {this.$refs.fresh.noMore()}
+      this.$refs.fresh.done()
+      this.list =this.list.concat(res.body)
+      this.page++
+      this.$store.commit('updateLoadingStatus', {isLoading: false})
+    })
     }
   },
   data() {
     return {
       type: '',
-      list : []
+      list : [],
+      page: 0
     }
   }
 }
