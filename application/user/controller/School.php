@@ -17,18 +17,9 @@ class School
      * 获取所有学校的键值对
      * @return \think\response\Json
      */
-    public function Index() {
-        $school_list = Db::query("select S_Id as Id, S_name as name from School");
+    public function List() {
+        $school_list = Db::query("select S_Id as Id, S_name as name, S_city as city from School");
         return json($school_list);
-    }
-
-    /**
-     * @get
-     * @return \think\response\Json
-     */
-    public function list() {
-        $school = Db::query("select S_Id as Id, S_name as name from School");
-        return json($school);
     }
 
     /**

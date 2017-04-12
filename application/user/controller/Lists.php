@@ -23,8 +23,8 @@ class Lists
         $user_openid = cookie('openid');
         $start = input('get.page',0) * 12;
         $down_list = Db::query("SELECT
-                       (SELECT F_Id FROM File WHERE F_Id = D_file_Id) AS 'F_Id',
-                       (SELECT F_name FROM File WHERE F_Id = D_file_Id) AS 'F_name'
+                       (SELECT F_Id FROM File WHERE F_Id = D_file_Id) AS 'Id',
+                       (SELECT F_name FROM File WHERE F_Id = D_file_Id) AS 'name'
                        FROM Download_record
                        WHERE D_user_openid = ? ORDER BY D_Id DESC LIMIT $start,12", [$user_openid]);
         return json($down_list);
@@ -40,8 +40,8 @@ class Lists
         $user_openid = cookie('openid');
         $start = input('get.page',0) * 12;
         $collect_list = Db::query("SELECT
-                       (SELECT F_Id FROM File WHERE F_Id = C_file_Id) AS 'F_Id',
-                       (SELECT F_name FROM File WHERE F_Id = C_file_Id) AS 'F_name'
+                       (SELECT F_Id FROM File WHERE F_Id = C_file_Id) AS 'Id',
+                       (SELECT F_name FROM File WHERE F_Id = C_file_Id) AS 'name'
                        FROM Collect_record
                        WHERE C_user_openid = ? ORDER BY C_Id DESC LIMIT $start,12", [$user_openid]);
         return json($collect_list);
@@ -55,7 +55,7 @@ class Lists
     public function notice()
     {
         $start = input('get.page',0) * 12;
-        $notice_list = Db::query("select * from Notice_record ORDER BY N_Id DESC LIMIT $start,12");
+        $notice_list = Db::query("select N_Id as 'Id',N_title as 'name' from Notice_record ORDER BY N_Id DESC LIMIT $start,12");
         return json($notice_list);
     }
 
@@ -67,7 +67,7 @@ class Lists
     public function share()
     {
         $start = input('get.page',0) * 12;
-        $notice_list = Db::query("select * from Share_record ORDER BY SH_Id DESC LIMIT $start,12");
+        $notice_list = Db::query("select SH_file_id as 'Id',(SELECT F_name from File where SH_file_id = F_Id) as 'name' from Share_record ORDER BY SH_Id DESC LIMIT $start,12");
         return json($notice_list);
     }
 }

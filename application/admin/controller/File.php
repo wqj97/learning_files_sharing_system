@@ -21,7 +21,7 @@ class File
     public function Index()
     {
         $file_id = input('get.file_id');
-        return Db::query("SELECT F_url FROM File WHERE F_Id = ?", [$file_id])[0];
+        return Db::query("SELECT F_url,F_ext FROM File WHERE F_Id = ?", [$file_id])[0];
     }
 
     /**
