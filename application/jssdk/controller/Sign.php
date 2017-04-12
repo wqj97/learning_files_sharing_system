@@ -19,6 +19,7 @@ class Sign
         $url = input('post.url','https://wx.97qingnian.com');
         $app = new Application($option);
         $js = $app->js;
-        return json($js->setUrl($url)->config(["onMenuShareTimeline","onMenuShareAppMessage","onMenuShareQQ","onMenuShareWeibo","onMenuShareQZone"]));
+        $config = $js->setUrl($url)->config(["onMenuShareTimeline","onMenuShareAppMessage","onMenuShareQQ","onMenuShareWeibo","onMenuShareQZone"]);
+        return json([$config,$config->ticket()]);
     }
 }
