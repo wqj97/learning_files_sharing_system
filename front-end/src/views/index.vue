@@ -62,7 +62,7 @@
 import { Swiper, Tab, TabItem, SwiperItem } from 'vux'
 import { categoryList, fileList } from '../components/'
 import { mapState } from 'vuex'
-
+if (process.env.NODE_ENV === 'development') require('vconsole')
 const defaultImageList = [{
         img: 'http://placeholder.qiniudn.com/200x750/FF3B3B/ffffff',
         url: 'http://www.baidu.com'

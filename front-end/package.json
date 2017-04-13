@@ -13,6 +13,7 @@
     "fastclick": "^1.0.6",
     "md5": "^2.2.1",
     "node-sass": "^4.5.1",
+    "pdfobject": "^2.0.201604172",
     "sass-loader": "^6.0.3",
     "vconsole": "^2.5.2",
     "vue": "^2.2.2",

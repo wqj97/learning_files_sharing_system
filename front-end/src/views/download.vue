@@ -39,7 +39,7 @@
             <img v-if="detail['liked']"
                  src="../assets/heartColor.svg">
             <img v-else
-                 src="../assets/Collect.svg"> {{detail['like_count']}}
+                 src="../assets/emptyHeart.svg"> {{detail['like_count']}}
           </div>
         </div>
         <div class="right">
@@ -49,12 +49,12 @@
       </div>
     </div>
     <div class="tab">
-      <div class="preview"
+      <div id="preview" class="preview"
            v-show="!isShowCommentList">
 
         <iframe style="width:100vw;height:100%;"
-                :src="iframeUrl"
-                frameborder="0"></iframe>
+                  :src="iframeUrl"
+                  frameborder="0"></iframe>
 
       </div>
       <div class="comments"
@@ -74,8 +74,8 @@ import { fileIcon, commentList } from '@/components/'
 import { getCategroyListById } from '@/utils'
 import { mapState } from 'vuex'
 import { XDialog, XTextarea, XButton } from 'vux'
+import PDFObject from 'pdfobject'
 let flag = 0
-// require('vconsole')
 export default {
   name: 'download',
   mounted() {
@@ -87,11 +87,14 @@ export default {
       })
       this.$router.push('/')
     }
+
+
     this.id = id
     this.$store.commit('updateLoadingStatus', { isLoading: true })
     this.$http.get(`/file?file_id=${id}`).then(res => {
       this.detail = res.body
       this.signWechat(res.body)
+      PDFObject.embed("https://wx.97qingnian.com/upload/20170411/4ead9893d74784d95f468cc218e11951.pdf", "#preview")
     }, err => {
       this.$store.commit('updateError', { isError: true })
     })
@@ -140,7 +143,7 @@ export default {
         this.$store.commit('updateLoadingStatus', { isLoading: false })
         wx.config(config)
       })
-      wx.ready( () => {
+      wx.ready(() => {
         console.log('jsjdkConfig success, set hooks...')
         wx.onMenuShareTimeline(fileShareInfo)
         wx.onMenuShareAppMessage(fileShareInfo)
@@ -148,13 +151,13 @@ export default {
         wx.onMenuShareQZone(fileShareInfo)
       })
 
-      wx.error( (res) => {
+      wx.error((res) => {
         flag++
         if (flag === 3) return
         console.log('jsjdkConfig error' + JSON.stringify(res))
         window.setTimeout(() => {
           this.signWechat(data)
-        },600)
+        }, 600)
       })
     },
     submitComment() {
@@ -257,6 +260,7 @@ export default {
   padding-top: 19px;
   padding-bottom: 18px; // border-bottom: 1px solid #EEEEEE;
   .top {
+    box-sizing: border-box;
     border: none;
     display: flex;
     justify-content: space-around;
