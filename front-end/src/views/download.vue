@@ -49,7 +49,7 @@
       </div>
     </div>
     <div class="tab">
-      <div id="preview" class="preview"
+      <div class="preview"
            v-show="!isShowCommentList">
 
         <iframe style="width:100vw;height:100%;"
@@ -74,7 +74,7 @@ import { fileIcon, commentList } from '@/components/'
 import { getCategroyListById } from '@/utils'
 import { mapState } from 'vuex'
 import { XDialog, XTextarea, XButton } from 'vux'
-import PDFObject from 'pdfobject'
+// import PDFObject from 'pdfobject'
 let flag = 0
 export default {
   name: 'download',
@@ -94,7 +94,7 @@ export default {
     this.$http.get(`/file?file_id=${id}`).then(res => {
       this.detail = res.body
       this.signWechat(res.body)
-      PDFObject.embed("https://wx.97qingnian.com/upload/20170411/4ead9893d74784d95f468cc218e11951.pdf", "#preview")
+      // PDFObject.embed("https://wx.97qingnian.com/upload/20170411/4ead9893d74784d95f468cc218e11951.pdf", "#preview")
     }, err => {
       this.$store.commit('updateError', { isError: true })
     })
