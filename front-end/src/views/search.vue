@@ -64,6 +64,7 @@ export default {
           return
       }
         this.searchResult = this.searchResult.concat(res.body)
+        this.$refs.scroll.done()
         this.page++
       }, res => {
         this.$vux.toast.show({

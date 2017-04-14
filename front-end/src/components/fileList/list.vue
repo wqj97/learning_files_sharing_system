@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Refresh ref="fresh" @refresh="$emit('refresh')">
+    <Refresh :distance="100" ref="fresh" @refresh="$emit('refresh')">
         <item v-for="(i, index) in list" type="DOC"
               :title="i['F_name']"
               :comments="i['comment_count']"
