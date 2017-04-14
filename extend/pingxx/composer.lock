@@ -1,0 +1,66 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "eb908bc5d24238be939b0c41eaab94f5",
+    "packages": [
+        {
+            "name": "pingplusplus/pingpp-php",
+            "version": "2.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PingPlusPlus/pingpp-php.git",
+                "reference": "c7d1dbcbd999d3e274e4629e1fc366ae83a1b992"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://files.phpcomposer.com/files/PingPlusPlus/pingpp-php/c7d1dbcbd999d3e274e4629e1fc366ae83a1b992.zip",
+                "reference": "c7d1dbcbd999d3e274e4629e1fc366ae83a1b992",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": []
+            },
+            "autoload": {
+                "psr-4": {
+                    "Pingpp\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pingplusplus and contributors",
+                    "homepage": "https://github.com/PingPlusPlus/pingpp-php/contributors"
+                }
+            ],
+            "description": "Pingplusplus PHP Library",
+            "homepage": "https://pingxx.com/",
+            "keywords": [
+                "api",
+                "mobile payment processing",
+                "pingpp"
+            ],
+            "time": "2016-12-19T04:06:16+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

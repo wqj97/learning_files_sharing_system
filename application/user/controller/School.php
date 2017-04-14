@@ -17,9 +17,35 @@ class School
      * 获取所有学校的键值对
      * @return \think\response\Json
      */
-    public function List() {
+    public function List()
+    {
         $school_list = Db::query("select S_Id as Id, S_name as name, S_city as city from School");
         return json($school_list);
+    }
+
+
+    /**
+     * 查询所有城市
+     * @get String city (Optional)
+     * @return \think\response\Json
+     */
+    public function City()
+    {
+        $city = input('get.city','');
+        $province_list = Db::query("select S_city from School where S_city like ? GROUP BY S_city ORDER BY S_Id",["%$city%"]);
+        return json($province_list);
+    }
+
+    /**
+     * 查询城市下的学校
+     * @get String city
+     * @return \think\response\Json
+     */
+    public function Index()
+    {
+        $city = input('get.city');
+        $school = Db::query("select * from School where S_city like ?",["%$city%"]);
+        return json($school);
     }
 
     /**
