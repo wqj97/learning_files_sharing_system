@@ -26,7 +26,6 @@ export default new Vuex.Store({
   },
   actions: {
     initUserInfo({state, commit}) {
-      // debugger
       if (state.user.U_name) return
       commit('updateLoadingStatus', {isLoading: true})
       Vue.http.get('/user').then(res => {
@@ -37,10 +36,10 @@ export default new Vuex.Store({
         commit('updateLoadingStatus', {isLoading: true})
       })
     },
-    updateUserSchool({state, commit}, {Id, name}) {
+    updateUserSchool({state, commit}, {Id,title}) {
       Vue.http.post('/user/school/update', {school: Id}).then(res => {
         if (state.user.U_name) {
-          state.user.U_school = name
+          state.user.U_school = title
         } else {
           dispatch('initUserInfo')
         }
