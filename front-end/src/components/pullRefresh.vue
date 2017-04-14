@@ -21,14 +21,17 @@ export default {
   methods: {
     done() {
       this.refreshFlag = false
+      this.$emit('done')
     },
     noMore() {
       this.noMoreData = true
       this.refreshFlag = false
+      this.$emit('no More data')
     },
     resetState() {
       this.noMoreData = false
       this.refreshFlag = false
+      this.$emit('state reset')
     }
   },
   mounted() {
