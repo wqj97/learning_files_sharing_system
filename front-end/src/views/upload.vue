@@ -47,6 +47,7 @@
 import { fileIcon } from '../components'
 import { mapMutations } from 'vuex'
 import { Loading } from 'vux'
+import {allowedFileType} from '@/constants'
 // import md5 from 'MD5'
 
 
@@ -68,14 +69,14 @@ export default {
       if (!file) return
       return file.name.split('.')[0]
     },
+    getExtName() {
+       let file = this.file.files[0]
+      if (!file) return
+      return file.name.split('.')[1]
+    },
     upload() {
-      if (!this.file.files[0]) {
-        this.$vux.toast.show({
-          text: '请选择文件',
-          type: 'warn'
-        })
-        return
-      }
+      if(!this.isReallyHaveFile()) return
+      if(!this.checkFileExtName()) return
       this.isLoading = true
       this.$nextTick(() => {
         if (this.fileName === '') {
@@ -100,6 +101,27 @@ export default {
           resolve(false)
         }, res => reject(res))
       })
+    },
+    checkFileExtName() {
+      let ext = this.getExtName()
+      if (allowedFileType.indexOf(ext.toLowerCase()) == -1) {
+        this.$vux.toast.show({
+          text: `${ext} 类型文件不支持上传`,
+          type: 'warn'
+        })
+        return false
+      }
+      return true
+    },
+    isReallyHaveFile() {
+      if (!this.file.files[0]) {
+        this.$vux.toast.show({
+          text: '请选择文件',
+          type: 'warn'
+        })
+        return false
+      }
+      return true
     },
     uploadFile() {
       return new Promise((resolve, rejcet) => {
