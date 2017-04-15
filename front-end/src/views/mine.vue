@@ -54,7 +54,7 @@
       </div>
     </div>
       <div class="bottom_btn" id="buy" @click="$router.push('/buy')">
-        立即升级
+        成为赞助者
       </div>
 
   </div>
@@ -96,8 +96,7 @@ redirect(url) {
   color: #FFF;
   font-size: 18px;
   font-weight: 200;
-
-  background-image: linear-gradient(-90deg, #EF5F3E 0%, #EB3369 100%);
+   background-image: linear-gradient(-180deg, #00B9F8 0%, #2ECAFF 100%);
 }
 
 .Mine {
