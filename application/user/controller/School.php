@@ -23,7 +23,14 @@ class School
         return json($school_list);
     }
 
-
+    /**
+     * 获取所有省份
+     */
+    public function Province()
+    {
+        $province_list = Db::query("select S_province from School GROUP BY S_province");
+        return json($province_list);
+    }
     /**
      * 查询所有城市
      * @get String city (Optional)
@@ -43,8 +50,8 @@ class School
      */
     public function Index()
     {
-        $city = input('get.city');
-        $school = Db::query("select * from School where S_city like ?",["%$city%"]);
+        $keyword = input('get.keyword');
+        $school = Db::query("select * from School where concat(S_name,S_city) like ?",["%$keyword%"]);
         return json($school);
     }
 
