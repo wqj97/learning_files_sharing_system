@@ -19,18 +19,21 @@ class School
      */
     public function List()
     {
-        $school_list = Db::query("select S_Id as Id, S_name as name, S_city as city from School");
+        $school_list = Db::query("SELECT S_Id AS Id, S_name AS name, S_city AS city FROM School");
         return json($school_list);
     }
 
     /**
      * 获取所有省份
+     * @get keyword String
      */
     public function Province()
     {
-        $province_list = Db::query("select S_province from School GROUP BY S_province");
+        $keyword = input('get.keyword', '');
+        $province_list = Db::query("SELECT S_province FROM School WHERE S_province LIKE ? GROUP BY S_province", ["%$keyword%"]);
         return json($province_list);
     }
+
     /**
      * 查询所有城市
      * @get String city (Optional)
@@ -38,8 +41,8 @@ class School
      */
     public function City()
     {
-        $city = input('get.city','');
-        $province_list = Db::query("select S_city from School where S_city like ? GROUP BY S_city ORDER BY S_Id",["%$city%"]);
+        $city = input('get.city', '');
+        $province_list = Db::query("SELECT S_city FROM School WHERE S_city LIKE ? GROUP BY S_city ORDER BY S_Id", ["%$city%"]);
         return json($province_list);
     }
 
@@ -51,7 +54,7 @@ class School
     public function Index()
     {
         $keyword = input('get.keyword');
-        $school = Db::query("select * from School where concat(S_name,S_city) like ?",["%$keyword%"]);
+        $school = Db::query("SELECT * FROM School WHERE concat(S_name,S_city) LIKE ?", ["%$keyword%"]);
         return json($school);
     }
 
