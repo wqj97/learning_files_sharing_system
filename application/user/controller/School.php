@@ -24,13 +24,24 @@ class School
     }
 
     /**
-     * 获取所有省份
+     * 获取所有省份列表
+     * @return \think\response\Json
+     */
+    public function Province_list()
+    {
+        $province_list = Db::query("SELECT S_province FROM School GROUP BY S_province");
+        return json($province_list);
+    }
+
+    /**
+     * 获取省份下的城市
      * @get keyword String
+     * @return \think\response\Json
      */
     public function Province()
     {
         $keyword = input('get.keyword', '');
-        $province_list = Db::query("SELECT S_province FROM School WHERE S_province LIKE ? GROUP BY S_province", ["%$keyword%"]);
+        $province_list = Db::query("SELECT S_city FROM School WHERE S_province LIKE ? GROUP BY S_city", ["%$keyword%"]);
         return json($province_list);
     }
 
