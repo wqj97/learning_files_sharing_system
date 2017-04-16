@@ -18,6 +18,7 @@
             @on-submit="onSearch"
             @on-cancel="isSearch = false"
             @on-change="onSearch"
+            @on-result-click="searchResultClick"
             v-model="searchValue"></Search>
     <Group v-show="!isSearch" gutter="0">
       <span v-for="(item, index) in list"
@@ -89,6 +90,11 @@ export default {
       }
       this.state = state
       return
+    },
+    searchResultClick (item) {
+       this.$store.dispatch('updateUserSchool', item)
+        this.$router.push('/')
+        return
     },
     click(item) {
       // 省市
