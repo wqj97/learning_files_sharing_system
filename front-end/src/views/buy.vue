@@ -1,7 +1,6 @@
 <template>
   <div>
     <p class="solgan">感谢您的赞助和支持，爱优医将通过等级以表谢意。</p>
-    <p class="solgan">若想提供更多赞助，请联系客服微信: aiyouyi123</p>
      <div class="item lv0">
       <div class="main">
         <div class="level">Lv.0</div>
@@ -31,6 +30,7 @@
       </div>
       <div class="slogan">可享受全部资料</div>
     </div>
+     <p class="solgan">若想提供更多赞助，请联系客服微信: aiyouyi123</p>
   </div>
 </template>
 <script>
@@ -60,9 +60,15 @@ export default {
 
 <style lang="scss" scoped>
 .solgan{
-  text-align: center;
-  color: #455D7A;
-
+  text-align: left;
+  color: #294d79;
+  margin: 20px 18px;
+  font-size: 17px;
+  white-space: normal;
+  word-break:break-all;
+}
+.lv0{
+  margin-top: 20px !important;
 }
 .item{
 user-select: none;
