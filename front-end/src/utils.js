@@ -4,3 +4,4 @@ export function getCategroyListById(id) {
   id = Number(id)
   return titleList[ids.indexOf(id)]
 }
+export const assetsPath = process.env.NODE_ENV === 'development' ?  '/static/' : '/home/static/'

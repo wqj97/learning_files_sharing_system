@@ -13,12 +13,12 @@
   </div>
 </template>
 <script>
-import {ids, titleList } from '../utils'
-const imgPath = process.env.NODE_ENV === 'development' ?  '/static/img/category/' : '/home/static/img/category/'
+import {ids, titleList, assetsPath} from '../utils'
+// const imgPath = process.env.NODE_ENV === 'development' ?  '/static/img/category/' : '/home/static/img/category/'
 const defaultList = titleList.map((item, index) => {
   return {
     title: item,
-    image: `${imgPath}${index + 1}.svg`,
+    image: `${assetsPath}img/category/${index + 1}.svg`,
     id: ids[index],
     checked: false
   }

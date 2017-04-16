@@ -1,5 +1,14 @@
 <template>
   <div>
+  <x-dialog
+  v-model="isShowDialog"
+  >
+  <div>用户协议</div>
+  <iframe   style="height:50vh;" :src="agreementUrl" frameborder="0"></iframe>
+  <div class="oper">
+  <x-button type="primary" mini @click.native="agree">同意</x-button> <x-button mini @click.native="reject">拒绝</x-button>
+  </div>
+  </x-dialog>
     <header id="header">
       <div id="basic_info"
            class="text_shdow">
@@ -59,9 +68,10 @@
   </div>
 </template>
 <script>
-import { Swiper, Tab, TabItem, SwiperItem } from 'vux'
+import { Swiper, Tab, TabItem, SwiperItem, XDialog , XButton} from 'vux'
 import { categoryList, fileList } from '../components/'
 import { mapState } from 'vuex'
+import {assetsPath} from '../utils'
 if (process.env.NODE_ENV === 'development') require('vconsole')
 const defaultImageList = [{
         img: 'http://placeholder.qiniudn.com/200x750/FF3B3B/ffffff',
@@ -84,9 +94,12 @@ export default {
     TabItem,
     categoryList,
     SwiperItem,
-    fileList
+    fileList,
+    XDialog,
+    XButton
   },
   mounted() {
+    this.isShowDialog = localStorage.isAgree === "true" ? false : true
     this.$store.dispatch('initUserInfo')
     this.$http.get('/index/home').then(data => {
       const body = data.body
@@ -106,6 +119,7 @@ export default {
   },
   data() {
     return {
+      isShowDialog: false,
       tabIndex: 0,
       currentTab: tabList[0],
       mainColor: "#F8421E",
@@ -116,11 +130,22 @@ export default {
     }
   },
   methods: {
+    agree() {
+      localStorage.isAgree=true
+      this.isShowDialog=false
+    },
+    reject() {
+      localStorage.isAgree=false
+      alert('感谢使用! 请退出')
+    },
     categoryListClick(val) {
       this.$router.push({ path: '/search', query: { type: val.id } })
     }
   },
   computed: {
+    agreementUrl() {
+      return assetsPath + 'img/agreement.html'
+    },
     ...mapState({
       user: state => state.user
     })
@@ -193,5 +218,11 @@ box-shadow: 0px 2px 7px 0px rgba(0,0,0,0.24);
 
 .slide_show {
   // height: 100px;
+}
+.oper{
+  padding: 10px;
+}
+.weui-btn + .weui-btn{
+  margin-top: 0px;
 }
 </style>
