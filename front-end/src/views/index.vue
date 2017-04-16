@@ -1,10 +1,15 @@
 <template>
   <div>
-  <x-dialog
-  v-model="isShowDialog"
+    <!--<div class="wrapper">
+    <iframe :src="agreementUrl" frameborder="0"></iframe>
+  </div>-->
+  <x-dialog  :scroll="false" v-model="isShowDialog"
   >
   <div>用户协议</div>
-  <iframe   style="height:50vh;" :src="agreementUrl" frameborder="0"></iframe>
+
+  <div class="wrapper">
+    <iframe style="height:100%;overflow:scroll;" :src="agreementUrl" frameborder="0"></iframe>
+  </div>
   <div class="oper">
   <x-button type="primary" mini @click.native="agree">同意</x-button> <x-button mini @click.native="reject">拒绝</x-button>
   </div>
@@ -219,8 +224,14 @@ box-shadow: 0px 2px 7px 0px rgba(0,0,0,0.24);
 .slide_show {
   // height: 100px;
 }
+.wrapper{
+    height:40vh;
+    overflow: hidden;
+    -webkit-overflow-scrolling:touch; overflow: scroll;
+  }
 .oper{
   padding: 10px;
+
 }
 .weui-btn + .weui-btn{
   margin-top: 0px;
