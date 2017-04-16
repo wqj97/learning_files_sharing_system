@@ -65,7 +65,7 @@ class MessageBuilder
     ];
 
     /**
-     * Preview bys.
+     * Transfer bys.
      *
      * @var array
      */

@@ -142,7 +142,7 @@ class Broadcast extends AbstractAPI
     }
 
     /**
-     * Preview a message.
+     * Transfer a message.
      *
      * @param string $msgType message type
      * @param mixed  $message message
@@ -159,7 +159,7 @@ class Broadcast extends AbstractAPI
     }
 
     /**
-     * Preview a text message.
+     * Transfer a text message.
      *
      * @param mixed  $message message
      * @param string $to
@@ -173,7 +173,7 @@ class Broadcast extends AbstractAPI
     }
 
     /**
-     * Preview a news message.
+     * Transfer a news message.
      *
      * @param mixed  $message message
      * @param string $to
@@ -187,7 +187,7 @@ class Broadcast extends AbstractAPI
     }
 
     /**
-     * Preview a voice message.
+     * Transfer a voice message.
      *
      * @param mixed  $message message
      * @param string $to
@@ -201,7 +201,7 @@ class Broadcast extends AbstractAPI
     }
 
     /**
-     * Preview a image message.
+     * Transfer a image message.
      *
      * @param mixed  $message message
      * @param string $to
@@ -215,7 +215,7 @@ class Broadcast extends AbstractAPI
     }
 
     /**
-     * Preview a video message.
+     * Transfer a video message.
      *
      * @param mixed  $message message
      * @param string $to
@@ -229,7 +229,7 @@ class Broadcast extends AbstractAPI
     }
 
     /**
-     * Preview a card message.
+     * Transfer a card message.
      *
      * @param mixed  $message message
      * @param string $to
@@ -243,7 +243,7 @@ class Broadcast extends AbstractAPI
     }
 
     /**
-     * Preview a message by name.
+     * Transfer a message by name.
      *
      * @param string $msgType message type
      * @param mixed  $message message
@@ -257,7 +257,7 @@ class Broadcast extends AbstractAPI
     }
 
     /**
-     * Preview a text message by name.
+     * Transfer a text message by name.
      *
      * @param mixed $message message
      * @param $to
@@ -270,7 +270,7 @@ class Broadcast extends AbstractAPI
     }
 
     /**
-     * Preview a news message by name.
+     * Transfer a news message by name.
      *
      * @param mixed $message message
      * @param $to
@@ -283,7 +283,7 @@ class Broadcast extends AbstractAPI
     }
 
     /**
-     * Preview a voice message by name.
+     * Transfer a voice message by name.
      *
      * @param mixed $message message
      * @param $to
@@ -296,7 +296,7 @@ class Broadcast extends AbstractAPI
     }
 
     /**
-     * Preview a image message by name.
+     * Transfer a image message by name.
      *
      * @param mixed $message message
      * @param $to
@@ -309,7 +309,7 @@ class Broadcast extends AbstractAPI
     }
 
     /**
-     * Preview a video message by name.
+     * Transfer a video message by name.
      *
      * @param mixed $message message
      * @param $to
@@ -322,7 +322,7 @@ class Broadcast extends AbstractAPI
     }
 
     /**
-     * Preview a card message by name.
+     * Transfer a card message by name.
      *
      * @param mixed $message message
      * @param $to
