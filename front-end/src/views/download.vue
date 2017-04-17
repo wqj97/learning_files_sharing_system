@@ -51,11 +51,7 @@
     <div class="tab">
       <div class="preview"
            v-show="!isShowCommentList">
-
-        <iframe style="width:100vw;height:100%;"
-                  :src="iframeUrl"
-                  frameborder="0"></iframe>
-
+           <preview v-if="previewUrlArr" :url="previewUrlArr"></preview>
       </div>
       <div class="comments"
            v-show="isShowCommentList">
@@ -70,7 +66,7 @@
 </template>
 
 <script>
-import { fileIcon, commentList } from '@/components/'
+import { fileIcon, commentList, preview } from '@/components/'
 import { getCategroyListById } from '@/utils'
 import { mapState } from 'vuex'
 import { XDialog, XTextarea, XButton } from 'vux'
@@ -78,6 +74,14 @@ import { XDialog, XTextarea, XButton } from 'vux'
 let flag = 0
 export default {
   name: 'download',
+    components: {
+    fileIcon,
+    commentList,
+    XDialog,
+    XTextarea,
+    XButton,
+    preview
+  },
   mounted() {
     let id = this.$route.query.id
     if (!id) {
@@ -93,8 +97,11 @@ export default {
     this.$store.commit('updateLoadingStatus', { isLoading: true })
     this.$http.get(`/file?file_id=${id}`).then(res => {
       this.detail = res.body
-      this.signWechat(res.body)
-      // PDFObject.embed("https://wx.97qingnian.com/upload/20170411/4ead9893d74784d95f468cc218e11951.pdf", "#preview")
+      if (process.env.NODE_ENV == 'development') {
+         this.$store.commit('updateLoadingStatus', { isLoading: false })
+         return
+    }
+        this.signWechat(res.body)
     }, err => {
       this.$store.commit('updateError', { isError: true })
     })
@@ -113,7 +120,6 @@ export default {
   },
   methods: {
     signWechat(data) {
-      console.log('signWechat')
       let fileShareInfo = {
         title: data['F_name'], // 分享标题
         link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
@@ -226,23 +232,15 @@ export default {
     }
   },
   computed: {
+    previewUrlArr () {
+      return this.detail['F_transfer_url']
+    },
     type() {
       return getCategroyListById(this.detail['F_type'])
-    },
-    iframeUrl() {
-      if (process.env.NODE_ENV === 'development') return 'https://broven.github.io'
-      return 'https://view.officeapps.live.com/op/view.aspx?src=' + encodeURI(window.location.origin + this.detail['F_url'])
     },
     ...mapState({
       user: state => state.user
     })
-  },
-  components: {
-    fileIcon,
-    commentList,
-    XDialog,
-    XTextarea,
-    XButton
   }
 }
 </script>
