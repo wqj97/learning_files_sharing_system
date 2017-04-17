@@ -33,15 +33,18 @@ class Download
             return json("权限不足", 403);
         }
         Db::execute("UPDATE File SET F_download_count = F_download_count + 1 WHERE F_Id = ?", [$file_id]);
-        Db::execute("Insert into Download_record (D_user_openid, D_file_Id) VALUES (?,?)",[$user_openid,$file_id]);
+        Db::execute("INSERT INTO Download_record (D_user_openid, D_file_Id) VALUES (?,?)", [$user_openid, $file_id]);
         $file_obj = new \SplFileObject($_SERVER['DOCUMENT_ROOT'] . $file_Info["F_url"], 'r');
-        Header("Content-Disposition: attachment; filename=" . $file_Info["F_name"].".".$file_Info["F_ext"]);
-        header("Content-type:text/html;charset=utf-8");
-        Header("Content-type: application/octet-stream");
-        Header("Accept-Ranges: bytes");
-        Header("Accept-Length:" . $file_obj->getSize());
-        foreach ($file_obj as $key => $val) {
-            echo $val;
+        if (strpos($_SERVER['HTTP_USER_AGENT'], 'iPhone') || strpos($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
+            echo "<iframe style='width:100%;height: 100%;' frameborder='0' src='{$file_Info["F_url"]}'></iframe>";
+        } else {
+            Header("Content-Disposition: attachment; filename=" . $file_Info["F_name"] . "." . $file_Info["F_ext"]);
+            Header("Content-type: application/pdf");
+            Header("Accept-Ranges: bytes");
+            Header("Accept-Length:" . $file_obj->getSize());
+            foreach ($file_obj as $key => $val) {
+                echo $val;
+            }
         }
     }
 
@@ -58,6 +61,6 @@ class Download
                 return $levelNum;
             }
         }
-        return 0;
+        return 3;
     }
 }

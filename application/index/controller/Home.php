@@ -32,7 +32,7 @@ class home
         }
         $user_info['level'] = $this->getLevel($user_info['U_credit']);
         $banner = json_decode(Server_Setting('banner'));
-        $top_file = Db::query("select F_Id,F_name,(SELECT count(*) from Comment where C_file_Id = F_Id) as 'comment_count',F_download_count,(SELECT count(*) from Collect_record where C_file_Id = F_Id) as 'collect_record',F_view_count,F_ext from File where F_type is NOT NULL ORDER BY F_download_count LIMIT 0,12");
+        $top_file = Db::query("select F_Id,F_name,(SELECT count(*) from Comment where C_file_Id = F_Id) as 'comment_count',F_download_count,(SELECT count(*) from Collect_record where C_file_Id = F_Id) as 'collect_record',F_view_count,F_ext from File where F_type is NOT NULL ORDER BY F_view_count LIMIT 0,12");
         return json(["userInfo" => $user_info,"banner" => $banner,"top_file" => $top_file]);
     }
 
