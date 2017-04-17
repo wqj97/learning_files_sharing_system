@@ -99,7 +99,7 @@ class File
     private function Transfer($file_id)
     {
         $server_file_url = Db::query("SELECT F_url,F_ext FROM File WHERE F_Id = ?", [$file_id])[0];
-        if ($server_file_url["F_ext"] != "pdf" || $server_file_url["F_ext"] != "PDF") {
+        if (mb_strtolower($server_file_url["F_ext"]) != "pdf") {
             Db::execute("UPDATE File SET F_transfer_url = ? WHERE aiuyi.File.F_Id = ?", ["Cant't transfer", $file_id]);
             return true;
         }

@@ -46,6 +46,6 @@ class Index
                 return $levelNum;
             }
         }
-        return 0;
+        return 3;
     }
 }
