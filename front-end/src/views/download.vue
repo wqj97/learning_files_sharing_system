@@ -83,6 +83,8 @@ export default {
     preview
   },
   mounted() {
+    window.scrollTo(0,0)
+
     let id = this.$route.query.id
     if (!id) {
       this.$vux.toast.show({
@@ -218,8 +220,10 @@ export default {
       }
       window.location.href = `${window.location.origin}/file/download/?file_id=${this.detail['F_Id']}`
     },
-    like() {
+    like () {
+       this.$store.commit('updateLoadingStatus', { isLoading: true })
       this.$http.get(`/file/collect?file_id=${this.detail['F_Id']}`).then(res => {
+         this.$store.commit('updateLoadingStatus', { isLoading: false })
         let isLiked = res.body['0'] === 'Collected'
         this.detail['liked'] = isLiked
         isLiked ? this.detail['like_count'] += 1 : this.detail['like_count'] -= 1
@@ -314,6 +318,7 @@ $menuBarRadius: 4px;
     }
     .like {
       border: 1px solid $redColor;
+      border-left: none;
       border-top-right-radius: $menuBarRadius;
       border-bottom-right-radius: $menuBarRadius;
     }

@@ -15,7 +15,6 @@ export default {
   },
   computed: {
     arr () {
-      console.log('!!!!!!' + this.url)
       if (this.url[0] !== '[') return []
       return JSON.parse(this.url)
     }
