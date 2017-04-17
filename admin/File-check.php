@@ -252,6 +252,20 @@ $Db = new Db();
           </select>
         </div>
       </div>
+      <div class="box box-info box-solid" style="display: none" id="waiting-dialog">
+        <div class="box-header">
+          <h3 class="box-title">服务器正在生成预览文档, 请等待</h3>
+        </div>
+        <div class="box-body">
+          服务器正在生成预览文档, 请等待
+        </div>
+        <!-- /.box-body -->
+        <!-- Loading (remove the following to stop the loading)-->
+        <div class="overlay">
+          <i class="fa fa-refresh fa-spin"></i>
+        </div>
+        <!-- end loading -->
+      </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="agreeBtn">通过</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -295,6 +309,7 @@ $Db = new Db();
     let type = $("#file_type_code").val();
     let level = $("#file_level").val();
     let file_name = $("#file_name").val();
+    $("#waiting-dialog").fadeToggle();
     $.get('/admin/File/Agree?file_id=' + Id + '&file_type_code=' + type + '&file_level=' + level + '&file_name=' + file_name, function (data) {
       if (data.result === "success") {
         location.reload()

@@ -27,6 +27,7 @@ class Index
         $file_info["like_count"] = Db::query("select count(0) from Collect_record where C_file_Id = $file_info[F_Id]")[0]["count(0)"];
         $file_collected = Db::query("select * from Collect_record where C_file_Id = $file_info[F_Id] and C_user_openid = '$openid'");
         $file_info["liked"] = !empty($file_collected);
+        unset($file_info["F_url"]);
         return json($file_info);
     }
 }
