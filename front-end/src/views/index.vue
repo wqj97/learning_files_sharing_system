@@ -77,7 +77,7 @@ import { Swiper, Tab, TabItem, SwiperItem, XDialog , XButton} from 'vux'
 import { categoryList, fileList } from '../components/'
 import { mapState } from 'vuex'
 import {assetsPath} from '../utils'
-if (process.env.NODE_ENV === 'development') require('vconsole')
+// require('vconsole')
 const defaultImageList = [{
         img: 'http://placeholder.qiniudn.com/200x750/FF3B3B/ffffff',
         url: 'http://www.baidu.com'
