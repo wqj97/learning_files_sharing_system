@@ -194,7 +194,7 @@ LIMIT $start, 12;");
                               return $levelNum;
                           }
                       }
-                      return 0;
+                      return 3;
                   }
 
                   foreach ($user as $row) {

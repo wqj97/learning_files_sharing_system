@@ -22,7 +22,7 @@ class Download
     {
 
         $file_id = input("get.file_id");
-        $user_openid = cookie('openid');
+        $user_openid = empty(cookie('openid')) ? input("get.openid") : cookie('openid');
         if (empty($file_id) || empty($user_openid)) {
             return json("禁止访问", 403);
         }

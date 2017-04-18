@@ -50,8 +50,13 @@ class File
     public function Refuse()
     {
         $file_id = input('get.file_id');
-        $file_src = Db::query("SELECT F_url FROM File WHERE F_Id = ?", [$file_id])[0]["F_url"];
-        unlink($_SERVER["DOCUMENT_ROOT"] . $file_src);
+        $file_src = Db::query("SELECT F_url,F_transfer_url FROM File WHERE F_Id = ?", [$file_id])[0];
+        unlink($_SERVER["DOCUMENT_ROOT"] . $file_src["F_url"]);
+        if ($file_src["F_transfer_url"] != "Can't transfer") {
+            foreach (json_decode($file_src["F_transfer_url"]) as $preview_url) {
+                unlink($preview_url);
+            }
+        }
         Db::execute("DELETE FROM File WHERE F_Id = ?", [$file_id]);
         return json(["result" => "success"]);
     }

@@ -67,7 +67,8 @@ class Lists
     public function share()
     {
         $start = input('get.page',0) * 12;
-        $notice_list = Db::query("select SH_file_id as 'Id',(SELECT F_name from File where SH_file_id = F_Id) as 'name' from Share_record ORDER BY SH_Id DESC LIMIT $start,12");
+        $user_openid = cookie('openid');
+        $notice_list = Db::query("select SH_file_id as 'Id',(SELECT F_name from File where SH_file_id = F_Id) as 'name' from Share_record where SH_user_openid = ? ORDER BY SH_Id DESC LIMIT $start,12",[$user_openid]);
         return json($notice_list);
     }
 }
