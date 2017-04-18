@@ -26,10 +26,12 @@ export default {
   },
   methods: {
     click(item) {
+      if(item['url']) {
+        window.location.href = item['url']
+        return
+      }
       if (item['Id']) {
         this.$router.push(`/download?id=${item['Id']}`)
-      } else {
-        window.location.href = item['N_url']
       }
     },
     getPage() {
