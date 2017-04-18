@@ -19,6 +19,9 @@ export default {
     ...mapState({
       isLoading: state => state.isLoading
     })
+  },
+  mounted() {
+    this.$store.dispatch('initUserInfo')
   }
 }
 </script>
