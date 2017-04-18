@@ -101,7 +101,7 @@ export default {
       if (this.state === 2) {
         this.province = item['title']
          this.$store.commit('updateLoadingStatus', { isLoading: true })
-        this.$http.get(`user/school/province?keyword=${item['title']}`).then(res => {
+        this.$http.get(`/user/school/province?keyword=${item['title']}`).then(res => {
           this.list = dataAdapter(res.body)
           this.$store.commit('updateLoadingStatus', { isLoading: false })
         })
