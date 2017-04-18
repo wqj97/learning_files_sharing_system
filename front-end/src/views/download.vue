@@ -44,6 +44,7 @@
         </div>
         <div class="right">
           <button id="download-btn"
+                  :class="{'gray': !isEnoughToDownload}"
                   @click="downloadClick">下载</button>
         </div>
       </div>
@@ -99,10 +100,10 @@ export default {
     this.$store.commit('updateLoadingStatus', { isLoading: true })
     this.$http.get(`/file?file_id=${id}`).then(res => {
       this.detail = res.body
-      if (process.env.NODE_ENV == 'development') {
+      if (process.env.NODE_ENV === 'development') {
          this.$store.commit('updateLoadingStatus', { isLoading: false })
          return
-    }
+     }
         this.signWechat(res.body)
     }, err => {
       this.$store.commit('updateError', { isError: true })
@@ -122,6 +123,8 @@ export default {
   },
   methods: {
     signWechat(data) {
+      console.log('sign jsjdk!')
+
       let fileShareInfo = {
         title: data['F_name'], // 分享标题
         link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
@@ -162,7 +165,7 @@ export default {
       wx.error((res) => {
         flag++
         if (flag === 3) return
-        console.log('jsjdkConfig error' + JSON.stringify(res))
+        console.error('jsjdkConfig error' + JSON.stringify(res))
         window.setTimeout(() => {
           this.signWechat(data)
         }, 600)
@@ -236,6 +239,12 @@ export default {
     }
   },
   computed: {
+    isEnoughToDownload () {
+      if(this.user.level < this.detail['F_level']) {
+        return false
+      }
+      return true
+    },
     previewUrlArr () {
       return this.detail['F_transfer_url']
     },
@@ -333,9 +342,12 @@ $menuBarRadius: 4px;
     padding: 10px 43px;
     border: none;
     box-shadow: 0 2px 10px rgba(0, 185, 248, .6);
+    transition: filter .5s ease-in;
   }
 }
-
+.gray{
+    filter: grayscale(100%);
+}
 .bottom_btn {
   position: fixed;
   width: 100%;
