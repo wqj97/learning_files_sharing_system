@@ -33,7 +33,6 @@ export default {
   },
   name: 'fileList',
   mounted() {
-    console.log('file list init')
     if (!this.isScroll) {
       this.noMoreData()
     }
