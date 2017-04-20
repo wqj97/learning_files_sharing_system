@@ -265,7 +265,7 @@ export default {
 <style lang="scss" scoped>
 @import '../style/base.scss';
 .container {
-  margin-bottom: 8vh;
+  padding-bottom: 8vh;
 }
 
 .top {
