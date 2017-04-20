@@ -287,7 +287,6 @@ $Db = new Db();
 <script>
   function getFile (Id) {
     $.get("/admin/File?file_id=" + Id, function (data) {
-      data.F_url = "https://wx.97qingnian.com" + data.F_url;
       if (data.F_ext === "pdf") {
         $("#preview .modal-body").html('').append('<iframe frameborder="0" width="1024px" height="768px" src="' + data.F_url + '"></iframe>');
       } else {

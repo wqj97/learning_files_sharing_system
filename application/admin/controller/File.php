@@ -144,7 +144,7 @@ class File
             $jpg_url = $file_url . ".jpg";
             $result = 0;
             $output = [];
-            exec("convert -verbose -density 150 -trim {$file_url} -quality 100 -flatten {$jpg_url}", $output, $result);
+            exec("convert -verbose -density 150 -trim {$file_url} -quality 50 -flatten {$jpg_url}", $output, $result);
             if (!empty($output)) {
                 break;
             }
@@ -166,6 +166,9 @@ class File
     {
         $cos = new COS();
         $excute_result = $cos->upLoad($local_path, $remote_path);
+        if ($excute_result["code"] == 0) {
+            str_replace("http:","",$excute_result["data"]["access_url"]);
+        }
         return $excute_result;
     }
 
@@ -196,7 +199,7 @@ class File
             }
         }
         $remote_transfer_file = json_encode($remote_transfer_file);
-        Db::execute("UPDATE File SET F_url = ?,F_transfer_url = ? WHERE F_Id = ?", [$remote_raw_url, $remote_transfer_file, $file_id]);
+        Db::execute("UPDATE File SET F_url = ?,F_transfer_url = ?, F_on_cos = 1 WHERE F_Id = ?", [$remote_raw_url, $remote_transfer_file, $file_id]);
         unlink($_SERVER["DOCUMENT_ROOT"] . $raw_file);
         foreach ($transfered_file as $item) {
             unlink($_SERVER["DOCUMENT_ROOT"] . $item);
@@ -227,7 +230,7 @@ class File
                 }
             }
             $remote_transfer_file = json_encode($remote_transfer_file);
-            Db::execute("UPDATE File SET F_url = ?,F_transfer_url = ? WHERE F_Id = ?", [$remote_raw_url, $remote_transfer_file, $item["F_Id"]]);
+            Db::execute("UPDATE File SET F_url = ?,F_transfer_url = ?,F_on_cos = 1 WHERE F_Id = ?", [$remote_raw_url, $remote_transfer_file, $item["F_Id"]]);
             unlink($raw_file);
             foreach ($transfered_file as $local_transfer_file_url) {
                 unlink("/home/wwwroot/wx.97qingnian.com" . $local_transfer_file_url);

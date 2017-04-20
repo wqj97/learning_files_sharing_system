@@ -336,8 +336,8 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
   }
   function getFile (Id) {
     $.get("/admin/File?file_id=" + Id, function (data) {
-      data.F_url = "//wx.97qingnian.com" + data.F_url;
       if (data.F_ext === "pdf") {
+        data.F_url = data.F_url.replace("http:","")
         $("#preview .modal-body").html('').append('<iframe frameborder="0" width="1024px" height="768px" src="' + data.F_url + '"></iframe>');
       } else {
         $("#preview .modal-body").html('').append('<iframe frameborder="0" width="1024px" height="768px" src="https://view.officeapps.live.com/op/view.aspx?src=' + data.F_url + '"></iframe>');

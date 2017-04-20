@@ -34,7 +34,6 @@ class Download
         }
         Db::execute("UPDATE File SET F_download_count = F_download_count + 1 WHERE F_Id = ?", [$file_id]);
         Db::execute("INSERT INTO Download_record (D_user_openid, D_file_Id) VALUES (?,?)", [$user_openid, $file_id]);
-        $file_obj = new \SplFileObject($_SERVER['DOCUMENT_ROOT'] . $file_Info["F_url"], 'r');
         if (strpos($_SERVER['HTTP_USER_AGENT'], 'iPhone') || strpos($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
             echo "<iframe style='width:100%;height: 100%;' frameborder='0' src='{$file_Info["F_url"]}'></iframe>";
         } else {
