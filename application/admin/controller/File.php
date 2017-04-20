@@ -8,10 +8,11 @@
 
 namespace app\admin\controller;
 
-
+use app\admin\model\COS;
 use think\Db;
 use think\db\Query;
 use think\Debug;
+use think\Loader;
 
 class File
 {
@@ -19,7 +20,7 @@ class File
      * 获取文件地址
      * @return mixed
      */
-    public function Index()
+    public function Index ()
     {
         $file_id = input('get.file_id');
         return Db::query("SELECT * FROM File WHERE F_Id = ?", [$file_id])[0];
@@ -31,7 +32,7 @@ class File
      * @get Int file_type_code
      * @return \think\response\Json
      */
-    public function Agree()
+    public function Agree ()
     {
         $file_id = input('get.file_id');
         $file_level = input('get.file_level');
@@ -47,18 +48,47 @@ class File
      * @get Int file_id
      * @return \think\response\Json
      */
-    public function Refuse()
+    public function Refuse ()
     {
         $file_id = input('get.file_id');
-        $file_src = Db::query("SELECT F_url,F_transfer_url FROM File WHERE F_Id = ?", [$file_id])[0];
-        unlink($_SERVER["DOCUMENT_ROOT"] . $file_src["F_url"]);
-        if ($file_src["F_transfer_url"] != "Can't transfer") {
-            foreach (json_decode($file_src["F_transfer_url"]) as $preview_url) {
-                unlink($preview_url);
+        $file_src = Db::query("SELECT F_url,F_transfer_url,F_on_cos FROM File WHERE F_Id = ?", [$file_id])[0];
+        if ($file_src["F_on_cos"] == 1) {
+            if ($this->deleteCosFile($file_id)) {
+                return json(["result" => "success"]);
+            } else {
+                return json(["result" => "failed"], 500);
             }
+        }
+        unlink($_SERVER["DOCUMENT_ROOT"] . $file_src["F_url"]);
+        foreach (json_decode($file_src["F_transfer_url"]) as $preview_url) {
+            unlink($_SERVER["DOCUMENT_ROOT"] . $preview_url);
         }
         Db::execute("DELETE FROM File WHERE F_Id = ?", [$file_id]);
         return json(["result" => "success"]);
+    }
+
+    /**
+     * 删除文件, 与审批拒绝不同的是, 删除文件会把远程COS的文件也删除
+     * @param $file_id Int 文件Id
+     * @return Boolean 处理结果
+     */
+
+    public function deleteCosFile ($file_id)
+    {
+        $file_info = Db::query("SELECT * FROM File WHERE F_Id = ?", [$file_id])[0];
+        $cos = new COS();
+        foreach (json_decode($file_info["F_transfer_url"]) as $item) {
+            $ext_result = $cos->delete($item);
+            if ($ext_result["code"] != 0) {
+                return false;
+            }
+        }
+        $ext_result = $cos->delete($file_info["F_url"]);
+        if ($ext_result["code"] != 0) {
+            return false;
+        }
+        Db::execute("DELETE FROM File WHERE F_Id = ?", [$file_id]);
+        return true;
     }
 
     /**
@@ -69,7 +99,7 @@ class File
      * @post file_level 文件等级
      * @return \think\response\Json
      */
-    public function Add()
+    public function Add ()
     {
         $file = request()->file('file');
         $file_hash = $file->hash('md5');
@@ -94,18 +124,18 @@ class File
      * @get file_id 文件Id
      * @return \think\response\Json
      */
-    public function getInfo()
+    public function getInfo ()
     {
         $file_id = input('get.file_id');
         $file_info = Db::query("SELECT * FROM File WHERE F_Id = ?", [$file_id])[0];
         return json($file_info);
     }
 
-    private function Transfer($file_id)
+    private function Transfer ($file_id)
     {
         $server_file_url = Db::query("SELECT F_url,F_ext FROM File WHERE F_Id = ?", [$file_id])[0];
         if (mb_strtolower($server_file_url["F_ext"]) != "pdf") {
-            Db::execute("UPDATE File SET F_transfer_url = ? WHERE aiuyi.File.F_Id = ?", ["Cant't transfer", $file_id]);
+            Db::execute("UPDATE File SET F_transfer_url = ? WHERE aiuyi.File.F_Id = ?", ["[]", $file_id]);
             return true;
         }
         $transfer_url = [];
@@ -122,6 +152,95 @@ class File
         }
         $transfer_url = json_encode($transfer_url);
         Db::execute("UPDATE File SET F_transfer_url = ? WHERE aiuyi.File.F_Id = ?", [$transfer_url, $file_id]);
+        $this->SyncToCOS($file_id);
         return true;
+    }
+
+    /**
+     * 上传文件到COS
+     * @param $local_path String 本地文件路径
+     * @param $remote_path String 远程文件路径
+     * @return array|mixed COS访问路径
+     */
+    private function uploadToCOS ($local_path, $remote_path)
+    {
+        $cos = new COS();
+        $excute_result = $cos->upLoad($local_path, $remote_path);
+        return $excute_result;
+    }
+
+    /**
+     * 需要同步的文件Id
+     * 如果同步成功, 会删除本地文件
+     * @param $file_id
+     * @return bool
+     */
+    private function SyncToCOS ($file_id)
+    {
+        $file_path = Db::query("SELECT F_url,F_transfer_url FROM File WHERE F_Id = ?", [$file_id])[0];
+        $raw_file = $_SERVER["DOCUMENT_ROOT"] . $file_path["F_url"];
+        $transfered_file = json_decode($file_path["F_transfer_url"]);
+        $raw_file_upload_result = $this->uploadToCOS($raw_file, $file_path["F_url"]);
+        if ($raw_file_upload_result["code"] != 0) {
+            return false;
+        } else {
+            $remote_raw_url = $raw_file_upload_result["data"]["access_url"];
+        }
+        $remote_transfer_file = [];
+        foreach ($transfered_file as $item) {
+            $upload_result = $this->uploadToCOS($_SERVER["DOCUMENT_ROOT"] . $item, $item);
+            if ($upload_result["code"] != 0) {
+                return false;
+            } else {
+                $remote_transfer_file[] = $upload_result["data"]["access_url"];
+            }
+        }
+        $remote_transfer_file = json_encode($remote_transfer_file);
+        Db::execute("UPDATE File SET F_url = ?,F_transfer_url = ? WHERE F_Id = ?", [$remote_raw_url, $remote_transfer_file, $file_id]);
+        unlink($_SERVER["DOCUMENT_ROOT"] . $raw_file);
+        foreach ($transfered_file as $item) {
+            unlink($_SERVER["DOCUMENT_ROOT"] . $item);
+        }
+        return true;
+    }
+
+    public function syncScript ()
+    {
+        echo "\r\n";
+        $un_upload_files = Db::query("SELECT * FROM File WHERE F_on_cos = 0");
+        foreach ($un_upload_files as $key => $item) {
+            $raw_file = "/home/wwwroot/wx.97qingnian.com" . $item["F_url"];
+            $transfered_file = json_decode($item["F_transfer_url"]);
+            $raw_file_upload_result = $this->uploadToCOS($raw_file, $item["F_url"]);
+            if ($raw_file_upload_result["code"] != 0) {
+                continue;
+            } else {
+                $remote_raw_url = $raw_file_upload_result["data"]["access_url"];
+            }
+            $remote_transfer_file = [];
+            foreach ($transfered_file as $local_transfer_file_url) {
+                $upload_result = $this->uploadToCOS("/home/wwwroot/wx.97qingnian.com" . $local_transfer_file_url, $local_transfer_file_url);
+                if ($upload_result["code"] != 0) {
+                    continue;
+                } else {
+                    $remote_transfer_file[] = $upload_result["data"]["access_url"];
+                }
+            }
+            $remote_transfer_file = json_encode($remote_transfer_file);
+            Db::execute("UPDATE File SET F_url = ?,F_transfer_url = ? WHERE F_Id = ?", [$remote_raw_url, $remote_transfer_file, $item["F_Id"]]);
+            unlink($raw_file);
+            foreach ($transfered_file as $local_transfer_file_url) {
+                unlink("/home/wwwroot/wx.97qingnian.com" . $local_transfer_file_url);
+            }
+            echo "Id: $item[F_Id], 文件名: $item[F_name], 传送完成\r\n";
+        }
+    }
+
+    public function transferScript ()
+    {
+        $untrans_file_list = Db::query("select * from File where F_ext = 'pdf' and F_transfer_url = '[]'");
+        foreach ($untrans_file_list as $item) {
+            $this->Transfer($item["F_Id"]);
+        }
     }
 }
