@@ -40,10 +40,7 @@ class Download
             Header("Content-Disposition: attachment; filename=" . $file_Info["F_name"] . "." . $file_Info["F_ext"]);
             Header("Content-type: application/pdf");
             Header("Accept-Ranges: bytes");
-            Header("Accept-Length:" . $file_obj->getSize());
-            foreach ($file_obj as $key => $val) {
-                echo $val;
-            }
+            Header("Location: $file_Info[F_url]");
         }
     }
 
