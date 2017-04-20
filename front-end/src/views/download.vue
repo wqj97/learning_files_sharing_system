@@ -71,6 +71,7 @@ import { fileIcon, commentList, preview } from '@/components/'
 import { getCategroyListById } from '@/utils'
 import { mapState } from 'vuex'
 import { XDialog, XTextarea, XButton } from 'vux'
+import Cookies from 'js-cookie'
 // import PDFObject from 'pdfobject'
 let flag = 0
 export default {
@@ -94,7 +95,6 @@ export default {
       })
       this.$router.push('/')
     }
-
 
     this.id = id
     this.$store.commit('updateLoadingStatus', { isLoading: true })
@@ -221,7 +221,11 @@ export default {
         })
         return
       }
-      window.location.href = `${window.location.origin}/file/download/?file_id=${this.detail['F_Id']}`
+      let openid = Cookies.get('Aiuyi_openid')
+      if (openid == undefined ) {
+        console.error('fail to get openId')
+      }
+      window.location.href = `${window.location.origin}/file/download/?file_id=${this.detail['F_Id']}&openid=${openid}`
     },
     like () {
        this.$store.commit('updateLoadingStatus', { isLoading: true })
