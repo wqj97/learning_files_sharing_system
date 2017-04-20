@@ -219,6 +219,9 @@ export default {
           text: '权限不够哦~ 请去个人中心升级权限',
           type: 'warn'
         })
+        setTimeout(() => {
+          this.$router.push('/mine')
+        }, 700);
         return
       }
       let openid = Cookies.get('Aiuyi_openid')
@@ -346,7 +349,8 @@ $menuBarRadius: 4px;
     padding: 10px 43px;
     border: none;
     box-shadow: 0 2px 10px rgba(0, 185, 248, .6);
-    transition: filter .5s ease-in;
+    transition: filter .4s cubic-bezier(0, 0.57, 0.75, 0.46);
+    transition-delay: .8s;
   }
 }
 .gray{
