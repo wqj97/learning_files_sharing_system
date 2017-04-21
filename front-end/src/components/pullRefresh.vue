@@ -4,7 +4,7 @@
   <slot></slot>
   <div class="footer">
     <span v-show="refreshFlag">加载中...</span>
-  <span v-show="noMoreData">没有更多数据</span>
+  <span v-show="noMoreData">{{slogan}}</span>
   </div>
   </div>
 </template>
@@ -15,7 +15,13 @@ export default {
   props: {
     distance: {
       type: Number,
-      default: 40
+      default: 40,
+      require: false
+    },
+    tip: {
+      type: String,
+      default: undefined,
+      require: false
     }
   },
   methods: {
@@ -44,8 +50,14 @@ export default {
       }
     })
   },
+  computed: {
+    slogan() {
+      return this.tip !== undefined ? this.tip : this.defaultTip
+    }
+  },
   data () {
     return {
+      defaultTip: '没有更多数据',
       refreshFlag: false,
       noMoreData: false
     }
