@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Refresh :distance="100" ref="fresh" @refresh="$emit('refresh')">
+    <Refresh :tip="tip" :distance="100" ref="fresh" @refresh="$emit('refresh')">
         <item v-for="(i, index) in list" type="DOC"
               :title="i['F_name']"
               :comments="i['comment_count']"
@@ -48,6 +48,11 @@ export default {
       this.$nextTick(() => {
         this.$refs.fresh.resetState()
       })
+    }
+  },
+  computed: {
+    tip() {
+      return this.isScroll ? '没有更多数据' : ''
     }
   },
   data() {
