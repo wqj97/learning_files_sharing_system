@@ -54,6 +54,7 @@ class Oauth
     public function debug()
     {
         cookie('openid','owFqbv40P9R9f22SRTLjfwRy2vVE');
-        header("loacation: /home");
+        header("location:/home");
+//        return json(null,302);
     }
 }

@@ -32,7 +32,22 @@ class home
         }
         $user_info['level'] = $this->getLevel($user_info['U_credit']);
         $banner = json_decode(Server_Setting('banner'));
-        $top_file = Db::query("select F_Id,F_name,(SELECT count(*) from Comment where C_file_Id = F_Id) as 'comment_count',F_download_count,(SELECT count(*) from Collect_record where C_file_Id = F_Id) as 'collect_record',F_view_count,F_ext from File where F_type is NOT NULL ORDER BY F_view_count LIMIT 0,12");
+        $top_file = [];
+        $top_file_by_down_and_school = Db::query("SELECT D_file_Id
+              FROM Download_record
+              WHERE D_user_school_Id = 1700
+              GROUP BY D_file_Id
+              ORDER BY COUNT(0) DESC LIMIT 0,12");
+        foreach ($top_file_by_down_and_school as $item) {
+            $top_file[] = Db::query("select F_Id,F_name,(SELECT count(*) from Comment where C_file_Id = F_Id) as 'comment_count',F_download_count,(SELECT count(*) from Collect_record where C_file_Id = F_Id) as 'collect_record',F_view_count,F_ext from File where F_Id = $item[D_file_Id]")[0];
+        }
+        if (count($top_file_by_down_and_school) < 12) {
+            $neet_select = 12 - count($top_file_by_down_and_school);
+            $top_file_by_view = Db::query("select F_Id,F_name,(SELECT count(*) from Comment where C_file_Id = F_Id) as 'comment_count',F_download_count,(SELECT count(*) from Collect_record where C_file_Id = F_Id) as 'collect_record',F_view_count,F_ext from File where F_type is NOT NULL ORDER BY F_view_count LIMIT 0,$neet_select");
+            foreach ($top_file_by_view as $item) {
+                $top_file[] = $item;
+            }
+        }
         return json(["userInfo" => $user_info,"banner" => $banner,"top_file" => $top_file]);
     }
 

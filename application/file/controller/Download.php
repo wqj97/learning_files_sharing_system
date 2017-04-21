@@ -27,15 +27,17 @@ class Download
             return json("禁止访问", 403);
         }
         $file_Info = Db::query("SELECT F_url,F_name,F_level,F_ext FROM File WHERE F_Id = ?", [$file_id])[0];
-        $user_credit = Db::query("SELECT U_credit FROM User WHERE U_openid = ?", [$user_openid])[0];
-        $user_level = $this->getLevel($user_credit);
+        $user_info = Db::query("SELECT U_credit,U_school FROM User WHERE U_openid = ?", [$user_openid])[0];
+        $user_level = $this->getLevel($user_info["U_credit"]);
         if ($user_level < $file_Info["F_level"]) {
             return json("权限不足", 403);
         }
         Db::execute("UPDATE File SET F_download_count = F_download_count + 1 WHERE F_Id = ?", [$file_id]);
-        Db::execute("INSERT INTO Download_record (D_user_openid, D_file_Id) VALUES (?,?)", [$user_openid, $file_id]);
+        Db::execute("INSERT INTO Download_record (D_user_openid, D_file_Id,D_user_school_Id) VALUES (?,?,?)", [$user_openid, $file_id,$user_info["U_school"]]);
         if (strpos($_SERVER['HTTP_USER_AGENT'], 'iPhone') || strpos($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
-            echo "<iframe style='width:100%;height: 100%;' frameborder='0' src='{$file_Info["F_url"]}'></iframe>";
+//            echo "<iframe style='width:100%;height: 100%;' frameborder='0' src='{$file_Info["F_url"]}'></iframe>";
+            Header("Location: $file_Info[F_url]");
+
         } else {
             Header("Content-Disposition: attachment; filename=" . $file_Info["F_name"] . "." . $file_Info["F_ext"]);
             Header("Content-type: application/pdf");
