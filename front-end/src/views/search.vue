@@ -65,7 +65,6 @@ export default {
       }
         this.searchResult = this.searchResult.concat(res.body)
         this.$refs.scroll.done()
-        this.page++
       }, res => {
         this.$vux.toast.show({
           text: '网络错误',
