@@ -10,7 +10,7 @@
 <script>
 import { mapState } from 'vuex'
 import {Loading} from 'vux'
-require('vconsole')
+// require('vconsole')
 export default {
   name: 'app',
   components:{
