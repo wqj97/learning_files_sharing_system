@@ -73,7 +73,7 @@ import { mapState } from 'vuex'
 import { XDialog, XTextarea, XButton } from 'vux'
 import Cookies from 'js-cookie'
 // import PDFObject from 'pdfobject'
-let flag = 0
+let flag = 0, jsjdkReady = false
 export default {
   name: 'download',
     components: {
@@ -123,7 +123,7 @@ export default {
   },
   methods: {
     signWechat(data) {
-      console.log('sign jsjdk!')
+      console.log('sign jsjdk...')
 
       let fileShareInfo = {
         title: data['F_name'], // 分享标题
@@ -145,17 +145,28 @@ export default {
           console.log('action trigger')
         }
       }
+
+
       console.log('fileShareInfo:' + JSON.stringify(fileShareInfo))
 
       this.$http.post('/jssdk/sign', { url: location.href.split('#')[0] }).then(res => {
         console.log('config:' + JSON.stringify(res.body))
+
         let config = JSON.parse(res.body[0])
         // config['debug'] = true
         this.$store.commit('updateLoadingStatus', { isLoading: false })
+        console.log('config jsjsk...')
         wx.config(config)
+        window.setTimeout(() => {
+          if (!jsjdkReady) {
+            console.log('come on! jsjdk is a block box! more than a shit!')
+            window.location.reload()
+          }
+        },1000)
       })
       wx.ready(() => {
         console.log('jsjdkConfig success, set hooks...')
+        jsjdkReady = true
         wx.onMenuShareTimeline(fileShareInfo)
         wx.onMenuShareAppMessage(fileShareInfo)
         wx.onMenuShareQQ(fileShareInfo)
@@ -163,9 +174,9 @@ export default {
       })
 
       wx.error((res) => {
+        console.error('jsjdkConfig error' + JSON.stringify(res))
         flag++
         if (flag === 3) return
-        console.error('jsjdkConfig error' + JSON.stringify(res))
         window.setTimeout(() => {
           this.signWechat(data)
         }, 600)
