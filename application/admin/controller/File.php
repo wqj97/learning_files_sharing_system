@@ -78,6 +78,7 @@ class File
         $file_info = Db::query("SELECT * FROM File WHERE F_Id = ?", [$file_id])[0];
         $cos = new COS();
         foreach (json_decode($file_info["F_transfer_url"]) as $item) {
+            echo "http:".$item."\r\n";
             $ext_result = $cos->delete($item);
             if ($ext_result["code"] != 0) {
                 return false;
@@ -136,6 +137,7 @@ class File
         $server_file_url = Db::query("SELECT F_url,F_ext FROM File WHERE F_Id = ?", [$file_id])[0];
         if (mb_strtolower($server_file_url["F_ext"]) != "pdf") {
             Db::execute("UPDATE File SET F_transfer_url = ? WHERE aiuyi.File.F_Id = ?", ["[]", $file_id]);
+            $this->SyncToCOS($file_id);
             return true;
         }
         $transfer_url = [];
@@ -148,6 +150,7 @@ class File
             if (!empty($output)) {
                 break;
             }
+            $server_file_url["F_url"] = str_replace("http:","",$server_file_url["F_url"]);
             $transfer_url[] = $server_file_url["F_url"] . "[$i].jpg";
         }
         $transfer_url = json_encode($transfer_url);
@@ -187,7 +190,7 @@ class File
         if ($raw_file_upload_result["code"] != 0) {
             return false;
         } else {
-            $remote_raw_url = $raw_file_upload_result["data"]["access_url"];
+            $remote_raw_url = str_replace("http:","",$raw_file_upload_result["data"]["access_url"]);
         }
         $remote_transfer_file = [];
         foreach ($transfered_file as $item) {
@@ -195,12 +198,12 @@ class File
             if ($upload_result["code"] != 0) {
                 return false;
             } else {
-                $remote_transfer_file[] = $upload_result["data"]["access_url"];
+                $remote_transfer_file[] = str_replace("http:","",$upload_result["data"]["access_url"]);
             }
         }
         $remote_transfer_file = json_encode($remote_transfer_file);
         Db::execute("UPDATE File SET F_url = ?,F_transfer_url = ?, F_on_cos = 1 WHERE F_Id = ?", [$remote_raw_url, $remote_transfer_file, $file_id]);
-        unlink($_SERVER["DOCUMENT_ROOT"] . $raw_file);
+        unlink($raw_file);
         foreach ($transfered_file as $item) {
             unlink($_SERVER["DOCUMENT_ROOT"] . $item);
         }

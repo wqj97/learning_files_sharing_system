@@ -192,7 +192,22 @@ $Db = new Db();
             </div>
           </div>
           <!-- /.box-body -->
-
+         <div class="col-md-12">
+           <div class="box box-primary box-solid" style="display: none;" id="upload-wait">
+             <div class="box-header">
+               <h3 class="box-title">正在上传</h3>
+             </div>
+             <div class="box-body">
+               上传中, 请等待
+             </div>
+             <!-- /.box-body -->
+             <!-- Loading (remove the following to stop the loading)-->
+             <div class="overlay">
+               <i class="fa fa-refresh fa-spin"></i>
+             </div>
+             <!-- end loading -->
+           </div>
+         </div>
           <div class="box-footer">
             <button type="button" class="btn btn-primary" onclick="ajaxUpload()" disabled id="uploadBtn">上传</button>
           </div>
@@ -291,6 +306,7 @@ $Db = new Db();
 
   function ajaxUpload () {
     let form = new FormData(document.getElementById('file_form'));
+    $("#upload-wait").slideToggle()
     $.ajax({
       url: '/admin/File/add',
       type: 'post',
@@ -298,16 +314,16 @@ $Db = new Db();
       processData: false,
       contentType: false,
       success: function (data) {
-        if (data.result === "success") {
-          $("#failed").hide();
-          $("#success").fadeIn();
-        } else {
-          $("#success").hide();
-          $("#failed").fadeIn();
-          $("#failed-message").html(data.reason);
-        }
+        $("#upload-wait").slideToggle()
+        $("#failed").hide();
+        $("#success").fadeIn();
         let result = data.result + data.reason ? data.reason : '';
         $("#resultBox").html(result);
+      },
+      error: function (data) {
+        $("#upload-wait").slideToggle()
+        $("#failed-message").html(data.responseJSON.reason);
+        $("#failed").fadeIn();
       }
     })
   }

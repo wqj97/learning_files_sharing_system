@@ -32,7 +32,7 @@ class Oauth
             $response = $this->app->oauth->scopes(['snsapi_userinfo'])->redirect();
             return $response->send();
         } else {
-            header('Location:/home');
+            header('Location:/home/?#');
             return '';
         }
     }
@@ -47,14 +47,14 @@ class Oauth
             Db::execute("update User set `U_name` = '$user[name]',`U_head` = '$user[avatar]' where `U_openid` = '$user[id]'");
         }
         cookie('openid',$user['id']);
-        header('location:/home');
+        header('location:/home/?#');
         return ;
     }
 
     public function debug()
     {
         cookie('openid','owFqbv40P9R9f22SRTLjfwRy2vVE');
-        header("location:/home");
+        header("location:/home/?#");
 //        return json(null,302);
     }
 }

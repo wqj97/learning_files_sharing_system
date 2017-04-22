@@ -63,7 +63,8 @@ class COS
      */
     public function delete ($file_path)
     {
-        $file_path = str_replace("http://aiuyi-1253584494.file.myqcloud.com","",$file_path);
+        $file_path = str_replace("//aiuyi-1253584494.file.myqcloud.com","",$file_path);
+        $file_path = urldecode($file_path);
         $result = Cosapi::delFile('aiuyi',$file_path);
         return $result;
     }

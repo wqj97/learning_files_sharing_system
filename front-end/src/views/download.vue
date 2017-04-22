@@ -150,7 +150,7 @@ export default {
       this.$http.post('/jssdk/sign', { url: location.href.split('#')[0] }).then(res => {
         console.log('config:' + JSON.stringify(res.body))
         let config = JSON.parse(res.body[0])
-        config['debug'] = true
+//        config['debug'] = true
         console.log('config jsjsk...')
         wx.config(config)
         // this.$store.commit('updateLoadingStatus', { isLoading: true })
