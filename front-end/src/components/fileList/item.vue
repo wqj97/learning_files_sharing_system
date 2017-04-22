@@ -1,5 +1,5 @@
 <template>
-  <div class="file-list-item"  @click="$router.push(`/download?id=${id}`)">
+  <div class="file-list-item"  @click.native="click">
     <div class="left">{{formatType}}</div>
     <div class="right">
       <div class="top">{{title}}</div>
@@ -16,6 +16,11 @@
 <script>
 export default {
   name: '',
+  methods: {
+    click() {
+      window.location.href = `${window.location.origin}${window.location.pathname}download?Id=${this.id}`
+    }
+  },
   props: {
     type: {
       type: String,
