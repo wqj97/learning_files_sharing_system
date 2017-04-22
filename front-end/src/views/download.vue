@@ -163,15 +163,12 @@ export default {
       })
       wx.ready(() => {
 
-        ////////
-        WeixinJSBridge.on('menu:share:appmessage', function(argv){ alert("发送给好友"); });
-        //////////
-        // console.log('jsjdkConfig success, set hooks...')
-        // wx.onMenuShareTimeline(fileShareInfo)
-        // wx.onMenuShareAppMessage(fileShareInfo)
-        // wx.onMenuShareQQ(fileShareInfo)
-        // wx.onMenuShareQZone(fileShareInfo)
-        // console.log(wx.onMenuShareTimeline)
+         console.log('jsjdkConfig success, set hooks...')
+         wx.onMenuShareTimeline(fileShareInfo)
+         wx.onMenuShareAppMessage(fileShareInfo)
+         wx.onMenuShareQQ(fileShareInfo)
+         wx.onMenuShareQZone(fileShareInfo)
+         console.log(wx.onMenuShareTimeline)
         this.$store.commit('updateLoadingStatus', { isLoading: false })
         this.jsjdkReady = true
       })
