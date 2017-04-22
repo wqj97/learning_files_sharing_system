@@ -52,7 +52,8 @@
     <div class="tab">
       <div class="preview"
            v-show="!isShowCommentList">
-           <preview v-if="previewUrlArr" :url="previewUrlArr"></preview>
+        <preview v-if="previewUrlArr"
+                 :url="previewUrlArr"></preview>
       </div>
       <div class="comments"
            v-show="isShowCommentList">
@@ -73,10 +74,10 @@ import { mapState } from 'vuex'
 import { XDialog, XTextarea, XButton } from 'vux'
 import Cookies from 'js-cookie'
 // import PDFObject from 'pdfobject'
-let flag = 0, jsjdkReady = false
+let flag = 0
 export default {
   name: 'download',
-    components: {
+  components: {
     fileIcon,
     commentList,
     XDialog,
@@ -85,7 +86,7 @@ export default {
     preview
   },
   mounted() {
-    window.scrollTo(0,0)
+    window.scrollTo(0, 0)
 
     let id = this.$route.query.id
     if (!id) {
@@ -98,17 +99,15 @@ export default {
 
     this.id = id
     this.$store.commit('updateLoadingStatus', { isLoading: true })
+    this.getComment()
     this.$http.get(`/file?file_id=${id}`).then(res => {
       this.detail = res.body
-      if (process.env.NODE_ENV === 'development') {
-         this.$store.commit('updateLoadingStatus', { isLoading: false })
-         return
-     }
-        this.signWechat(res.body)
+      if (process.env.NODE_ENV === 'development') return
+      this.signWechat(res.body)
+      this.$store.commit('updateLoadingStatus', { isLoading: false })
     }, err => {
       this.$store.commit('updateError', { isError: true })
     })
-    this.getComment()
   },
   data() {
     return {
@@ -118,18 +117,18 @@ export default {
       newCommentContent: '',
       detail: {},
       commentArr: [],
-      commentPage: 0
+      commentPage: 0,
+      jsjdkReady: false
     }
   },
   methods: {
     signWechat(data) {
       console.log('sign jsjdk...')
-
       let fileShareInfo = {
         title: data['F_name'], // 分享标题
         link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
         desc: '你的好友给你分享文件啦!',
-        imgUrl: '', // 分享图标
+        imgUrl: '',                  // 分享图标
         success: () => {
           console.log('share ok')
           this.$http.post('/file/share', { 'file_id': this.detail['F_Id'] }).then(res => {
@@ -148,31 +147,34 @@ export default {
 
 
       console.log('fileShareInfo:' + JSON.stringify(fileShareInfo))
-
       this.$http.post('/jssdk/sign', { url: location.href.split('#')[0] }).then(res => {
         console.log('config:' + JSON.stringify(res.body))
-
         let config = JSON.parse(res.body[0])
-        // config['debug'] = true
-        this.$store.commit('updateLoadingStatus', { isLoading: false })
+        config['debug'] = true
         console.log('config jsjsk...')
         wx.config(config)
-        window.setTimeout(() => {
-          if (!jsjdkReady) {
-            console.log('come on! jsjdk is a block box! more than a shit!')
+        // this.$store.commit('updateLoadingStatus', { isLoading: true })
+        window.setInterval(() => {
+          if (!this.jsjdkReady) {
+            console.log('come on!  a shit!')
             window.location.reload()
           }
-        },1000)
+        }, 1000)
       })
       wx.ready(() => {
-        console.log('jsjdkConfig success, set hooks...')
-        jsjdkReady = true
-        wx.onMenuShareTimeline(fileShareInfo)
-        wx.onMenuShareAppMessage(fileShareInfo)
-        wx.onMenuShareQQ(fileShareInfo)
-        wx.onMenuShareQZone(fileShareInfo)
-      })
 
+        ////////
+        WeixinJSBridge.on('menu:share:appmessage', function(argv){ alert("发送给好友"); });
+        //////////
+        // console.log('jsjdkConfig success, set hooks...')
+        // wx.onMenuShareTimeline(fileShareInfo)
+        // wx.onMenuShareAppMessage(fileShareInfo)
+        // wx.onMenuShareQQ(fileShareInfo)
+        // wx.onMenuShareQZone(fileShareInfo)
+        // console.log(wx.onMenuShareTimeline)
+        this.$store.commit('updateLoadingStatus', { isLoading: false })
+        this.jsjdkReady = true
+      })
       wx.error((res) => {
         console.error('jsjdkConfig error' + JSON.stringify(res))
         flag++
@@ -236,15 +238,15 @@ export default {
         return
       }
       let openid = Cookies.get('Aiuyi_openid')
-      if (openid == undefined ) {
+      if (openid == undefined) {
         console.error('fail to get openId')
       }
       window.location.href = `${window.location.origin}/file/download/?file_id=${this.detail['F_Id']}&openid=${openid}`
     },
-    like () {
-       this.$store.commit('updateLoadingStatus', { isLoading: true })
+    like() {
+      this.$store.commit('updateLoadingStatus', { isLoading: true })
       this.$http.get(`/file/collect?file_id=${this.detail['F_Id']}`).then(res => {
-         this.$store.commit('updateLoadingStatus', { isLoading: false })
+        this.$store.commit('updateLoadingStatus', { isLoading: false })
         let isLiked = res.body['0'] === 'Collected'
         this.detail['liked'] = isLiked
         isLiked ? this.detail['like_count'] += 1 : this.detail['like_count'] -= 1
@@ -257,13 +259,13 @@ export default {
     }
   },
   computed: {
-    isEnoughToDownload () {
-      if(this.user.level < this.detail['F_level']) {
+    isEnoughToDownload() {
+      if (this.user.level < this.detail['F_level']) {
         return false
       }
       return true
     },
-    previewUrlArr () {
+    previewUrlArr() {
       return this.detail['F_transfer_url']
     },
     type() {
@@ -364,9 +366,11 @@ $menuBarRadius: 4px;
     transition-delay: .8s;
   }
 }
-.gray{
-    filter: grayscale(100%);
+
+.gray {
+  filter: grayscale(100%);
 }
+
 .bottom_btn {
   position: fixed;
   width: 100%;
