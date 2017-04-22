@@ -73,7 +73,6 @@ import { getCategroyListById } from '@/utils'
 import { mapState } from 'vuex'
 import { XDialog, XTextarea, XButton } from 'vux'
 import Cookies from 'js-cookie'
-// import PDFObject from 'pdfobject'
 let flag = 0
 export default {
   name: 'download',
@@ -86,6 +85,11 @@ export default {
     preview
   },
   mounted() {
+    if (this.$route.query.refresh !== 'true') {
+      window.location.href = window.location.href + '&refresh=true'
+      window.location.reload()
+      return
+    }
     window.scrollTo(0, 0)
 
     let id = this.$route.query.id
@@ -102,9 +106,9 @@ export default {
     this.getComment()
     this.$http.get(`/file?file_id=${id}`).then(res => {
       this.detail = res.body
+      this.$store.commit('updateLoadingStatus', { isLoading: false })
       if (process.env.NODE_ENV === 'development') return
       this.signWechat(res.body)
-      this.$store.commit('updateLoadingStatus', { isLoading: false })
     }, err => {
       this.$store.commit('updateError', { isError: true })
     })
@@ -150,7 +154,7 @@ export default {
       this.$http.post('/jssdk/sign', { url: location.href.split('#')[0] }).then(res => {
         console.log('config:' + JSON.stringify(res.body))
         let config = JSON.parse(res.body[0])
-//        config['debug'] = true
+        // config['debug'] = true
         console.log('config jsjsk...')
         wx.config(config)
         // this.$store.commit('updateLoadingStatus', { isLoading: true })
