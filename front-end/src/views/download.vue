@@ -69,7 +69,7 @@
 
 <script>
 import { fileIcon, commentList, preview } from '@/components/'
-import { getCategroyListById } from '@/utils'
+import { getCategroyListById, isComputer } from '@/utils'
 import { mapState } from 'vuex'
 import { XDialog, XTextarea, XButton } from 'vux'
 import Cookies from 'js-cookie'
@@ -107,7 +107,7 @@ export default {
     this.$http.get(`/file?file_id=${id}`).then(res => {
       this.detail = res.body
       this.$store.commit('updateLoadingStatus', { isLoading: false })
-      if (process.env.NODE_ENV === 'development') return
+      if (isComputer() || process.env.NODE_ENV === 'development') return
       this.signWechat(res.body)
     }, err => {
       this.$store.commit('updateError', { isError: true })
@@ -163,7 +163,7 @@ export default {
             console.log('come on!  a shit!')
             window.location.reload()
           }
-        }, 1000)
+        }, 5000)
       })
       wx.ready(() => {
 
