@@ -29,23 +29,8 @@ class Index
         } else {
             $user_info['U_school'] = Db::query('SELECT S_name FROM School WHERE S_Id = ?', [$user_info['U_school']])[0]['S_name'];
         }
-        $user_info['level'] = $this->getLevel($user_info['U_credit']);
+        $user_info['level'] = getLevel($user_info['U_credit']);
         return json($user_info);
     }
 
-    /**
-     * 返回用户等级
-     * @param $credit
-     * @return int
-     */
-    private function getLevel($credit)
-    {
-        $level = json_decode(Server_Setting('level'));
-        foreach ($level as $levelNum => $each) {
-            if ($credit <= $each) {
-                return $levelNum;
-            }
-        }
-        return 3;
-    }
 }

@@ -28,7 +28,7 @@ class Download
         }
         $file_Info = Db::query("SELECT F_url,F_name,F_level,F_ext FROM File WHERE F_Id = ?", [$file_id])[0];
         $user_info = Db::query("SELECT U_credit,U_school FROM User WHERE U_openid = ?", [$user_openid])[0];
-        $user_level = $this->getLevel($user_info["U_credit"]);
+        $user_level = getLevel($user_info["U_credit"]);
         if ($user_level < $file_Info["F_level"]) {
             return json("权限不足", 403);
         }
@@ -44,21 +44,5 @@ class Download
             Header("Accept-Ranges: bytes");
             Header("Location: $file_Info[F_url]");
         }
-    }
-
-    /**
-     * 返回用户等级
-     * @param $credit
-     * @return int
-     */
-    private function getLevel($credit)
-    {
-        $level = json_decode(Server_Setting('level'));
-        foreach ($level as $levelNum => $each) {
-            if ($credit <= $each) {
-                return $levelNum;
-            }
-        }
-        return 3;
     }
 }

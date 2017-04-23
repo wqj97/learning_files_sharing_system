@@ -30,7 +30,7 @@ class home
         } else {
             $user_info['U_school'] = Db::query('SELECT S_name FROM School WHERE S_Id = ?', [$user_info['U_school']])[0]['S_name'];
         }
-        $user_info['level'] = $this->getLevel($user_info['U_credit']);
+        $user_info['level'] = getLevel($user_info['U_credit']);
         $banner = json_decode(Server_Setting('banner'));
         $top_file = [];
         $top_file_by_down_and_school = Db::query("SELECT D_file_Id
@@ -49,21 +49,5 @@ class home
             }
         }
         return json(["userInfo" => $user_info,"banner" => $banner,"top_file" => $top_file]);
-    }
-
-    /**
-     * 获取用户等级
-     * @param $credit
-     * @return int|string
-     */
-    private function getLevel($credit)
-    {
-        $level = json_decode(Server_Setting('level'));
-        foreach ($level as $levelNum => $each) {
-            if ($credit <= $each) {
-                return $levelNum;
-            }
-        }
-        return 0;
     }
 }

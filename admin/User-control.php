@@ -4,6 +4,15 @@ $Db = new Db();
 $page = isset($_GET['page']) ? $_GET["page"] : 0;
 $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
 $start = $page * 12;
+function getLevel ($credit)
+{
+  global $Db;
+    $level = json_decode($Db->query("select * from Setting where S_key = 'level'")[0]["S_value"],true);//0,9,24,45
+    for ($i = 0; $i < 3; $i++) {
+        if ($credit <= $level[$i + 1]) return $i;
+    }
+    return 3;
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -185,18 +194,6 @@ FROM User
 where U_name like '%$keywords%'
 ORDER BY U_Id DESC
 LIMIT $start, 12;");
-                  function getLevel($credit)
-                  {
-                      global $Db;
-                      $level = json_decode($Db->query("SELECT S_value FROM Setting WHERE S_key = 'level'")[0]["S_value"]);
-                      foreach ($level as $levelNum => $each) {
-                          if ($credit <= $each) {
-                              return $levelNum;
-                          }
-                      }
-                      return 3;
-                  }
-
                   foreach ($user as $row) {
                       $user_level = getLevel($row["U_credit"]);
                       echo "
