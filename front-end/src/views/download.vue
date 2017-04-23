@@ -85,7 +85,6 @@ export default {
     preview
   },
   mounted() {
-    // alert( window.location.href)
     if (this.$route.query.refresh !== 'true') {
       window.location.href = window.location.href + '&refresh=true'
       window.location.reload()
@@ -164,7 +163,7 @@ export default {
             console.log('come on!  a shit!')
             window.location.reload()
           }
-        }, 1000)
+        }, 5000)
       })
       wx.ready(() => {
 
