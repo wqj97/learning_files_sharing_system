@@ -9,5 +9,5 @@ export const assetsPath = process.env.NODE_ENV === 'development' ?  '/static/' :
 export function isComputer() {
   let platform = window.navigator.platform
   console.log(platform)
-  return /(mac|win|x11|linux|unix)/.test(platform.toLowerCase())
+  return /(mac|win|x11)/.test(platform.toLowerCase())
 }

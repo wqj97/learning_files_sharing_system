@@ -85,6 +85,7 @@ export default {
     preview
   },
   mounted() {
+    // alert( window.location.href)
     if (this.$route.query.refresh !== 'true') {
       window.location.href = window.location.href + '&refresh=true'
       window.location.reload()
