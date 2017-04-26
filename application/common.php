@@ -17,9 +17,14 @@ function Server_Setting ($key)
  */
 function getLevel ($credit)
 {
-    $level = json_decode(Server_Setting('level'),true);//0,10,50,100
-    for ($i = 0; $i < 4; $i++) {
-        if ($credit <= (Int)$level[$i + 1]) return $i + 1;
+    $level = json_decode(Server_Setting('level'), true);
+    foreach ($level as $levelKey => $levelVal) {
+        if ($credit - $levelVal <= 0) {
+            if ($credit - $levelVal == 0) {
+                return $levelKey;
+            }
+            return $levelKey - 1;
+        }
     }
     return 3;
 }
