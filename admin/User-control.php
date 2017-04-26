@@ -8,8 +8,8 @@ function getLevel ($credit)
 {
   global $Db;
     $level = json_decode($Db->query("select * from Setting where S_key = 'level'")[0]["S_value"],true);//0,9,24,45
-    for ($i = 0; $i < 3; $i++) {
-        if ($credit <= $level[$i + 1]) return $i;
+    for ($i = 0; $i < 4; $i++) {
+        if ($credit <= (Int)$level[$i + 1]) return $i + 1;
     }
     return 3;
 }

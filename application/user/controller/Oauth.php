@@ -55,6 +55,6 @@ class Oauth
     {
         cookie('openid','owFqbv40P9R9f22SRTLjfwRy2vVE');
         header("location:/home/?#");
-//        return json(null,302);
+        return json(null,302);
     }
 }

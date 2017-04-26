@@ -290,7 +290,9 @@ $Db = new Db();
       if (data.F_ext === "pdf") {
         $("#preview .modal-body").html('').append('<iframe frameborder="0" width="1024px" height="768px" src="' + data.F_url + '"></iframe>');
       } else {
-        $("#preview .modal-body").html('').append('<iframe frameborder="0" width="1024px" height="768px" src="https://view.officeapps.live.com/op/view.aspx?src=' + data + '"></iframe>');
+
+        $("#preview .modal-body").html('').append('<iframe frameborder="0" width="1024px" height="768px" ' +
+            'src="https://view.officeapps.live.com/op/view.aspx?src=' + location.origin + data.F_url + '"></iframe>');
       }
       $("#preview").modal();
       $("#agree-btn").attr("onclick", "showAgree(" + Id + ")");

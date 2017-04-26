@@ -17,7 +17,7 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
   <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
   <link rel="stylesheet" href="dist/css/skins/skin-black.min.css">
   <style>
-    .comment-content{
+    .comment-content {
       max-width: 180px;
     }
   </style>
@@ -176,7 +176,7 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
                       $user_openid = $Db->query("select U_openid from User where U_name like '%$keywords%'");
                       foreach ($user_openid as $user) {
                           $user = $user['U_openid'];
-                          $comment[] = $Db->query("
+                          $search_result = $Db->query("
                           SELECT
                             (SELECT F_name
                              FROM File
@@ -190,12 +190,37 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
                             C_content,
                             C_join_time
                           FROM Comment
-                          WHERE C_user = '$user' OR C_content LIKE '%$keywords%' OR C_file_Id = (SELECT F_Id
-                                                                                                 FROM File
-                                                                                                 WHERE F_name LIKE '%$keywords%')
+                          WHERE C_user = '$user' OR C_content LIKE '%$keywords%'
                           GROUP BY C_file_Id DESC
                           LIMIT $start, 12
                           ");
+                          foreach ($search_result as $item) {
+                              $comment[] = $item;
+                          }
+                      }
+                      $file_ids = $Db->query("select F_Id from File where F_name like '%$keywords%'");
+                      foreach ($file_ids as $file_id) {
+                          $result = $Db->query("
+                          SELECT
+                            (SELECT F_name
+                             FROM File
+                             WHERE F_Id = C_file_Id) AS 'file_name',
+                            (SELECT concat(U_name, '[ ',
+                                           (SELECT S_name
+                                            FROM School
+                                            WHERE S_Id = U_school), ' ]')
+                             FROM User
+                             WHERE U_openid = '$user') AS 'user_name',
+                            C_content,
+                            C_join_time
+                          FROM Comment
+                          WHERE C_file_Id = $file_id[F_Id]
+                          GROUP BY C_file_Id DESC
+                          LIMIT $start, 12
+                          ");
+                          foreach ($result as $item) {
+                            $comment[] = $item;
+                          }
                       }
                   } else {
                       $comment = $Db->query("
@@ -327,32 +352,32 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
 <script src="dist/js/app.min.js"></script>
 
 <script>
-  function search (keyWords) {
-    window.location.href = 'Comment.php?page=0' + '&keyWords=' + keyWords;
-  }
+	function search (keyWords) {
+		window.location.href = 'Comment.php?page=0' + '&keyWords=' + keyWords;
+	}
 
-  function showEdit (Id) {
-    $.get('/admin/comment?comment_id='+ Id,function (data) {
-      $("#comment-content").val(data.C_content)
-    })
-    $("#agreeBtn").attr("onclick",`save(${Id})`)
-    $("#CommentEdit").modal()
-  }
+	function showEdit (Id) {
+		$.get('/admin/comment?comment_id=' + Id, function (data) {
+			$("#comment-content").val(data.C_content)
+		})
+		$("#agreeBtn").attr("onclick", `save(${Id})`)
+		$("#CommentEdit").modal()
+	}
 
-  function save (Id) {
-    $.post('/admin/comment/save',{
-      comment_id:Id,
-      comment_content:$("#comment-content").val()
-    },function () {
-      location.reload()
-    })
-  }
+	function save (Id) {
+		$.post('/admin/comment/save', {
+			comment_id: Id,
+			comment_content: $("#comment-content").val()
+		}, function () {
+			location.reload()
+		})
+	}
 
-  function refuse (Id) {
-    $.get("/admin/comment/delete?comment_id=" + Id,function () {
-      location.reload()
-    })
-  }
+	function refuse (Id) {
+		$.get("/admin/comment/delete?comment_id=" + Id, function () {
+			location.reload()
+		})
+	}
 </script>
 
 </body>
