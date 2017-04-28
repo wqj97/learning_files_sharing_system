@@ -47,6 +47,10 @@ const router = new Router({
     {
       path: '/netWorkError',
       component: asyncImport('netWorkError')
+    },
+    {
+      path: '/tempPay',
+      component: asyncImport('tempPay')
     }
 
   ]
