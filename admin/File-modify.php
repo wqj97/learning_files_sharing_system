@@ -145,7 +145,11 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
                 <div>
                   <label>文件名/用户名:
                     <input type="search" class="form-control" onkeydown="if(event.keyCode === 13) search(this.value)"
-                           value="<?php echo $keywords ?>">
+                           value="<?php
+                           if (!empty($keywords)) {
+                               echo $keywords;
+                           }
+                           ?>">
                   </label>
                 </div>
               </div>
@@ -174,6 +178,13 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
                           $user_file = $Db->query("SELECT F_Id,F_name,F_ext,F_user_openid,F_join_time FROM File where F_user_openid = '$user[U_openid]' order by F_Id desc");
                           foreach ($user_file as $file) {
                               $unsolve_file[] = $file;
+                          }
+                      }
+                      $file_id = $Db->query("select F_Id from File where F_name like '%$keywords%'");
+                      foreach ($file_id as $file) {
+                          $file_info = $Db->query("SELECT F_Id,F_name,F_ext,F_user_openid,F_join_time FROM File where F_Id = '$file[F_Id]' order by F_Id desc");
+                          foreach ($file_info as $file_each) {
+                              $unsolve_file[] = $file_each;
                           }
                       }
                   } else {
@@ -331,50 +342,50 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
 <script src="dist/js/app.min.js"></script>
 
 <script>
-  function search (keyWords) {
-    window.location.href = 'File-modify.php?page=0' + '&keyWords=' + keyWords;
-  }
-  function getFile (Id) {
-    $.get("/admin/File?file_id=" + Id, function (data) {
-      if (data.F_ext === "pdf") {
-        data.F_url = data.F_url.replace("http:","")
-        $("#preview .modal-body").html('').append('<iframe frameborder="0" width="1024px" height="768px" src="' + data.F_url + '"></iframe>');
-      } else {
-        $("#preview .modal-body").html('').append('<iframe frameborder="0" width="1024px" height="768px" src="https://view.officeapps.live.com/op/view.aspx?src=' + data.F_url + '"></iframe>');
-      }
-      $("#preview").modal();
-      $("#refuse-btn").attr("onclick", "refuse(" + Id + ")");
-    })
-  }
+	function search (keyWords) {
+		window.location.href = 'File-modify.php?page=0' + '&keyWords=' + keyWords;
+	}
+	function getFile (Id) {
+		$.get("/admin/File?file_id=" + Id, function (data) {
+			if (data.F_ext === "pdf") {
+				data.F_url = data.F_url.replace("http:", "")
+				$("#preview .modal-body").html('').append('<iframe frameborder="0" width="1024px" height="768px" src="' + data.F_url + '"></iframe>');
+			} else {
+				$("#preview .modal-body").html('').append('<iframe frameborder="0" width="1024px" height="768px" src="https://view.officeapps.live.com/op/view.aspx?src=' + data.F_url + '"></iframe>');
+			}
+			$("#preview").modal();
+			$("#refuse-btn").attr("onclick", "refuse(" + Id + ")");
+		})
+	}
 
-  function showEdit (Id) {
-    $.get('/admin/File/getInfo?file_id=' + Id, function (data) {
-      $("#file_name").val(data.F_name)
-      $("#file_level").val(data.F_level)
-      $("#file_type_code").val(data.F_type)
-      $("#editBtn").attr("onclick", `agree(${Id})`)
-      $("#file_type").modal()
-    })
-  }
+	function showEdit (Id) {
+		$.get('/admin/File/getInfo?file_id=' + Id, function (data) {
+			$("#file_name").val(data.F_name)
+			$("#file_level").val(data.F_level)
+			$("#file_type_code").val(data.F_type)
+			$("#editBtn").attr("onclick", `agree(${Id})`)
+			$("#file_type").modal()
+		})
+	}
 
-  function agree (Id) {
-    let type = $("#file_type_code").val();
-    let level = $("#file_level").val();
-    let file_name = $("#file_name").val();
-    $.get('/admin/File/Agree?file_id=' + Id + '&file_type_code=' + type + '&file_level=' + level + '&file_name=' + file_name, function (data) {
-      if (data.result === "success") {
-        location.reload()
-      }
-    })
-  }
+	function agree (Id) {
+		let type = $("#file_type_code").val();
+		let level = $("#file_level").val();
+		let file_name = $("#file_name").val();
+		$.get('/admin/File/Agree?file_id=' + Id + '&file_type_code=' + type + '&file_level=' + level + '&file_name=' + file_name, function (data) {
+			if (data.result === "success") {
+				location.reload()
+			}
+		})
+	}
 
-  function refuse (Id) {
-    $.get('/admin/File/Refuse?file_id=' + Id, function (data) {
-      if (data.result === "success") {
-        location.reload()
-      }
-    })
-  }
+	function refuse (Id) {
+		$.get('/admin/File/Refuse?file_id=' + Id, function (data) {
+			if (data.result === "success") {
+				location.reload()
+			}
+		})
+	}
 </script>
 
 </body>

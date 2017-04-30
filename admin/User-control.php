@@ -7,10 +7,18 @@ $start = $page * 12;
 function getLevel ($credit)
 {
     global $Db;
-    $level = json_decode($Db->query("select * from Setting where S_key = 'level'")[0]["S_value"],true);//0,9,24,45
-
+    $level = json_decode($Db->query("SELECT * FROM Setting WHERE S_key = 'level'")[0]["S_value"], true);//0,9,24,45
+    foreach ($level as $levelKey => $levelVal) {
+        if ($credit - $levelVal <= 0) {
+            if ($credit - $levelVal == 0) {
+                return $levelKey;
+            }
+            return $levelKey - 1;
+        }
+    }
     return 3;
 }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -151,12 +159,13 @@ function getLevel ($credit)
             <div class="row">
               <div class="pull-right" style="padding-right: 15px;">
                 <div>
-                  <label>用户名:
+                  <label>用户名/学校名称:
                     <input type="search" class="form-control" onkeydown="if(event.keyCode === 13) search(this.value)"
                            value="<?php
-                           echo $keywords;
-                           ?>
-                           ">
+                           if (!empty($keywords)) {
+                               echo $keywords;
+                           }
+                           ?>">
                   </label>
                 </div>
               </div>
@@ -192,6 +201,27 @@ FROM User
 where U_name like '%$keywords%'
 ORDER BY U_Id DESC
 LIMIT $start, 12;");
+                  $school_user = $Db->query("select S_Id from School where S_name like '%$keywords%'");
+                  foreach ($school_user as $school) {
+                      $user_list = $Db->query("SELECT
+  U_Id,
+  U_name,
+  (SELECT S_name
+   FROM School
+   WHERE S_Id = U_school)          AS 'school_name',
+  (SELECT COUNT(*)
+   FROM File
+   WHERE F_user_openid = U_openid) AS File_count,
+  U_credit,
+  U_join_date
+FROM User
+where U_school = {$school["S_Id"]}
+ORDER BY U_Id DESC
+LIMIT $start, 12;");
+                      foreach ($user_list as $item) {
+                        $user[] = $item;
+                      }
+                  }
                   foreach ($user as $row) {
                       $user_level = getLevel($row["U_credit"]);
                       echo "
@@ -319,30 +349,30 @@ LIMIT $start, 12;");
 <script src="dist/js/app.min.js"></script>
 
 <script>
-  function search (keyWords) {
-    window.location.href = 'User-control.php?page=0' + '&keyWords=' + keyWords;
-  }
+	function search (keyWords) {
+		window.location.href = 'User-control.php?page=0' + '&keyWords=' + keyWords;
+	}
 
-  function showUserEdit (Id) {
-    $.get(`/admin/user?user_id=${Id}`, function (data) {
-      $("#user_school").val(data.U_school)
-      $("#user_credit").val(data.U_credit)
-      $("#user_name").val(data.U_name)
-      $("#user_edit").modal()
-      $("#editBtn").attr("onclick", `save(${Id})`)
-    })
-  }
+	function showUserEdit (Id) {
+		$.get(`/admin/user?user_id=${Id}`, function (data) {
+			$("#user_school").val(data.U_school)
+			$("#user_credit").val(data.U_credit)
+			$("#user_name").val(data.U_name)
+			$("#user_edit").modal()
+			$("#editBtn").attr("onclick", `save(${Id})`)
+		})
+	}
 
-  function save (Id) {
-    $.post('/admin/User/save', {
-      user_id: Id,
-      user_name: $("#user_name").val(),
-      user_school: $("#user_school").val(),
-      user_credit: $("#user_credit").val()
-    }, function () {
-      location.reload()
-    })
-  }
+	function save (Id) {
+		$.post('/admin/User/save', {
+			user_id: Id,
+			user_name: $("#user_name").val(),
+			user_school: $("#user_school").val(),
+			user_credit: $("#user_credit").val()
+		}, function () {
+			location.reload()
+		})
+	}
 </script>
 
 </body>

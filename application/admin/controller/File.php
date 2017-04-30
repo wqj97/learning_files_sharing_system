@@ -78,7 +78,6 @@ class File
         $file_info = Db::query("SELECT * FROM File WHERE F_Id = ?", [$file_id])[0];
         $cos = new COS();
         foreach (json_decode($file_info["F_transfer_url"]) as $item) {
-            echo "http:".$item."\r\n";
             $ext_result = $cos->delete($item);
             if ($ext_result["code"] != 0) {
                 return false;

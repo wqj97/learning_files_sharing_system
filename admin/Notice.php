@@ -177,7 +177,10 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
                       echo "
                       <tr role=\"row\" class=\"even\">
                       <td class=\"sorting_1\">$row[N_title]</td>
-                      <td class=\"sorting_1\"><a href='$row[N_url]'>$row[N_url]</a></td>
+                      <td class=\"sorting_1\" 
+                      style='max-width: 500px;white-space: nowrap;texht-overflow: ellipsis;overflow: hidden;'><a 
+                      href='$row[N_url]'>
+                      $row[N_url]</a></td>
                       <td class=\"sorting_1\">
                       <div class=\"btn-group\">
                         <button type=\"button\" class=\"btn btn-primary\" onclick='showEdit($row[N_Id])'>修改</button>
