@@ -53,7 +53,7 @@
         系统通知
       </div>
     </div>
-      <div class="bottom_btn" id="buy" @click="$router.push('/buy')">
+      <div class="bottom_btn" id="buy" @click="$router.push('/tempPay')">
         成为赞助者
       </div>
 
