@@ -4,7 +4,6 @@ import Router from 'vue-router'
 const asyncImport = (component) =>
     resolve => {
      require.ensure([], (require) => {
-       // TODO: BUG: alias doesn't work
        resolve(require(`../views/${component}`))
      }, 'noneIndex')
    }

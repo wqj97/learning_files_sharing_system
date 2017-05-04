@@ -228,13 +228,25 @@ export default {
       this.$refs.refresh.noMoreData()
     },
     downloadClick() {
+
+        if (this.user['U_school'] == '' || this.user['U_school'] === null || this.user['U_school'] === undefined) {
+        this.$vux.toast.show({
+          text: '没有绑定学校, 请先绑定学校~',
+          type: 'warn'
+        })
+        setTimeout(() => {
+          this.$router.push('/schoolList')
+        }, 700);
+        return
+      }
+
       if (this.user.level < this.detail['F_level']) {
         this.$vux.toast.show({
           text: '权限不够哦~ 请去个人中心升级权限',
           type: 'warn'
         })
         setTimeout(() => {
-          this.$router.push('/mine')
+          // this.$router.push('/mine')
         }, 700);
         return
       }
