@@ -1,19 +1,13 @@
 <template>
   <div class="container">
-    <x-dialog v-model="isShowNewComment"
-              hide-on-blur>
+    <x-dialog v-model="isShowNewComment" hide-on-blur>
       <div class="comment_title">新建评论</div>
-      <x-textarea v-model="newCommentContent"
-                  placeholder="请输入你的评论"
-                  :max="40"></x-textarea>
+      <x-textarea v-model="newCommentContent" placeholder="请输入你的评论" :max="40"></x-textarea>
       <x-button @click.native="submitComment">评论</x-button>
     </x-dialog>
     <div class="top">
       <div class="top">
-        <fileIcon class="fileIcon"
-                  v-if="detail['F_ext']"
-                  :type="detail['F_ext']"
-                  size="small"></fileIcon>
+        <fileIcon class="fileIcon" v-if="detail['F_ext']" :type="detail['F_ext']" size="small"></fileIcon>
         <div class="right">
           <h2>{{detail['F_name']}}</h2>
           <span>下载等级: Lv.{{detail['F_level']}}</span>
@@ -32,37 +26,25 @@
       </div>
       <div class="bottom">
         <div class="left">
-          <div class="comment wrapper"
-               @click="isShowCommentList = !isShowCommentList"><img src="../assets/commentColor.svg"> {{detail['comment_count']}}</div>
-          <div class="like wrapper"
-               @click="like">
-            <img v-if="detail['liked']"
-                 src="../assets/heartColor.svg">
-            <img v-else
-                 src="../assets/emptyHeart.svg"> {{detail['like_count']}}
+          <div class="comment wrapper" @click="isShowCommentList = !isShowCommentList"><img src="../assets/commentColor.svg"> {{detail['comment_count']}}</div>
+          <div class="like wrapper" @click="like">
+            <img v-if="detail['liked']" src="../assets/heartColor.svg">
+            <img v-else src="../assets/emptyHeart.svg"> {{detail['like_count']}}
           </div>
         </div>
         <div class="right">
-          <button id="download-btn"
-                  :class="{'gray': !isEnoughToDownload}"
-                  @click="downloadClick">下载</button>
+          <button id="download-btn" :class="{'gray': !isEnoughToDownload}" @click="downloadClick">下载</button>
         </div>
       </div>
     </div>
     <div class="tab">
-      <div class="preview"
-           v-show="!isShowCommentList">
-        <preview v-if="previewUrlArr"
-                 :url="previewUrlArr"></preview>
+      <div class="preview" v-show="!isShowCommentList">
+        <preview v-if="previewUrlArr" :url="previewUrlArr"></preview>
       </div>
-      <div class="comments"
-           v-show="isShowCommentList">
-        <commentList :list="commentArr"
-                     @refresh="commentRefresh"
-                     ref="refresh"></commentList>
+      <div class="comments" v-show="isShowCommentList">
+        <commentList :list="commentArr" @refresh="commentRefresh" ref="refresh"></commentList>
       </div>
-      <div class="bottom_btn"
-           @click="isShowNewComment = true">新建评论</div>
+      <div class="bottom_btn" @click="isShowNewComment = true">新建评论</div>
     </div>
   </div>
 </template>
@@ -130,7 +112,7 @@ export default {
       console.log('sign jsjdk...')
       let fileShareInfo = {
         title: data['F_name'], // 分享标题
-        link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        link: `https://wx.97qingnian.com/user/oauth?url=${window.location.href}`, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
         desc: '你的好友给你分享文件啦!',
         imgUrl: '',                  // 分享图标
         success: () => {
@@ -167,12 +149,12 @@ export default {
       })
       wx.ready(() => {
 
-         console.log('jsjdkConfig success, set hooks...')
-         wx.onMenuShareTimeline(fileShareInfo)
-         wx.onMenuShareAppMessage(fileShareInfo)
-         wx.onMenuShareQQ(fileShareInfo)
-         wx.onMenuShareQZone(fileShareInfo)
-         console.log(wx.onMenuShareTimeline)
+        console.log('jsjdkConfig success, set hooks...')
+        wx.onMenuShareTimeline(fileShareInfo)
+        wx.onMenuShareAppMessage(fileShareInfo)
+        wx.onMenuShareQQ(fileShareInfo)
+        wx.onMenuShareQZone(fileShareInfo)
+        console.log(wx.onMenuShareTimeline)
         this.$store.commit('updateLoadingStatus', { isLoading: false })
         this.jsjdkReady = true
       })
@@ -228,33 +210,39 @@ export default {
       this.$refs.refresh.noMoreData()
     },
     downloadClick() {
+      this.$http.get('/user/check').then(data => {
+        if (!data.data) {
+          window.location.href = 'https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzIxNDYyOTU2OA==&scene=124#wechat_redirect'
+          return
+        } else {
+          if (this.user['U_school'] == '' || this.user['U_school'] === null || this.user['U_school'] === undefined) {
+            this.$vux.toast.show({
+              text: '没有绑定学校, 请先绑定学校~',
+              type: 'warn'
+            })
+            setTimeout(() => {
+              this.$router.push('/schoolList')
+            }, 700);
+            return
+          }
 
-        if (this.user['U_school'] == '' || this.user['U_school'] === null || this.user['U_school'] === undefined) {
-        this.$vux.toast.show({
-          text: '没有绑定学校, 请先绑定学校~',
-          type: 'warn'
-        })
-        setTimeout(() => {
-          this.$router.push('/schoolList')
-        }, 700);
-        return
-      }
-
-      if (this.user.level < this.detail['F_level']) {
-        this.$vux.toast.show({
-          text: '权限不够哦~ 请去个人中心升级权限',
-          type: 'warn'
-        })
-        setTimeout(() => {
-          // this.$router.push('/mine')
-        }, 700);
-        return
-      }
-      let openid = Cookies.get('Aiuyi_openid')
-      if (openid == undefined) {
-        console.error('fail to get openId')
-      }
-      window.location.href = `${window.location.origin}/file/download/?file_id=${this.detail['F_Id']}&openid=${openid}`
+          if (this.user.level < this.detail['F_level']) {
+            this.$vux.toast.show({
+              text: '权限不够哦~ 请去个人中心升级权限',
+              type: 'warn'
+            })
+            setTimeout(() => {
+              this.$router.push('/mine')
+            }, 700);
+            return
+          }
+          let openid = Cookies.get('Aiuyi_openid')
+          if (openid == undefined) {
+            console.error('fail to get openId')
+          }
+          window.location.href = `${window.location.origin}/file/download/?file_id=${this.detail['F_Id']}&openid=${openid}`
+        }
+      })
     },
     like() {
       this.$store.commit('updateLoadingStatus', { isLoading: true })
