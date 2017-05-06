@@ -103,6 +103,10 @@ export default {
     })
 
     this.$http.get('/user/check').then( data => {
+      if (process.env.NODE_ENV === 'development') {
+        this.isSubscribe = false
+        return
+      }
       this.isSubscribe = data.data
     })
   },
@@ -382,13 +386,18 @@ $menuBarRadius: 4px;
     transition-delay: .8s;
   }
 }
+$sSize: 7.3vh;
 #subscribe{
   position: fixed;
   bottom: 13vh;
   right: 5vw;
   color: #fff;
   border-radius: 100%;
-  padding: 10px;
+  width: $sSize;
+  height: $sSize;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-image: linear-gradient(-180deg, #00B9F8 0%, #2ECAFF 100%);
    box-shadow: 0 2px 10px rgba(0, 185, 248, .6);
 }
