@@ -3,7 +3,7 @@
     <Refresh :tip="tip" :distance="100" ref="fresh" @refresh="$emit('refresh')">
         <item v-for="(i, index) in list" type="DOC"
               :title="i['F_name']"
-              :comments="i['comment_count']"
+              :level="i['F_level']"
               :times="i['F_download_count']"
               :views="i['F_view_count']"
               :likes="i['collect_record']"

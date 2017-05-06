@@ -10,6 +10,7 @@ namespace app\user\controller;
 
 
 use EasyWeChat\Foundation\Application;
+use think\Cookie;
 use think\Db;
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/extend/wechat-master/vendor/autoload.php';
@@ -29,12 +30,20 @@ class Oauth
 
     public function index ()
     {
+        $redirect = input('get.url');
+        if (!empty($redirect)) {
+           Cookie::set('redirect_url',$redirect,120);
+        }
         if (!cookie('?openid')) {
             $response = $this->app->oauth->scopes(['snsapi_userinfo'])->redirect();
             return $response->send();
         } else {
-            header('Location:/home/?#');
-            return '';
+            if (empty($redirect)) {
+                header('Location:/home/?#');
+            } else {
+                header("location:{$redirect}");
+            }
+            return json(null,302);
         }
     }
 
@@ -48,7 +57,12 @@ class Oauth
             Db::execute("update User set `U_name` = '$user[name]',`U_head` = '$user[avatar]' where `U_openid` = '$user[id]'");
         }
         cookie('openid', $user['id']);
-        header('location:/home/?#');
+        $redirect = cookie('redirect_url');
+        if (empty($redirect)) {
+            header('location:/home');
+        } else {
+            header("location:{$redirect}");
+        }
         return;
     }
 
@@ -57,10 +71,10 @@ class Oauth
         if ($Id != 1) {
             $openid = Db::query("select U_openid from User where U_Id = $Id")[0]["U_openid"];
             cookie('openid', $openid);
-            header("location:/home/?#");
+            header("location:/home");
         } else {
             cookie('openid', 'owFqbv40P9R9f22SRTLjfwRy2vVE');
-            header("location:/home/?#");
+            header("location:/home");
         }
         return json(null, 302);
     }

@@ -20,6 +20,6 @@ class Sign
         $app = new Application($option);
         $js = $app->js;
         $config = $js->setUrl($url)->config(["onMenuShareTimeline","onMenuShareAppMessage","onMenuShareQQ","onMenuShareWeibo","onMenuShareQZone"]);
-        return json([$config,$config->ticket()]);
+        return json([$config]);
     }
 }

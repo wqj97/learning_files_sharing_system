@@ -4,7 +4,7 @@
     <div class="right">
       <div class="top">{{title}}</div>
       <div class="bottom">
-        <div class="item"><img class="img" src="../../assets/comment.svg">{{comments}}</div>
+        <div class="item"><img class="img" src="../../assets/level.svg" style="position: relative;bottom:2px;">{{level}}</div>
         <div class="item"><img class="img" src="../../assets/download.svg">{{times}}</div>
 
         <div class="item"><img class="img" src="../../assets/views.svg">{{views}}</div>
@@ -25,7 +25,7 @@ export default {
       type: String,
       require: true
     },
-    comments: {
+    level: {
       type: Number
     },
     times: {
@@ -50,7 +50,7 @@ export default {
 </script>
 
 
-<style lang="scss" scoped>
+<style lang="scss" scoped type="text/scss">
 $radius: 5px;
 .file-list-item {
   margin: 15px 9px;
