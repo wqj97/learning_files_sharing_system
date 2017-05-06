@@ -1,10 +1,17 @@
 <template>
   <div class="container">
-    <x-dialog v-model="isShowNewComment" hide-on-blur>
+    <x-dialog class="comment" v-model="isShowNewComment" hide-on-blur>
       <div class="comment_title">新建评论</div>
       <x-textarea v-model="newCommentContent" placeholder="请输入你的评论" :max="40"></x-textarea>
       <x-button @click.native="submitComment">评论</x-button>
     </x-dialog>
+    <x-dialog class="qrcode" v-model="isShowQRcode" hide-on-blur>
+       <div class="comment_title">长按关注<span style="color:#43d243">爱优医官方号</span>公众号</div>
+    <img class="qrcode" src="../assets/qrcode.jpeg">
+    </x-dialog>
+    <div id="subscribe" v-show="!isSubscribe" @click="isShowQRcode=true">
+      关注
+    </div>
     <div class="top">
       <div class="top">
         <fileIcon class="fileIcon" v-if="detail['F_ext']" :type="detail['F_ext']" size="small"></fileIcon>
@@ -98,6 +105,7 @@ export default {
   data() {
     return {
       id: '',
+      isShowQRcode: false,
       isShowCommentList: false,
       isShowNewComment: false,
       newCommentContent: '',
@@ -272,6 +280,9 @@ export default {
     type() {
       return getCategroyListById(this.detail['F_type'])
     },
+    isSubscribe(){
+      return false
+    },
     ...mapState({
       user: state => state.user
     })
@@ -284,7 +295,10 @@ export default {
 .container {
   padding-bottom: 8vh;
 }
-
+.qrcode{
+  width:100%;
+  height: 100%;
+}
 .top {
   background-color: #fff;
   color: #455D7A;
@@ -366,6 +380,16 @@ $menuBarRadius: 4px;
     transition: filter .4s cubic-bezier(0, 0.57, 0.75, 0.46);
     transition-delay: .8s;
   }
+}
+#subscribe{
+  position: fixed;
+  bottom: 13vh;
+  right: 5vw;
+  color: #fff;
+  border-radius: 100%;
+  padding: 10px;
+  background-image: linear-gradient(-180deg, #00B9F8 0%, #2ECAFF 100%);
+   box-shadow: 0 2px 10px rgba(0, 185, 248, .6);
 }
 
 .gray {
