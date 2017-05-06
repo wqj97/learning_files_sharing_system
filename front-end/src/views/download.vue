@@ -101,10 +101,15 @@ export default {
     }, err => {
       this.$store.commit('updateError', { isError: true })
     })
+
+    this.$http.get('/user/check').then( data => {
+      this.isSubscribe = data.data
+    })
   },
   data() {
     return {
       id: '',
+      isSubscribe: false,
       isShowQRcode: false,
       isShowCommentList: false,
       isShowNewComment: false,
@@ -218,8 +223,7 @@ export default {
       this.$refs.refresh.noMoreData()
     },
     downloadClick() {
-      this.$http.get('/user/check').then(data => {
-        if (!data.data) {
+        if (!this.isSubscribe) {
           window.location.href = 'https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzIxNDYyOTU2OA==&scene=124#wechat_redirect'
           return
         } else {
@@ -250,7 +254,7 @@ export default {
           }
           window.location.href = `${window.location.origin}/file/download/?file_id=${this.detail['F_Id']}&openid=${openid}`
         }
-      })
+
     },
     like() {
       this.$store.commit('updateLoadingStatus', { isLoading: true })
@@ -269,7 +273,7 @@ export default {
   },
   computed: {
     isEnoughToDownload() {
-      if (this.user.level < this.detail['F_level']) {
+      if ((this.user.level < this.detail['F_level']) || !this.isSubscribe) {
         return false
       }
       return true
@@ -279,9 +283,6 @@ export default {
     },
     type() {
       return getCategroyListById(this.detail['F_type'])
-    },
-    isSubscribe(){
-      return false
     },
     ...mapState({
       user: state => state.user
