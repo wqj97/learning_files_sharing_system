@@ -17,5 +17,5 @@ return [
         'scopes'   => ['snsapi_userinfo'],
         'callback' => '/user/oauth/check',
     ],
-    'url' => 'wx.97qingnian.com'
+    'url' => 'www.aiyouyi.net.cn'
 ];

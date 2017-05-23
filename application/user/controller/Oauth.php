@@ -32,7 +32,7 @@ class Oauth
     {
         $redirect = input('get.url');
         if (!empty($redirect)) {
-           Cookie::set('redirect_url',$redirect,120);
+            Cookie::set('redirect_url', $redirect, 120);
         }
         if (!cookie('?openid')) {
             $response = $this->app->oauth->scopes(['snsapi_userinfo'])->redirect();
@@ -43,7 +43,7 @@ class Oauth
             } else {
                 header("location:{$redirect}");
             }
-            return json(null,302);
+            return json(null, 302);
         }
     }
 
@@ -76,6 +76,13 @@ class Oauth
             cookie('openid', 'owFqbv40P9R9f22SRTLjfwRy2vVE');
             header("location:/home");
         }
+        return json(null, 302);
+    }
+
+    public function truncate ()
+    {
+        cookie('openid', null);
+        header('location:/user/oauth');
         return json(null, 302);
     }
 }
