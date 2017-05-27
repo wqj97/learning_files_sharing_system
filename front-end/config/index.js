@@ -32,31 +32,31 @@ module.exports = {
     sourceImgPath: '/src/assets/',
        proxyTable: {
         '/user': {
-        target: 'https://wx.97qingnian.com',
+        target: 'https://www.aiyouyi.net.cn',
         changeOrigin: true
       },
       '/file': {
-        target: 'https://wx.97qingnian.com',
+        target: 'https://www.aiyouyi.net.cn',
         changeOrigin: true,
       },
             '/search': {
-        target: 'https://wx.97qingnian.com',
+        target: 'https://www.aiyouyi.net.cn',
         changeOrigin: true,
       },
             '/index': {
-        target: 'https://wx.97qingnian.com',
+        target: 'https://www.aiyouyi.net.cn',
         changeOrigin: true,
       },
       '/upload': {
-        target: 'https://wx.97qingnian.com',
+        target: 'https://www.aiyouyi.net.cn',
         changeOrigin: true,
       },
       '/pay': {
-        target: 'https://wx.97qingnian.com',
+        target: 'https://www.aiyouyi.net.cn',
         changeOrigin: true,
       },
       '/jssdk': {
-         target: 'https://wx.97qingnian.com',
+         target: 'https://www.aiyouyi.net.cn',
         changeOrigin: true,
       }
 
