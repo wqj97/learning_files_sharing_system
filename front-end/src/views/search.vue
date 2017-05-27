@@ -19,6 +19,7 @@ export default {
   created() {
     let id = this.$route.query.type
     let searchData = this.$route.query.search
+    // debugger
     if (id) {
       this.type = []
       this.type.push(Number(id))
@@ -31,6 +32,8 @@ export default {
       }
     } else {
       this.type.push(0)
+      this.search = searchData
+        this.submit()
     }
   },
   methods: {
