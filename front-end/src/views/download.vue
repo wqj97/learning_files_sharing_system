@@ -227,10 +227,6 @@ export default {
       this.$refs.refresh.noMoreData()
     },
     downloadClick() {
-        if (!this.isSubscribe) {
-          window.location.href = 'https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzIxNDYyOTU2OA==&scene=124#wechat_redirect'
-          return
-        } else {
           if (this.user['U_school'] == '' || this.user['U_school'] === null || this.user['U_school'] === undefined) {
             this.$vux.toast.show({
               text: '没有绑定学校, 请先绑定学校~',
@@ -257,8 +253,6 @@ export default {
             console.error('fail to get openId')
           }
           window.location.href = `${window.location.origin}/file/download/?file_id=${this.detail['F_Id']}&openid=${openid}`
-        }
-
     },
     like() {
       this.$store.commit('updateLoadingStatus', { isLoading: true })
