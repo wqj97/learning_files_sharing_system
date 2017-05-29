@@ -1,5 +1,15 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 var path = require('path')
+let renderProxyTable = (arr) => {
+  let temp = {}
+  for (let i = 0; i < arr.length; i++) {
+    temp[arr[i]] = {
+      target: 'https://www.aiyouyi.net.cn',
+      changeOrigin: true,
+    }
+  }
+  return temp
+}
 
 module.exports = {
   build: {
@@ -30,37 +40,7 @@ module.exports = {
     assetsPublicPath: '/',
     imgPublicPath: './dist/static/img',
     sourceImgPath: '/src/assets/',
-       proxyTable: {
-        '/user': {
-        target: 'https://www.aiyouyi.net.cn',
-        changeOrigin: true
-      },
-      '/file': {
-        target: 'https://www.aiyouyi.net.cn',
-        changeOrigin: true,
-      },
-            '/search': {
-        target: 'https://www.aiyouyi.net.cn',
-        changeOrigin: true,
-      },
-            '/index': {
-        target: 'https://www.aiyouyi.net.cn',
-        changeOrigin: true,
-      },
-      '/upload': {
-        target: 'https://www.aiyouyi.net.cn',
-        changeOrigin: true,
-      },
-      '/pay': {
-        target: 'https://www.aiyouyi.net.cn',
-        changeOrigin: true,
-      },
-      '/jssdk': {
-         target: 'https://www.aiyouyi.net.cn',
-        changeOrigin: true,
-      }
-
-    },
+    proxyTable: renderProxyTable(['/user', '/file', '/search', '/index', '/upload', '/pay', '/jsjdk']),
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
     // (https://github.com/webpack/css-loader#sourcemaps)
