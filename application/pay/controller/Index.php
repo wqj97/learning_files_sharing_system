@@ -26,8 +26,8 @@ class Index
         $order_no = Db::query('select last_insert_id() as Id')[0]['Id'];
         $ip = $_SERVER['REMOTE_ADDR'];
         $pingpp = new Pingpp();
-        $pingpp::setApiKey('sk_test_5aDyr9rjvnP0i9Sir9afD0OS');
-//        Pingpp::setApiKey('sk_live_8iPajPzbHCaLnDyPi5D88WrP');
+//        $pingpp::setApiKey('sk_test_5aDyr9rjvnP0i9Sir9afD0OS');
+        Pingpp::setApiKey('sk_live_8iPajPzbHCaLnDyPi5D88WrP');
         $pingpp::setPrivateKeyPath($_SERVER['DOCUMENT_ROOT'] . "/extend/pingxx/pem/private.key");
         return Charge::create(array(
                 'order_no' => $order_no,
@@ -37,8 +37,8 @@ class Index
                 'currency' => 'cny',
                 'client_ip' => $ip,
                 'extra' => [
-                    'success_url' => 'https://www.aiyouyi.net.cn/pay/succeed',
-                    'cancel_url' => 'https://www.aiyouyi.net.cn/pay/cancel'
+                    'success_url' => 'https://www.aiyouyi.net.cn/home/#/buy?success',
+                    'cancel_url' => 'https://www.aiyouyi.net.cn/home/#/buy?cancel'
                 ],
                 'subject' => "爱优医" . $price / 100 . "元赞助",
                 'body' => '赞助爱优医')
