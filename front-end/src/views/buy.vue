@@ -49,8 +49,30 @@ export default {
         type: 'warn'
       })
     })
+    let callBack
+    if (/buy\?success/.test(this.$route.fullPath)) callBack = true
+    if (/buy\?cancel/.test(this.$route.fullPath)) callBack = false
+    if (callBack === undefined) return
+    callBack ? this.paySecceed() : this.payCancel()
   },
   methods: {
+    paySecceed() {
+      let duration = 3000
+      this.$vux.toast.show({
+        type: 'success',
+        time: duration,
+        text: '付款成功!'
+      })
+     window.setTimeout(() => {
+        this.$router.push('/mine')
+     }, duration)
+    },
+    payCancel() {
+this.$vux.toast.show({
+        type: 'cancel',
+        text: '支付取消'
+      })
+    },
     pay(index) {
       let price = this.prices[index]
       console.log(price)
@@ -63,18 +85,17 @@ export default {
           console.log(err.msg)
           console.log(err.extra)
           if (result == "success") {
-            alert('支付成功!')
+            this.paySecceed()
             // 只有微信公众账号 wx_pub 支付成功的结果会在这里返回，其他的支付结果都会跳转到 extra 中对应的 URL。
           } else if (result == "fail") {
             alert('失败!')
             // charge 不正确或者微信公众账号支付失败时会在此处返回
           } else if (result == "cancel") {
-            alert('取消')
+           this.payCancel()
             // 微信公众账号支付取消支付
           }
         })
         ////////
-
  })
     }
   },
