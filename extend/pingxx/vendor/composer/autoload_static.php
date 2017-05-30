@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit8f49b4bc859dbdbbd8755c5d16a16765
+class ComposerStaticInit42c063e3c08fa083177344d47f6334b7
 {
     public static $prefixLengthsPsr4 = array (
         'P' => 
@@ -16,15 +16,15 @@ class ComposerStaticInit8f49b4bc859dbdbbd8755c5d16a16765
     public static $prefixDirsPsr4 = array (
         'Pingpp\\' => 
         array (
-            0 => __DIR__ . '/..',
+            0 => __DIR__ . '/..' . '/pingplusplus/pingpp-php/lib',
         ),
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit8f49b4bc859dbdbbd8755c5d16a16765::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit8f49b4bc859dbdbbd8755c5d16a16765::$prefixDirsPsr4;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit42c063e3c08fa083177344d47f6334b7::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit42c063e3c08fa083177344d47f6334b7::$prefixDirsPsr4;
 
         }, null, ClassLoader::class);
     }

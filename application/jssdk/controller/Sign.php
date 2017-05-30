@@ -16,7 +16,7 @@ class Sign
     public function Index()
     {
         $option = require_once $_SERVER['DOCUMENT_ROOT'] . '/extend/wechat-master/config.php';
-        $url = input('post.url','https://wx.97qingnian.com');
+        $url = input('post.url','https://www.aiyouyi.net.cn');
         $app = new Application($option);
         $js = $app->js;
         $config = $js->setUrl($url)->config(["onMenuShareTimeline","onMenuShareAppMessage","onMenuShareQQ","onMenuShareWeibo","onMenuShareQZone"]);
