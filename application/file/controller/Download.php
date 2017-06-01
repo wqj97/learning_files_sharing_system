@@ -10,6 +10,7 @@ namespace app\file\controller;
 
 
 use think\Db;
+use think\Exception;
 
 class Download
 {
@@ -26,7 +27,13 @@ class Download
         if (empty($file_id) || empty($user_openid)) {
             return json("禁止访问", 403);
         }
-        $file_Info = Db::query("SELECT F_url,F_name,F_level,F_ext FROM File WHERE F_Id = ?", [$file_id])[0];
+        try{
+            $file_Info = Db::query("SELECT F_url,F_name,F_level,F_ext FROM File WHERE F_Id = ?", [$file_id])[0];
+        } catch (Exception $e) {
+            echo $e->getCode();
+            echo "\n非常抱歉, 文件损坏, 暂时无法下载这个文件";
+            echo "<script>window.location.go(-1)</script>";
+        }
         $user_info = Db::query("SELECT U_credit,U_school FROM User WHERE U_openid = ?", [$user_openid])[0];
         if (empty($user_info["U_school"])) {
             return json("未绑定学校", 403);
