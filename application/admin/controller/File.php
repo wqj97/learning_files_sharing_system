@@ -13,6 +13,7 @@ use think\Db;
 use think\db\Query;
 use think\Debug;
 use think\Loader;
+use think\Log;
 
 class File
 {
@@ -169,6 +170,7 @@ class File
         $cos = new COS();
         $excute_result = $cos->upLoad($local_path, $remote_path);
         if ($excute_result["code"] == 0) {
+            Log::error($excute_result['message']);
             str_replace("http:","",$excute_result["data"]["access_url"]);
         }
         return $excute_result;

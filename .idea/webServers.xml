@@ -3,11 +3,11 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="8df584ce-87b1-4888-a15b-b4bc3dd0df4b" name="腾讯云_爱优医" url="https://www.aiyouyi.net.cn">
-        <fileTransfer host="123.206.177.73" port="21" rootFolder="/wx.97qingnian.com">
+        <fileTransfer host="123.206.177.73" port="22" rootFolder="/home/wwwroot/wx.97qingnian.com" accessType="SFTP">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" />
           </advancedOptions>
-          <option name="port" value="21" />
+          <option name="port" value="22" />
         </fileTransfer>
       </webServer>
       <webServer id="7440914d-3cbc-4549-8220-3607653c3e42" name="local" url="http://localhost">
