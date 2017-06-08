@@ -12,6 +12,12 @@
     <div id="subscribe" v-show="!isSubscribe" @click="isShowQRcode=true">
       关注
     </div>
+    <div id="shareTipWraper">
+    <div id="shareTip">
+     <p id="shareTipSlogan"> 分享给好友可以获得积分喔</p>
+      <img id="shareTipArrow" src="../assets/shareinwechat.svg">
+    </div>
+    </div>
     <div class="top">
       <div class="top">
         <fileIcon class="fileIcon" v-if="detail['F_ext']" :type="detail['F_ext']" size="small"></fileIcon>
@@ -293,6 +299,40 @@ export default {
 @import '../style/base.scss';
 .container {
   padding-bottom: 8vh;
+}
+@keyframes showTip {
+  0%
+   {margin-bottom: -45px;}
+  35%, 75%{margin-bottom: 0px;}
+}
+#shareTipWraper{
+  animation-name: showTip;
+  animation-duration: 1s;
+  animation-delay: 3s;
+  // animation-iteration-count: infinite;
+  margin-bottom: -45px;
+  transition: margin-bottom 2s ease-in-out;
+  transition-delay: 4s;
+  box-sizing: border-box;
+  height: 45px;
+  padding: 5px 0;
+  font-size: 18px;
+  font-weight: 200;
+  color: #fff;
+  background-image: linear-gradient(-180deg, #00B9F8 0%, #2ECAFF 100%);
+  box-shadow: 0px -2px 10px 0px #0f9ccc inset;
+}
+#shareTip{
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 7vw;
+  align-items: baseline;
+}
+ #shareTipArrow{
+    height: 28px;
+  }
+#shareTipSlogan{
+
 }
 .qrcode{
   width:100%;
