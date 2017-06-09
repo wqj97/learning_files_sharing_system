@@ -33,13 +33,13 @@ class Index
                 'order_no' => $order_no,
                 'amount' => $price,  //订单总金额, 人民币单位：分（如订单总金额为 1 元，此处请填 100）
                 'app' => array('id' => 'app_HOyvHKPCajnHCarT'),
-                'channel' => 'alipay_wap',
+                'channel' => 'wx_pub',
                 'currency' => 'cny',
                 'client_ip' => $ip,
-                'extra' => [
-                    'success_url' => 'https://www.aiyouyi.net.cn/home/#/buy?success',
-                    'cancel_url' => 'https://www.aiyouyi.net.cn/home/#/buy?cancel'
-                ],
+//                'extra' => [
+//                    'success_url' => 'https://www.aiyouyi.net.cn/home/#/buy?success',
+//                    'cancel_url' => 'https://www.aiyouyi.net.cn/home/#/buy?cancel'
+//                ],
                 'subject' => "爱优医" . $price / 100 . "元赞助",
                 'body' => '赞助爱优医')
         );
