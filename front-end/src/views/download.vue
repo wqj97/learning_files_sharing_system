@@ -303,12 +303,12 @@ export default {
 @keyframes showTip {
   0%
    {margin-bottom: -45px;}
-  35%, 75%{margin-bottom: 0px;}
+  35%, 73%{margin-bottom: 0px;}
 }
 #shareTipWraper{
   animation-name: showTip;
-  animation-duration: 1s;
-  animation-delay: 3s;
+  animation-duration: 3s;
+  animation-delay: 1s;
   // animation-iteration-count: infinite;
   margin-bottom: -45px;
   transition: margin-bottom 2s ease-in-out;
