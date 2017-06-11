@@ -36,10 +36,9 @@ class Index
                 'channel' => 'wx_pub',
                 'currency' => 'cny',
                 'client_ip' => $ip,
-//                'extra' => [
-//                    'success_url' => 'https://www.aiyouyi.net.cn/home/#/buy?success',
-//                    'cancel_url' => 'https://www.aiyouyi.net.cn/home/#/buy?cancel'
-//                ],
+                'extra' => [
+                    'open_id' => "$openid",
+                ],
                 'subject' => "爱优医" . $price / 100 . "元赞助",
                 'body' => '赞助爱优医')
         );
