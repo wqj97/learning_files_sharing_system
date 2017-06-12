@@ -1,21 +1,21 @@
 <template>
   <div>
     <p class="solgan">感谢您的赞助和支持，爱优医将通过等级以表谢意。</p>
-    <div class="item lv0">
+    <div v-show="level <= 0" class="item lv0">
       <div class="main">
         <div class="level">Lv.0</div>
         <div class="price">￥0</div>
       </div>
       <div class="slogan">可享受少部分资料</div>
     </div>
-    <div class="item lv1" @click="pay(0)">
+    <div v-show="level <= 1" class="item lv1" @click="pay(0)">
       <div class="main">
         <div class="level">Lv.1</div>
         <div class="price">￥{{prices["0"]}}</div>
       </div>
       <div class="slogan">可享受部分资料</div>
     </div>
-    <div class="item lv2" @click="pay(1)">
+    <div v-show="level <= 2" class="item lv2" @click="pay(1)">
       <div class="main">
         <div class="level">Lv.2</div>
         <div class="price">￥{{prices["1"]}}</div>
@@ -23,7 +23,7 @@
       </div>
       <div class="slogan">可享受大部分资料</div>
     </div>
-    <div class="item lv3" @click="pay(2)">
+    <div v-show="level <= 3" class="item lv3" @click="pay(2)">
       <div class="main">
         <div class="level">Lv.3</div>
         <div class="price">￥{{prices["2"]}}</div>
@@ -35,6 +35,7 @@
 </template>
 <script>
 import pingpp from 'pingpp-js'
+import { mapState } from 'vuex'
 export default {
   name: 'buy',
   mounted() {
@@ -76,7 +77,7 @@ this.$vux.toast.show({
     pay(index) {
       let price = Number(this.prices[index])
       console.log(price)
-      this.$http.post('/pay', { amount: price*1000 }).then(res => {
+      this.$http.post('/pay', { amount: price*100 }).then(res => {
         let charge = res.body
         console.log(charge)
         ////ugly code///
@@ -103,6 +104,11 @@ this.$vux.toast.show({
     return {
       prices: {}
     }
+  },
+    computed: {
+    ...mapState({
+      level: state => state.user.level
+    })
   }
 }
 </script>
