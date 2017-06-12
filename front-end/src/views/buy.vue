@@ -76,7 +76,7 @@ this.$vux.toast.show({
     pay(index) {
       let price = Number(this.prices[index])
       console.log(price)
-      this.$http.post('/pay', { amount: price*1000 }).then(res => {
+      this.$http.post('/pay', { amount: price*100 }).then(res => {
         let charge = res.body
         console.log(charge)
         ////ugly code///
