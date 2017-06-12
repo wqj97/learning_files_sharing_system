@@ -20,24 +20,8 @@ class Succeed
         $data = json_decode($input);
         $order_info = $data->data->object;
         $order_no = $order_info->order_no;
-        $amount = $order_info->amount / 100;
-        $level = json_decode(Server_Setting('level'), true);
-        $price = json_decode(Server_Setting('price'), true);
-        $credit = 0;
-        foreach ($price as $key => $val) {
-            if ($val - $amount >= 0) {
-                $credit = $level[$key + 1];
-                break;
-            }
-        }
-        if ($amount > $price[count($price) - 1]){
-            $credit = $level[count($level) - 1];
-        }
-        if ($amount < $price[0]) {
-            $credit = 0;
-        }
-        $O_openid = Db::query("SELECT O_openid FROM Pay_Order WHERE O_Id = ?", [$order_no])[0]['O_openid'];
+        $O_info = Db::query("SELECT O_openid,O_increase FROM Pay_Order WHERE O_Id = ?", [$order_no])[0];
         Db::execute('UPDATE Pay_Order SET O_state = 2 WHERE O_Id = ?', [$order_no]);
-        Db::execute('UPDATE `User` SET `U_credit` = `U_credit` + ?  WHERE U_openid = ?', [$credit, $O_openid]);
+        Db::execute('UPDATE `User` SET `U_credit` = `U_credit` + ?  WHERE U_openid = ?', [$O_info['O_increase'], $O_info['O_openid']]);
     }
 }
