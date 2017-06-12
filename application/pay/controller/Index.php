@@ -84,7 +84,9 @@ class Index
         }
 
         // 计算需要多少钱
-        $amount -= $price[$user_level -1];
+        if ($user_level != 0) {
+            $amount -= $price[$user_level -1];
+        }
         if ($amount < 0) {
             $amount = 0;
         }
