@@ -41,8 +41,11 @@ class home
               GROUP BY D_file_Id
               ORDER BY COUNT(0) DESC LIMIT 0,12");
         foreach ($top_file_by_down_and_school as $item) {
-            $top_file[] = Db::query("select F_Id,F_name,F_level,F_download_count,
-(SELECT count(*) from Collect_record where C_file_Id = F_Id) as 'collect_record',F_view_count,F_ext from File where F_Id = $item[D_file_Id]")[0];
+            $top_file_db = Db::query("select F_Id,F_name,F_level,F_download_count,
+            (SELECT count(*) from Collect_record where C_file_Id = F_Id) as 'collect_record',F_view_count,F_ext from File where F_Id = $item[D_file_Id]");
+            if (!empty($top_file_db)){
+                $top_file[] = $top_file_db[0];
+            }
         }
         if (count($top_file_by_down_and_school) < 12) {
             $need_select = 12 - count($top_file_by_down_and_school);

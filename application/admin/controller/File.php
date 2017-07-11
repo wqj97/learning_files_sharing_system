@@ -132,7 +132,7 @@ class File
         return json($file_info);
     }
 
-    private function Transfer ($file_id)
+    public function Transfer ($file_id)
     {
         $server_file_url = Db::query("SELECT F_url,F_ext FROM File WHERE F_Id = ?", [$file_id])[0];
         if (mb_strtolower($server_file_url["F_ext"]) != "pdf") {
@@ -146,7 +146,7 @@ class File
             $jpg_url = $file_url . ".jpg";
             $result = 0;
             $output = [];
-            exec("convert -verbose -density 150 -trim {$file_url} -quality 50 -flatten {$jpg_url}", $output, $result);
+            exec("convert -verbose -density 150 -trim {$file_url} -quality 100 -flatten {$jpg_url}", $output, $result);
             if (!empty($output)) {
                 break;
             }
@@ -214,7 +214,7 @@ class File
     public function syncScript ()
     {
         echo "\r\n";
-        $un_upload_files = Db::query("SELECT * FROM File WHERE F_on_cos = 0");
+        $un_upload_files = Db::query("SELECT * FROM File WHERE F_on_cos = 0 and F_type is not NULL");
         foreach ($un_upload_files as $key => $item) {
             $raw_file = "/home/wwwroot/wx.97qingnian.com" . $item["F_url"];
             $transfered_file = json_decode($item["F_transfer_url"]);

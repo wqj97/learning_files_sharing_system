@@ -24,7 +24,9 @@ class Index
         $openid = cookie('openid');
 
         $credit_and_price = $this->geneticCredit($price, $openid);
-
+        if ($credit_and_price[0] == 0) {
+            return;
+        }
         Db::execute('INSERT INTO Pay_Order (O_openid,O_total_fee,O_state, O_increase) VALUE (?,?,?,?)', [$openid,
             $price, 0, $credit_and_price[1]]);
         $order_no = Db::query('select last_insert_id() as Id')[0]['Id'];

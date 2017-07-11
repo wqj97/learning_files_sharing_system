@@ -3,6 +3,7 @@ require_once 'SQL/Db.php';
 $Db = new Db();
 $page = isset($_GET['page']) ? $_GET["page"] : 0;
 $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
+$file_type = isset($_GET['file_type']) ? $_GET['file_type'] : '';
 ?>
 <!DOCTYPE html>
 <html>
@@ -136,6 +137,21 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
       <div class="box box-success">
         <div class="box-header">
           <h3 class="box-title">文件列表</h3>
+          <label>
+            <select name="" id="" class="form-control" onchange="searchType(this.value)">
+              <option value="">全部</option>
+                <?php
+                $types = json_decode($Db->query("SELECT S_value FROM Setting WHERE S_key = 'file_type'")[0]['S_value']);
+                foreach ($types as $key => $val) {
+                    echo "<option value='$key'";
+                    if ($key == $file_type) {
+                        echo " selected ";
+                    }
+                    echo ">$val</option>";
+                }
+                ?>
+            </select>
+          </label>
         </div>
         <!-- /.box-header -->
         <div class="box-body">
@@ -173,7 +189,7 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
                   $start = $page * 12;
                   if ($keywords) {
                       $user_openid = $Db->query("select U_openid from User where U_name like '%$keywords%'");
-                      $unsolve_file = $Db->query("SELECT F_Id,F_name,F_ext,F_user_openid,F_join_time FROM File where F_name = '%$keywords%' order by F_Id desc LIMIT $start,12");
+                      $unsolve_file = $Db->query("SELECT F_Id,F_name,F_ext,F_user_openid,F_join_time FROM File where F_name = '%$keywords%' and F_type = '$file_type' order by F_Id desc LIMIT $start,12");
                       foreach ($user_openid as $user) {
                           $user_file = $Db->query("SELECT F_Id,F_name,F_ext,F_user_openid,F_join_time FROM File where F_user_openid = '$user[U_openid]' order by F_Id desc");
                           foreach ($user_file as $file) {
@@ -182,13 +198,16 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
                       }
                       $file_id = $Db->query("select F_Id from File where F_name like '%$keywords%'");
                       foreach ($file_id as $file) {
-                          $file_info = $Db->query("SELECT F_Id,F_name,F_ext,F_user_openid,F_join_time FROM File where F_Id = '$file[F_Id]' order by F_Id desc");
+                          $file_info = $Db->query("SELECT F_Id,F_name,F_ext,F_user_openid,F_join_time FROM File where F_Id = '$file[F_Id]' and F_type = '$file_type' order by F_Id desc");
                           foreach ($file_info as $file_each) {
                               $unsolve_file[] = $file_each;
                           }
                       }
                   } else {
-                      $unsolve_file = $Db->query("SELECT F_Id,F_name,F_ext,F_user_openid,F_join_time FROM File order by F_Id desc LIMIT $start,12");
+                      $sql = "SELECT F_Id,F_name,F_ext,F_user_openid,F_join_time FROM File ";
+                      $sql .= $file_type ? "where `F_type` = " . $file_type : '';
+                      $sql .= " order by F_Id desc LIMIT $start,12";
+                      $unsolve_file = $Db->query($sql);
                   }
                   foreach ($unsolve_file as $row) {
                       $userName = $Db->query("select U_name,(select S_name from School where S_Id = U_school) as 'school_name' from User where U_openid = '$row[F_user_openid]'")[0];
@@ -242,12 +261,12 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
                     ?>">
                       <a href="<?php
                       $prewPage = $page - 1;
-                      echo "File-modify.php?page=$prewPage&keyWords=$keywords";
+                      echo "File-modify.php?page=$prewPage&keyWords=$keywords&fileType=$file_type";
                       ?>">上一页</a>
                     <li class="paginate_button next">
                       <a href="<?php
                       $nextPage = $page + 1;
-                      echo "File-modify.php?page=$nextPage&keyWords=$keywords";
+                      echo "File-modify.php?page=$nextPage&keyWords=$keywords&fileType=$file_type";
                       ?>">下一页</a>
                     </li>
                   </ul>
@@ -343,7 +362,18 @@ $keywords = isset($_GET['keyWords']) ? $_GET['keyWords'] : '';
 
 <script>
 	function search (keyWords) {
-		window.location.href = 'File-modify.php?page=0' + '&keyWords=' + keyWords;
+		window.location.href = 'File-modify.php?page=0' + '&keyWords=' + keyWords <?php
+      if (!empty($file_type)) {
+          echo " + '&file_type=" . $file_type . "'";
+      }
+      ?>
+	}
+	function searchType (type) {
+		window.location.href = 'File-modify.php?page=0' + '&file_type=' + type<?php
+      if (!empty($keywords)) {
+          echo " + '&keyWords=" . $keywords . "'";
+      }
+      ?>
 	}
 	function getFile (Id) {
 		$.get("/admin/File?file_id=" + Id, function (data) {
