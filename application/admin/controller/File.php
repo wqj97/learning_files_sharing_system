@@ -54,10 +54,10 @@ class File
         $file_id = input('get.file_id');
         $file_src = Db::query("SELECT F_url,F_transfer_url,F_on_cos FROM File WHERE F_Id = ?", [$file_id])[0];
         if ($file_src["F_on_cos"] == 1) {
-            if ($this->deleteCosFile($file_id)) {
+            if ($delete_response = $this->deleteCosFile($file_id)) {
                 return json(["result" => "success"]);
             } else {
-                return json(["result" => "failed"], 500);
+                return json(["result" => "failed", 'reson' => $delete_response], 500);
             }
         }
         unlink($_SERVER["DOCUMENT_ROOT"] . $file_src["F_url"]);
@@ -79,10 +79,7 @@ class File
         $file_info = Db::query("SELECT * FROM File WHERE F_Id = ?", [$file_id])[0];
         $cos = new COS();
         foreach (json_decode($file_info["F_transfer_url"]) as $item) {
-            $ext_result = $cos->delete($item);
-            if ($ext_result["code"] != 0) {
-                return false;
-            }
+            $cos->delete($item);
         }
         $ext_result = $cos->delete($file_info["F_url"]);
         if ($ext_result["code"] != 0) {
@@ -141,7 +138,13 @@ class File
             return true;
         }
         $transfer_url = [];
-        for ($i = 0; $i < 5; $i++) {
+        $total_page = $this->getPageTotal("/home/wwwroot/wx.97qingnian.com" . $server_file_url["F_url"]);
+        $page_start = floor($total_page * 0.45);
+        $page_end = floor($total_page * 0.65);
+        if ($page_end - $page_start < 1) {
+            $page_end = $page_start + 1;
+        }
+        for ($i = $page_start; $i < $page_end; $i++) {
             $file_url = "/home/wwwroot/wx.97qingnian.com" . $server_file_url["F_url"] . "[{$i}]";
             $jpg_url = $file_url . ".jpg";
             $result = 0;
@@ -150,7 +153,7 @@ class File
             if (!empty($output)) {
                 break;
             }
-            $server_file_url["F_url"] = str_replace("http:","",$server_file_url["F_url"]);
+            $server_file_url["F_url"] = str_replace("http:", "", $server_file_url["F_url"]);
             $transfer_url[] = $server_file_url["F_url"] . "[$i].jpg";
         }
         $transfer_url = json_encode($transfer_url);
@@ -171,7 +174,7 @@ class File
         $excute_result = $cos->upLoad($local_path, $remote_path);
         if ($excute_result["code"] == 0) {
             Log::error($excute_result['message']);
-            str_replace("http:","",$excute_result["data"]["access_url"]);
+            str_replace("http:", "", $excute_result["data"]["access_url"]);
         }
         return $excute_result;
     }
@@ -191,7 +194,7 @@ class File
         if ($raw_file_upload_result["code"] != 0) {
             return false;
         } else {
-            $remote_raw_url = str_replace("http:","",$raw_file_upload_result["data"]["access_url"]);
+            $remote_raw_url = str_replace("http:", "", $raw_file_upload_result["data"]["access_url"]);
         }
         $remote_transfer_file = [];
         foreach ($transfered_file as $item) {
@@ -199,7 +202,7 @@ class File
             if ($upload_result["code"] != 0) {
                 return false;
             } else {
-                $remote_transfer_file[] = str_replace("http:","",$upload_result["data"]["access_url"]);
+                $remote_transfer_file[] = str_replace("http:", "", $upload_result["data"]["access_url"]);
             }
         }
         $remote_transfer_file = json_encode($remote_transfer_file);
@@ -214,7 +217,7 @@ class File
     public function syncScript ()
     {
         echo "\r\n";
-        $un_upload_files = Db::query("SELECT * FROM File WHERE F_on_cos = 0 and F_type is not NULL");
+        $un_upload_files = Db::query("SELECT * FROM File WHERE F_on_cos = 0 AND F_type IS NOT NULL");
         foreach ($un_upload_files as $key => $item) {
             $raw_file = "/home/wwwroot/wx.97qingnian.com" . $item["F_url"];
             $transfered_file = json_decode($item["F_transfer_url"]);
@@ -245,9 +248,30 @@ class File
 
     public function transferScript ()
     {
-        $untrans_file_list = Db::query("select * from File where F_ext = 'pdf' and F_transfer_url = '[]'");
+        $untrans_file_list = Db::query("SELECT * FROM File WHERE F_ext = 'pdf' AND F_transfer_url = '[]'");
         foreach ($untrans_file_list as $item) {
             $this->Transfer($item["F_Id"]);
+        }
+    }
+
+    private function getPageTotal ($path)
+    {
+        // 打开文件
+        if (!$fp = @fopen($path, "r")) {
+            $error = "打开文件{$path}失败";
+            return false;
+        } else {
+            $max = 0;
+            while (!feof($fp)) {
+                $line = fgets($fp, 255);
+                if (preg_match('/\/Count [0-9]+/', $line, $matches)) {
+                    preg_match('/[0-9]+/', $matches[0], $matches2);
+                    if ($max < $matches2[0]) $max = $matches2[0];
+                }
+            }
+            fclose($fp);
+            // 返回页数
+            return $max;
         }
     }
 }
