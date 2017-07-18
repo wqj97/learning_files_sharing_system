@@ -261,12 +261,12 @@ $file_type = isset($_GET['file_type']) ? $_GET['file_type'] : '';
                     ?>">
                       <a href="<?php
                       $prewPage = $page - 1;
-                      echo "File-modify.php?page=$prewPage&keyWords=$keywords&fileType=$file_type";
+                      echo "File-modify.php?page=$prewPage&keyWords=$keywords&file_type=$file_type";
                       ?>">上一页</a>
                     <li class="paginate_button next">
                       <a href="<?php
                       $nextPage = $page + 1;
-                      echo "File-modify.php?page=$nextPage&keyWords=$keywords&fileType=$file_type";
+                      echo "File-modify.php?page=$nextPage&keyWords=$keywords&file_type=$file_type";
                       ?>">下一页</a>
                     </li>
                   </ul>
