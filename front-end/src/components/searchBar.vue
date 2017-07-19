@@ -7,6 +7,7 @@
     <div class="right">
       <form action="" @submit.prevent="empty">
       <input  v-on:keyup.13="$emit('submit', $event.target.value)" :value="value" type="search" @input="$emit('input', $event.target.value)" :placeholder="placeholder" autofocus>
+      <button id="search" @click="$emit('submit', $event.target.value)">搜索</button>
       </form>
     </div>
   </div>
@@ -53,6 +54,17 @@ export default {
 
 <style lang="scss" scoped>
   @import '../style/base.scss';
+  #search{
+  position: absolute;
+  top:-4px;
+  right: 0vw;
+  padding: 7px;
+  font-size: 17px;
+  background-color: #2ECAFF;
+  border:none;
+  color: #fff;
+  border-radius: 20%;
+  }
 .searchBar{
   background-color: #fff;
   width: 100%;
@@ -83,6 +95,7 @@ export default {
   vertical-align: middle;
 }
 .right {
+  position: relative;
   width: 100%;
   input{
     width: 100%;

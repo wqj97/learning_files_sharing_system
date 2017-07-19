@@ -34,7 +34,7 @@
            @click="$router.push('/search')">
         <img src="../assets/search.png"
              class="img vertical_center">
-        <span>搜索...</span>
+        <span>请输入资料名称或关键词</span>
       </div>
       <div class="upload text_shdow"
            @click="$router.push('/upload')">
@@ -200,6 +200,9 @@ box-shadow: 0px 2px 7px 0px rgba(0,0,0,0.24);
       width: 15px;
       height: 15px;
     }
+    span{
+      text-shadow: 0px 2px 12px rgba(0, 0, 0, 0.7);
+    }
   }
 }
 
@@ -208,7 +211,7 @@ box-shadow: 0px 2px 7px 0px rgba(0,0,0,0.24);
   text-align: left;
   margin: 0 28px; // line-height: 48px;
   padding: 12px 17px;
-  color: #9E9E9E;
+  color: #bbbbbb;
   line-height: 22px;
   .img {
     padding-right: 5px;

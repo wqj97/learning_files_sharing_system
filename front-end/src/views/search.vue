@@ -1,5 +1,6 @@
 <template>
   <div>
+    <scrollBanner>资料说明：部分资料来源于网络，无法联系上作者。若作者认为侵权，我方将尽快从平台移除。</scrollBanner>
     <searchBar v-if="passIn" shadow :type="type[0]" v-model="search" @submit="submit"></searchBar>
     <searchBar v-else shadow v-model="search" @submit="submit"></searchBar>
     <main class="container">
@@ -10,11 +11,11 @@
 </template>
 
 <script>
-import { searchBar, fileList, categoryList } from '@/components'
+import { searchBar, fileList, categoryList, scrollBanner } from '@/components'
 export default {
   name: 'search',
   components: {
-    searchBar, fileList, categoryList
+    searchBar, fileList, categoryList, scrollBanner
   },
   created() {
     let id = this.$route.query.type

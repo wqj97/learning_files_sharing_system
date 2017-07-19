@@ -6,6 +6,7 @@ import searchBar from './searchBar'
 import commentList from './comment/list'
 import refresh from './pullRefresh'
 import preview from './preview'
+import scrollBanner from './scrollBanner'
 export {
   categoryList,
   fileListItem,
@@ -14,5 +15,6 @@ export {
   searchBar,
   commentList,
   refresh,
-  preview
+  preview,
+  scrollBanner
 }
