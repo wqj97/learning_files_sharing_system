@@ -189,7 +189,13 @@ $file_type = isset($_GET['file_type']) ? $_GET['file_type'] : '';
                   $start = $page * 12;
                   if ($keywords) {
                       $user_openid = $Db->query("select U_openid from User where U_name like '%$keywords%'");
-                      $unsolve_file = $Db->query("SELECT F_Id,F_name,F_ext,F_user_openid,F_join_time FROM File where F_name = '%$keywords%' and F_type = '$file_type' order by F_Id desc LIMIT $start,12");
+                      $search_sql = "SELECT F_Id,F_name,F_ext,F_user_openid,F_join_time FROM File where F_name like '%$keywords%'";
+                      if (empty($file_type)) {
+                        $search_sql .= " order by F_Id desc LIMIT $start,12";
+                      } else {
+                        $search_sql .= "and F_type = '$file_type' order by F_Id desc LIMIT $start,12";
+                      }
+                      $unsolve_file = $Db->query($search_sql);
                       foreach ($user_openid as $user) {
                           $user_file = $Db->query("SELECT F_Id,F_name,F_ext,F_user_openid,F_join_time FROM File where F_user_openid = '$user[U_openid]' order by F_Id desc");
                           foreach ($user_file as $file) {
