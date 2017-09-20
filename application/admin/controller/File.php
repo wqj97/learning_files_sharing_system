@@ -139,12 +139,8 @@ class File
         }
         $transfer_url = [];
         $total_page = $this->getPageTotal("/home/wwwroot/wx.97qingnian.com" . $server_file_url["F_url"]);
-        $page_start = floor($total_page * 0.45);
-        $page_end = floor($total_page * 0.65);
-        if ($page_end - $page_start < 1) {
-            $page_end = $page_start + 1;
-        }
-        for ($i = $page_start; $i < $page_end; $i++) {
+        $page_end = floor($total_page * 0.8);
+        for ($i = 0; $i < $page_end; $i++) {
             $file_url = "/home/wwwroot/wx.97qingnian.com" . $server_file_url["F_url"] . "[{$i}]";
             $jpg_url = $file_url . ".jpg";
             $result = 0;
